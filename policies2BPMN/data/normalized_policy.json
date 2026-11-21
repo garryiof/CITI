@@ -1,0 +1,1134 @@
+{
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html",
+    "issuer": "BlackRock, Inc.",
+    "section_count": 17,
+    "paragraph_count": 140,
+    "character_count": 20592
+  },
+  "paragraphs": [
+    {
+      "section_id": "0",
+      "section_title": "Preamble",
+      "paragraph": 1,
+      "text": "Global Personal Trading Policy",
+      "start_offset": 0,
+      "end_offset": 30
+    },
+    {
+      "section_id": "0",
+      "section_title": "Preamble",
+      "paragraph": 2,
+      "text": "Global Personal Trading Policy",
+      "start_offset": 31,
+      "end_offset": 61
+    },
+    {
+      "section_id": "0",
+      "section_title": "Preamble",
+      "paragraph": 3,
+      "text": "Effective Date: 28 September 2021",
+      "start_offset": 62,
+      "end_offset": 95
+    },
+    {
+      "section_id": "1",
+      "section_title": "Introduction",
+      "paragraph": 1,
+      "text": "Employees are required to place the interests of our clients first and avoid transactions, activities and relationships that might interfere or appear to interfere with making decisions in the best interests of clients of BlackRock. For example, employees may not induce clients to purchase securities that they own to increase the value of that security. In addition, you must consider, when making a personal investment, whether that transaction may also be appropriate for a client.",
+      "start_offset": 96,
+      "end_offset": 581
+    },
+    {
+      "section_id": "2",
+      "section_title": "Scope",
+      "paragraph": 1,
+      "text": "This policy governs the personal trading and investments of all employees and Contingent Workers (collectively, \u201cemployees\u201d) of BlackRock, Inc. and its subsidiaries (\u201cBlackRock\u201d) globally. It should be read in conjunction with BlackRock\u2019s other compliance policies, including its Code of Business Conduct and Ethics, Global Insider Trading Policy and Global Employee Private Investment Policy.",
+      "start_offset": 582,
+      "end_offset": 975
+    },
+    {
+      "section_id": "2",
+      "section_title": "Scope",
+      "paragraph": 2,
+      "text": "Please refer to the Personal Trading Summary in Annex 2 for a reference guide to this policy. Japan employees should refer to Annex 3 for additional requirements. This policy applies generally to employees and contingent workers 1 , except for those contingent workers subject to a contractual arrangement with BlackRock that addresses personal trading, insider trading, and/or similar potential conflicts of interest. Any exceptions to this policy must be pre-approved by Legal & Compliance.",
+      "start_offset": 976,
+      "end_offset": 1468
+    },
+    {
+      "section_id": "2",
+      "section_title": "Scope",
+      "paragraph": 3,
+      "text": "Policy / Document Requirements and Statements",
+      "start_offset": 1469,
+      "end_offset": 1514
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 1,
+      "text": "Account Disclosure Required:",
+      "start_offset": 1515,
+      "end_offset": 1543
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 2,
+      "text": "You must disclose brokerage or other investment accounts, including private investments, trusts or investment clubs in which you make investment decisions or have direct influence or control (such as joint ownership, trading authorization, or the authority to exercise investment discretion) or a direct or indirect beneficial ownership interest by entering them into the Personal Trading Assistant (\u201cPTA\u201d). 2",
+      "start_offset": 1544,
+      "end_offset": 1953
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 3,
+      "text": "For the purposes of this policy, contingent workers are, generally, temporary workers contracted through a third party to perform a short term, defined time period, or specific project assignment. The policy also applies to interns with a tenure of 6 months or more.",
+      "start_offset": 1954,
+      "end_offset": 2220
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 4,
+      "text": "Note that employees who are FINRA registered representatives are also required to notify the broker or financial institution maintaining their account that they are employed with BlackRock. Please see the Broker Dealer Written Supervisory Procedures for additional detail.",
+      "start_offset": 2221,
+      "end_offset": 2493
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 5,
+      "text": "Global Personal Trading Policy",
+      "start_offset": 2494,
+      "end_offset": 2524
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 6,
+      "text": "Subject to applicable law, this includes accounts for spouses, domestic partners, dependent children or any other person on behalf of whom you make investment decisions or have direct influence or control. 3 Employees in Canada and Japan should check with their local Legal & Compliance team for how this requirement applies to them.",
+      "start_offset": 2525,
+      "end_offset": 2858
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 7,
+      "text": "Account Disclosure Not Required:",
+      "start_offset": 2859,
+      "end_offset": 2891
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 8,
+      "text": "Employees are not required to disclose accounts that are restricted to only holding and trading the following types of investments:",
+      "start_offset": 2892,
+      "end_offset": 3023
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 9,
+      "text": "Open-end Mutual Funds (such as 401k Plans that can only hold and trade open ended mutual funds), Open-End Investment Companies, Unit Trusts and SICAVs;",
+      "start_offset": 3024,
+      "end_offset": 3175
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 10,
+      "text": "Note : Investment Trusts are in scope of the policy.",
+      "start_offset": 3176,
+      "end_offset": 3228
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 11,
+      "text": "Pension arrangements where you do not have investment discretion and/or where you are not permitted to invest directly in securities.",
+      "start_offset": 3229,
+      "end_offset": 3362
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 12,
+      "text": "Note : BlackRock Sponsored Pension plans option not meeting the above requirement(s) will need to comply with Section 3.1 and 4.1 of the policy.",
+      "start_offset": 3363,
+      "end_offset": 3507
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 13,
+      "text": "Direct obligations of national government issuers;",
+      "start_offset": 3508,
+      "end_offset": 3558
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 14,
+      "text": "Certificates of deposit and commercial paper;",
+      "start_offset": 3559,
+      "end_offset": 3604
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 15,
+      "text": "Money market funds, cash, or cash equivalents (such as bank deposit accounts);",
+      "start_offset": 3605,
+      "end_offset": 3683
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 16,
+      "text": "Donation, reward, and debt based crowdfunding initiatives (however, note that equity and investment- based crowdfunding must be pre-cleared); and",
+      "start_offset": 3684,
+      "end_offset": 3829
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 17,
+      "text": "Employee Benefit Trust Accounts in Hong Kong and Singapore;",
+      "start_offset": 3830,
+      "end_offset": 3889
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 18,
+      "text": "Initial Disclosure Requirements for New Employees",
+      "start_offset": 3890,
+      "end_offset": 3939
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 19,
+      "text": "Initial Holdings Certification : Within ten days of joining BlackRock, you must provide your securities holdings information, as well as account information for every account required to be disclosed in accordance with Section 3.2. You are required to complete this certification even if you have no accounts or holdings to report in PTA.",
+      "start_offset": 3940,
+      "end_offset": 4278
+    },
+    {
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "paragraph": 20,
+      "text": "Current Information : The information you provide must be current (no older than 45 calendar days, prior to your commencing employment with BlackRock).",
+      "start_offset": 4279,
+      "end_offset": 4430
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 1,
+      "text": "Approved Broker Requirements for all Accounts",
+      "start_offset": 4431,
+      "end_offset": 4476
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 2,
+      "text": "All employees are required to conduct their personal trading through a broker listed on the Global Approved Broker List (an \u201cApproved Broker\u201d). 4 Approved Brokers generally provide an electronic feed of employee personal trading activity directly to BlackRock. Brokers that do not provide electronic feeds may pose a risk to BlackRock and, for this reason, any exception to this requirement to maintain account(s) with a Non Approved Broker must be approved by both a member of the Global Executive Committee and Legal & Compliance. 5",
+      "start_offset": 4477,
+      "end_offset": 5011
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 3,
+      "text": "Note t hat contingent workers are not r required to disclose the accounts of spouses or dependent children unless the account is joint or otherwise in the name of the contingent worker as a custodian or trustee.",
+      "start_offset": 5012,
+      "end_offset": 5223
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 4,
+      "text": "Note that contingent workers are not required to move their accounts to an Approved Broker.",
+      "start_offset": 5224,
+      "end_offset": 5315
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 5,
+      "text": "Note that the Global Approved Broker List includes a limited number of brokers that do not provide electronic feeds, for example, in jurisdictions where electronic feeds generally are not available. Any employee who maintains an account with a broker that does not provide BlackRock with an electronic feed, whether an Approved Broker or not, is responsible for the information delivery requirements in Section 4.1.",
+      "start_offset": 5316,
+      "end_offset": 5731
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 6,
+      "text": "Global Personal Trading Policy",
+      "start_offset": 5732,
+      "end_offset": 5762
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 7,
+      "text": "Disclosing your Account Information : Except as noted in Section 3.2, all accounts must be disclosed in PTA.",
+      "start_offset": 5763,
+      "end_offset": 5871
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 8,
+      "text": "Any employee who maintains an account with a broker that does not submit reportable transactions and holdings information to BlackRock via an electronic feed is required to provide such information to BlackRock as follows:",
+      "start_offset": 5872,
+      "end_offset": 6094
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 9,
+      "text": "Trade confirmations must be submitted to BlackRock within five (5) calendar days of trade execution; and",
+      "start_offset": 6095,
+      "end_offset": 6199
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 10,
+      "text": "Quarterly statements must be submitted to BlackRock within thirty (30) calendar days of quarter end.",
+      "start_offset": 6200,
+      "end_offset": 6300
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 11,
+      "text": "It is the employee\u2019s obligation to report the information to BlackRock \u2013 in instances where the employee arranges for the broker to submit information directly to BlackRock, the employee remains responsible to confirm that documents are submitted, and that the information provided is accurate.",
+      "start_offset": 6301,
+      "end_offset": 6595
+    },
+    {
+      "section_id": "4",
+      "section_title": "Approved Broker Requirements for all Accounts",
+      "paragraph": 12,
+      "text": "If you transact directly with the issuer in a direct stock purchase plan or Dividend Reinvestment Plan (\u201cDRIP\u201d), you must disclose the account information and the name of the transfer agent or bank that executes such transactions to the extent available.",
+      "start_offset": 6596,
+      "end_offset": 6850
+    },
+    {
+      "section_id": "5",
+      "section_title": "Transaction Pre-Clearance Requirement",
+      "paragraph": 1,
+      "text": "Transaction Pre-Clearance Requirement",
+      "start_offset": 6851,
+      "end_offset": 6888
+    },
+    {
+      "section_id": "5",
+      "section_title": "Transaction Pre-Clearance Requirement",
+      "paragraph": 2,
+      "text": "You must submit a pre-clearance request in PTA and receive an approval before undertaking any personal investment transactions permitted under this policy, including purchases, sales, stock options exercises, ETFs and gifts.",
+      "start_offset": 6889,
+      "end_offset": 7113
+    },
+    {
+      "section_id": "5",
+      "section_title": "Transaction Pre-Clearance Requirement",
+      "paragraph": 3,
+      "text": "Pre-clearance approvals, whether for market orders 6 or limit orders 7 , are valid only on the day the approval is received. Your order must be executed on the same day by the time the market closes, on which the security is traded.",
+      "start_offset": 7114,
+      "end_offset": 7346
+    },
+    {
+      "section_id": "5",
+      "section_title": "Transaction Pre-Clearance Requirement",
+      "paragraph": 4,
+      "text": "Note : Employees can request exemption from the preclearance requirement for trades in a spousal account, in which the employee has no investment discretion. Spousal accounts require disclosure, regardless of preclearance exemption status and are subject to periodic monitoring. Employees may be required to supply a quarterly statement for such accounts. When such requests are made employees must provide the statements to the Legal & Compliance within 30 days of the request.. Reach out to your regional Core Compliance team for details regarding the approval process.",
+      "start_offset": 7347,
+      "end_offset": 7918
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 1,
+      "text": "Transactions Type and Preclearance Requirements",
+      "start_offset": 7919,
+      "end_offset": 7966
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 2,
+      "text": "Transactions not subject to Preclearance",
+      "start_offset": 7967,
+      "end_offset": 8007
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 3,
+      "text": "You are n ot r equired to obtain pre-clearance approval to transact in the following:",
+      "start_offset": 8008,
+      "end_offset": 8093
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 4,
+      "text": "Open-end Mutual Funds, including Labour-Sponsored Funds and shares or units of BlackRock Funds; Open-End Investment Companies, Unit Trusts, SICAVs;",
+      "start_offset": 8094,
+      "end_offset": 8241
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 5,
+      "text": "1) Taiwan SITE BlackRock funds must be pre-cleared.",
+      "start_offset": 8242,
+      "end_offset": 8293
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 6,
+      "text": "Buy or sell transactions placed at current market price.",
+      "start_offset": 8294,
+      "end_offset": 8350
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 7,
+      "text": "Buy or sell transactions placed at a pre-determined price (detailed within the pre-clearance request).",
+      "start_offset": 8351,
+      "end_offset": 8453
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 8,
+      "text": "Global Personal Trading Policy",
+      "start_offset": 8454,
+      "end_offset": 8484
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 9,
+      "text": "Investment Trusts must be pre-cleared.",
+      "start_offset": 8485,
+      "end_offset": 8523
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 10,
+      "text": "Purchases of common stock under an Employee Stock Purchase Plan/vested Restricted Shares Units (however, sales of the same must be pre-cleared );",
+      "start_offset": 8524,
+      "end_offset": 8669
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 11,
+      "text": "Direct obligations of national government issuers;",
+      "start_offset": 8670,
+      "end_offset": 8720
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 12,
+      "text": "Certificates of deposit and commercial paper;",
+      "start_offset": 8721,
+      "end_offset": 8766
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 13,
+      "text": "529 Plans, Direct Stock Purchase Plans, and any securities purchased pursuant to a dividend reinvestment plan;",
+      "start_offset": 8767,
+      "end_offset": 8877
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 14,
+      "text": "Securities acquired by an exercise of rights to the holders of a class of securities (however, sales of the same must be pre-cle ared);",
+      "start_offset": 8878,
+      "end_offset": 9013
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 15,
+      "text": "Stock dividend, stock split, or similar corporate distribution;",
+      "start_offset": 9014,
+      "end_offset": 9077
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 16,
+      "text": "Conversion of employee stock options (however, sales of the same must be p re-cle ared);",
+      "start_offset": 9078,
+      "end_offset": 9166
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 17,
+      "text": "Permissible Futures Transactions;",
+      "start_offset": 9167,
+      "end_offset": 9200
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 18,
+      "text": "Direct Investments into Crypto Currency (unless restricted);",
+      "start_offset": 9201,
+      "end_offset": 9261
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 19,
+      "text": "Managed Accounts (as defined below): and/or",
+      "start_offset": 9262,
+      "end_offset": 9305
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 20,
+      "text": "Transfer of securities with no change in beneficial ownership e.g. (transfer from one account in your name to another account in your name).",
+      "start_offset": 9306,
+      "end_offset": 9446
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 21,
+      "text": "Transactions subject to One time Preclearance",
+      "start_offset": 9447,
+      "end_offset": 9492
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 22,
+      "text": "Subject to below mentioned conditions being met , you may only be required to seek one time preclearance for:",
+      "start_offset": 9493,
+      "end_offset": 9602
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 23,
+      "text": "Monthly Investment Plan (MIP)/Systematic Investment Plan (SIP): Transactions in any in scope securities (refer to Annex 2) via Monthly Investment Plan (MIP)/Systematic Investment Plan (SIP) requires an initial one time preclearance before you enroll into the plan. Thereafter, the subsequent periodic investments in the same security as initially precleared will not require preclearance. Any changes to the terms of such Monthly Investment Plan (MIP)/Systematic Investment Plan (SIP)including but not limited to, underlying security, amount or quantity that is traded or frequency must be notified to Compliance and precleared.",
+      "start_offset": 9603,
+      "end_offset": 10231
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 24,
+      "text": "Please note, sale of investments accumulated as part of Monthly Investment Plan (MIP)/Systematic Investment Plan (SIP) will require preclearance.",
+      "start_offset": 10232,
+      "end_offset": 10377
+    },
+    {
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "paragraph": 25,
+      "text": "While submitting the preclearance, please mention in comments that this is a one time preclearance request for investment via MIP/SIP plan.",
+      "start_offset": 10378,
+      "end_offset": 10517
+    },
+    {
+      "section_id": "7",
+      "section_title": "Managed Accounts",
+      "paragraph": 1,
+      "text": "While you are required to disclose discretionary managed accounts, you are not required to obtain pre- clearance approval with respect to transactions in the Managed Account, provided you obtain written confirmation from the investment adviser/manager, or trustee managing your account that the account is managed on a discretionary basis and/or that you (or, if applicable, your spouse, domestic partner, or dependent child) do not exercise investment discretion or otherwise have direct or indirect influence or control over investment decisions. The investment manager\u2019s written confirmation must be in a form acceptable to Legal & Compliance.",
+      "start_offset": 10518,
+      "end_offset": 11164
+    },
+    {
+      "section_id": "7",
+      "section_title": "Managed Accounts",
+      "paragraph": 2,
+      "text": "Global Personal Trading Policy",
+      "start_offset": 11165,
+      "end_offset": 11195
+    },
+    {
+      "section_id": "7",
+      "section_title": "Managed Accounts",
+      "paragraph": 3,
+      "text": "Managed Accounts are subject to periodic monitoring. Employees may be required to supply a quarterly statement for their managed accounts. When such requests are made employees must provide the statements to the Legal & Compliance within 30 days of the request.",
+      "start_offset": 11196,
+      "end_offset": 11457
+    },
+    {
+      "section_id": "7",
+      "section_title": "Managed Accounts",
+      "paragraph": 4,
+      "text": "Investment Restrictions : The following investments are not permitted in Managed Accounts. It is your responsibility to communicate these investment restrictions to the manager, investment adviser, trustee, or other fiduciary managing your account.",
+      "start_offset": 11458,
+      "end_offset": 11706
+    },
+    {
+      "section_id": "7",
+      "section_title": "Managed Accounts",
+      "paragraph": 5,
+      "text": "Investments in BlackRock, Inc. (BLK); BlackRock TCP Capital Corp (TCPC) and BlackRock Capital Investment Corporation (BKCC)",
+      "start_offset": 11707,
+      "end_offset": 11830
+    },
+    {
+      "section_id": "7",
+      "section_title": "Managed Accounts",
+      "paragraph": 6,
+      "text": "BlackRock Closed-end mutual funds domiciled in the US; and",
+      "start_offset": 11831,
+      "end_offset": 11889
+    },
+    {
+      "section_id": "7",
+      "section_title": "Managed Accounts",
+      "paragraph": 7,
+      "text": "Initial public offerings and Private Investments.",
+      "start_offset": 11890,
+      "end_offset": 11939
+    },
+    {
+      "section_id": "7",
+      "section_title": "Managed Accounts",
+      "paragraph": 8,
+      "text": "Permitted Investments : All other securities, including BlackRock iShares ETFs and options, and futures are permitted in Managed Accounts.",
+      "start_offset": 11940,
+      "end_offset": 12078
+    },
+    {
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "paragraph": 1,
+      "text": "Prohibited Investments",
+      "start_offset": 12079,
+      "end_offset": 12101
+    },
+    {
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "paragraph": 2,
+      "text": "You are prohibited from transacting in the following:",
+      "start_offset": 12102,
+      "end_offset": 12155
+    },
+    {
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "paragraph": 3,
+      "text": "Initial Public Offerings (\u201cIPOs\u201d) except for investments in mutual saving bank IPOs by depositors or certain offerings directed or sponsored by BlackRock (as may be permitted by Legal & Compliance);",
+      "start_offset": 12156,
+      "end_offset": 12354
+    },
+    {
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "paragraph": 4,
+      "text": "Repurchase Agreements;",
+      "start_offset": 12355,
+      "end_offset": 12377
+    },
+    {
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "paragraph": 5,
+      "text": "Spread betting on financial markets and instruments;",
+      "start_offset": 12378,
+      "end_offset": 12430
+    },
+    {
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "paragraph": 6,
+      "text": "Contracts For Difference (\u201cCFD\u201d) (only prohibited in EMEA and Japan);",
+      "start_offset": 12431,
+      "end_offset": 12500
+    },
+    {
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "paragraph": 7,
+      "text": "Options other than Permissible Options Transactions (as defined in Section 9.1);",
+      "start_offset": 12501,
+      "end_offset": 12581
+    },
+    {
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "paragraph": 8,
+      "text": "Futures other than Permissible Futures Transactions (as defined in Section 9.2); and/or",
+      "start_offset": 12582,
+      "end_offset": 12669
+    },
+    {
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "paragraph": 9,
+      "text": "Limited offerings 8 (e.g., private offerings) unless permitted by Legal & Compliance in accordance with the Global Employee Private Investment Policy and section 12 of the Global Personal Trading Policy.",
+      "start_offset": 12670,
+      "end_offset": 12873
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 1,
+      "text": "Permissible Options and Futures Transactions",
+      "start_offset": 12874,
+      "end_offset": 12918
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 2,
+      "text": "Options : Subject to pre-clearance, you are permitted to engage in the following listed, exchange-traded options transactions:",
+      "start_offset": 12919,
+      "end_offset": 13045
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 3,
+      "text": "Options on ETFs and Indices;",
+      "start_offset": 13046,
+      "end_offset": 13074
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 4,
+      "text": "Covered Calls \u2013 Selling call options against existing, long stock positions of companies included in the S&P 200, FTSE 100, S&P/TSX 60, or ASX 100 (and transactions to close out these positions including buying a call option for an existing short call on the underlying); and/or",
+      "start_offset": 13075,
+      "end_offset": 13353
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 5,
+      "text": "Protective Puts \u2013 Buying a put on existing, long stock positions of companies included in the S&P 200, FTSE 100, S&P/TSX 60, or ASX 100 (and transactions to close out these positions including selling a put option for an existing put option on the underlying).",
+      "start_offset": 13354,
+      "end_offset": 13614
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 6,
+      "text": "Futures : You are permitted to trade in the following futures:",
+      "start_offset": 13615,
+      "end_offset": 13677
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 7,
+      "text": "Futures on direct obligations of national government issuers;",
+      "start_offset": 13678,
+      "end_offset": 13739
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 8,
+      "text": "Limited offerings are private offerings that are exempt from registration under the Securities Act of 1933, as amended, pursuant to Section 4(a)(2), Section 4(a)(5), Rule 504, Rule 505, or Rule 506.",
+      "start_offset": 13740,
+      "end_offset": 13938
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 9,
+      "text": "Global Personal Trading Policy",
+      "start_offset": 13939,
+      "end_offset": 13969
+    },
+    {
+      "section_id": "9",
+      "section_title": "Permissible Options and Futures Transactions",
+      "paragraph": 10,
+      "text": "Physical commodity futures; and/or",
+      "start_offset": 13970,
+      "end_offset": 14004
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 1,
+      "text": "Blackout Periods \u2013 Trading Against Clients",
+      "start_offset": 14005,
+      "end_offset": 14047
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 2,
+      "text": "Specific Knowledge Blackout Period: You may not trade in a security or futures contract at a time when you know of another\u2019s intention to trade that same security or futures contract on behalf of a client.",
+      "start_offset": 14048,
+      "end_offset": 14253
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 3,
+      "text": "Portfolio Employee Blackout Periods:",
+      "start_offset": 14254,
+      "end_offset": 14290
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 4,
+      "text": "7 Day Blackout Period: Portfolio Employees may not trade in a security or futures contract within 7 calen dar days before or after the trade date of a transaction in that security with respect to a client/fund account over which the Portfolio Employee\u2019s team has authority.",
+      "start_offset": 14291,
+      "end_offset": 14564
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 5,
+      "text": "15 Day Blackout Period: Portfolio Employees may not trade in a security that the Portfolio Employee is considering, or has considered and rejected for purchase or sale, for a client within the 15 calendar days preceding the proposed t rade unless pre-approval is obtained by Legal & Compliance in consultation with the employee\u2019s supervisor.",
+      "start_offset": 14565,
+      "end_offset": 14906
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 6,
+      "text": "Portfolio Employee Definition: For purposes of this section, a Portfolio Employee is any employee who has the authority to make investment decisions or direct trades on behalf of a client account/fund or any other employee who provides information or advice to such employee, helps execute such employee\u2019s decisions, or directly supervises such employee, each with respect to a client account/fund.",
+      "start_offset": 14907,
+      "end_offset": 15305
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 7,
+      "text": "Blackout Period Exemptions",
+      "start_offset": 15306,
+      "end_offset": 15332
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 8,
+      "text": "Blackout period restrictions do not a pply to the following transactions:",
+      "start_offset": 15333,
+      "end_offset": 15406
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 9,
+      "text": "Transactions not subject to pre-clearance as identified in Section 6; and/or",
+      "start_offset": 15407,
+      "end_offset": 15483
+    },
+    {
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "paragraph": 10,
+      "text": "Securities of a company included in the S&P 200, FTSE 100, S&P/TSX 60 or ASX 100.",
+      "start_offset": 15484,
+      "end_offset": 15565
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 1,
+      "text": "Ban on Short-Term Trading Profits",
+      "start_offset": 15566,
+      "end_offset": 15599
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 2,
+      "text": "You may not profit from the purchase then sale, or the sale then purchase, of the same security within a 60-calendar day period and are only permitted to trade on the 61st day 9 . The profit is calculated from the price differential between the trades, regardless in which account(s) the transactions took place:",
+      "start_offset": 15600,
+      "end_offset": 15912
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 3,
+      "text": "If selling, you are considered to profit from the sell if the sell price is higher than the price(s) at which it was bought within the last 60 calendar days;",
+      "start_offset": 15913,
+      "end_offset": 16070
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 4,
+      "text": "If buying, you are considered to profit from the buy if the purchase price is lower than the price(s) at which it was sold within the last 60 calendar days.",
+      "start_offset": 16071,
+      "end_offset": 16227
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 5,
+      "text": "This restriction does not app ly to the following transactions at the discretion of Legal & Compliance:",
+      "start_offset": 16228,
+      "end_offset": 16331
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 6,
+      "text": "Transactions not subject to pre-clearance as identified in Section 6",
+      "start_offset": 16332,
+      "end_offset": 16400
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 7,
+      "text": "Securities of a company included in the S&P 200, FTSE 100, S&P/TSX 60, or ASX 100;",
+      "start_offset": 16401,
+      "end_offset": 16483
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 8,
+      "text": "Short Term Trading profit requirement: The short-term trading profit requirement identifies a profit based on price per share from the purchase and sale, or sale and purchase of the same security traded within 60 calendar days, regardless of which account (s) the security was traded in. The policy does not consider the loss made on the accumulated position, even if the entire position is sold then subsequently, shares are bought back within 60 calendar days. Additionally, commission and other fees are not considered when determining profit/loss.",
+      "start_offset": 16484,
+      "end_offset": 17035
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 9,
+      "text": "Global Personal Trading Policy",
+      "start_offset": 17036,
+      "end_offset": 17066
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 10,
+      "text": "Permissible options on securities of a company included in the S&P 200, FTSE 100, S&P/TSX 60, or ASX 100;",
+      "start_offset": 17067,
+      "end_offset": 17172
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 11,
+      "text": "ETFs listed on Annex 1 ;",
+      "start_offset": 17173,
+      "end_offset": 17197
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 12,
+      "text": "Options on ETFs listed on Annex 1 (excludes Japan employees) ;",
+      "start_offset": 17198,
+      "end_offset": 17260
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 13,
+      "text": "Options on Indices consisting of 100 or more components; and/or",
+      "start_offset": 17261,
+      "end_offset": 17324
+    },
+    {
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "paragraph": 14,
+      "text": "Transactions in BlackRock, Inc. (BLK), BlackRock TCP Capital Corp (TCPC) and BlackRock Capital Investment Corporation (BKCC) during open window periods and with prior pre-clearance approval. (Note, day trading is not permitted in BLK, TCPC and BKCC).",
+      "start_offset": 17325,
+      "end_offset": 17575
+    },
+    {
+      "section_id": "12",
+      "section_title": "Private Investment Pre-Approval Process",
+      "paragraph": 1,
+      "text": "Private Investment Pre-Approval Process",
+      "start_offset": 17576,
+      "end_offset": 17615
+    },
+    {
+      "section_id": "12",
+      "section_title": "Private Investment Pre-Approval Process",
+      "paragraph": 2,
+      "text": "Private Investment Questionnaire : Private investments (including hedge funds, private equity funds, or private placements of securities) must be pre-approved by your line manager and Legal & Compliance. Please consult the Global Employee Private Investment Policy for details.",
+      "start_offset": 17616,
+      "end_offset": 17893
+    },
+    {
+      "section_id": "13",
+      "section_title": "Trading in BlackRock, Inc. (BLK)",
+      "paragraph": 1,
+      "text": "Trading in BlackRock, Inc. (BLK)",
+      "start_offset": 17894,
+      "end_offset": 17926
+    },
+    {
+      "section_id": "13",
+      "section_title": "Trading in BlackRock, Inc. (BLK)",
+      "paragraph": 2,
+      "text": "Trading Window: You may only transfer (resulting in change to beneficial ownership), gift, or trade (purchase, sell, or exercise employee stock options) BLK, TCPC and BKCC during open trading window periods. You will be notified of these window periods by an email notification sent by Legal & Compliance to all employees announcing the opening and closing date of the trading window.",
+      "start_offset": 17927,
+      "end_offset": 18311
+    },
+    {
+      "section_id": "13",
+      "section_title": "Trading in BlackRock, Inc. (BLK)",
+      "paragraph": 3,
+      "text": "Pre-Clearance of BLK, TCPC, BKCC is required: Even during open trading windows, you are required to pre-clear all of your transactions in BLK, TCPC and BKCC. This includes purchases, sales, stock option exercises and gifts.",
+      "start_offset": 18312,
+      "end_offset": 18535
+    },
+    {
+      "section_id": "13",
+      "section_title": "Trading in BlackRock, Inc. (BLK)",
+      "paragraph": 4,
+      "text": "Pre-Clearance of BlackRock\u2019s Employee Stock Purchase Plan (ESPP) Restricted Share Units (RSU) : You are required to pre-clear sales of BlackRock common stock from BlackRock\u2019s ESPP/vested RSU (purchases in the ESPP/vested RSU do not require pre-clearance).",
+      "start_offset": 18536,
+      "end_offset": 18791
+    },
+    {
+      "section_id": "13",
+      "section_title": "Trading in BlackRock, Inc. (BLK)",
+      "paragraph": 5,
+      "text": "Restrictions on Trading in BlackRock Securities: You may not:",
+      "start_offset": 18792,
+      "end_offset": 18853
+    },
+    {
+      "section_id": "13",
+      "section_title": "Trading in BlackRock, Inc. (BLK)",
+      "paragraph": 6,
+      "text": "Trade in options or warrants on BLK; TCPC and BKCC",
+      "start_offset": 18854,
+      "end_offset": 18904
+    },
+    {
+      "section_id": "13",
+      "section_title": "Trading in BlackRock, Inc. (BLK)",
+      "paragraph": 7,
+      "text": "Engage in any day trading (buying and selling the same security during one calendar day);",
+      "start_offset": 18905,
+      "end_offset": 18994
+    },
+    {
+      "section_id": "13",
+      "section_title": "Trading in BlackRock, Inc. (BLK)",
+      "paragraph": 8,
+      "text": "Engage in any short selling of BLK; TCPC and BKCC and/or",
+      "start_offset": 18995,
+      "end_offset": 19051
+    },
+    {
+      "section_id": "13",
+      "section_title": "Trading in BlackRock, Inc. (BLK)",
+      "paragraph": 9,
+      "text": "Purchase any single-stock futures contracts on BLK, TCPC and BKCC.",
+      "start_offset": 19052,
+      "end_offset": 19118
+    },
+    {
+      "section_id": "14",
+      "section_title": "Insider Trading",
+      "paragraph": 1,
+      "text": "Employee must comply with BlackRock\u2019s Global Insider Trading Policy at all times, including when conducting your personal trading. In addition, you must notify Legal & Compliance immediately if you receive, or expect to receive, material non-public information. Legal & Compliance will determine the restrictions, if any, that will apply to your communications and business activities while in possession of that information.",
+      "start_offset": 19119,
+      "end_offset": 19544
+    },
+    {
+      "section_id": "15",
+      "section_title": "Personal Trading Violations",
+      "paragraph": 1,
+      "text": "Personal Trading Violations",
+      "start_offset": 19545,
+      "end_offset": 19572
+    },
+    {
+      "section_id": "15",
+      "section_title": "Personal Trading Violations",
+      "paragraph": 2,
+      "text": "Employee personal trading is subject to monitoring by BlackRock. BlackRock will determine on a case by case basis what remedial action should be taken in response to any violation. This may include disgorgement of profits and/or limiting an employee\u2019s personal trading for some period. Violations of this policy, including but not limited to violations relating to trading activity and the obligation to provide information to BlackRock, may result in disciplinary action, up to and including termination.",
+      "start_offset": 19573,
+      "end_offset": 20078
+    },
+    {
+      "section_id": "15",
+      "section_title": "Personal Trading Violations",
+      "paragraph": 3,
+      "text": "Global Personal Trading Policy",
+      "start_offset": 20079,
+      "end_offset": 20109
+    },
+    {
+      "section_id": "16",
+      "section_title": "Annual Certification",
+      "paragraph": 1,
+      "text": "Annual Certification",
+      "start_offset": 20110,
+      "end_offset": 20130
+    },
+    {
+      "section_id": "16",
+      "section_title": "Annual Certification",
+      "paragraph": 2,
+      "text": "Employee must attest to the accuracy and completeness of all information(account details, security holdings, etc.) provided to BlackRock on an annual basis.",
+      "start_offset": 20131,
+      "end_offset": 20287
+    },
+    {
+      "section_id": "16",
+      "section_title": "Annual Certification",
+      "paragraph": 3,
+      "text": "For any questions or clarification of the policy, please reach out to your regional Core Compliance Team, Susan Seidel (Policy Owner) or refer to the FAQs by clicking here.",
+      "start_offset": 20288,
+      "end_offset": 20460
+    },
+    {
+      "section_id": "16",
+      "section_title": "Annual Certification",
+      "paragraph": 4,
+      "text": "APAC 34-3000 APACPTAHelp@blackrock.com",
+      "start_offset": 20461,
+      "end_offset": 20499
+    },
+    {
+      "section_id": "16",
+      "section_title": "Annual Certification",
+      "paragraph": 5,
+      "text": "EMEA 23-3332 EMEACompliancePersonalTrading@blackrock.com",
+      "start_offset": 20500,
+      "end_offset": 20556
+    },
+    {
+      "section_id": "16",
+      "section_title": "Annual Certification",
+      "paragraph": 6,
+      "text": "AMRS 10-3700 PTA-Help@blackrock.com",
+      "start_offset": 20557,
+      "end_offset": 20592
+    }
+  ]
+}

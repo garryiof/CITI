@@ -1,0 +1,162 @@
+[
+  {
+    "workflow_id": "PTP-POLICY",
+    "title": "Entire Personal Trading Policy",
+    "steps": 7,
+    "gateways": 1,
+    "confidence": 0.9,
+    "validation_errors": 0,
+    "json": "PTP-POLICY.json",
+    "bpmn": "PTP-POLICY.bpmn"
+  },
+  {
+    "workflow_id": "PTP-EXCEPTION",
+    "title": "Request Exception to This Policy",
+    "steps": 2,
+    "gateways": 0,
+    "confidence": 0.81,
+    "validation_errors": 0,
+    "json": "PTP-EXCEPTION.json",
+    "bpmn": "PTP-EXCEPTION.bpmn"
+  },
+  {
+    "workflow_id": "PTP-DISC",
+    "title": "Disclose Reportable Accounts",
+    "steps": 7,
+    "gateways": 1,
+    "confidence": 0.84,
+    "validation_errors": 0,
+    "json": "PTP-DISC.json",
+    "bpmn": "PTP-DISC.bpmn"
+  },
+  {
+    "workflow_id": "PTP-BROKER",
+    "title": "Maintain Accounts with Approved Brokers",
+    "steps": 8,
+    "gateways": 0,
+    "confidence": 0.85,
+    "validation_errors": 0,
+    "json": "PTP-BROKER.json",
+    "bpmn": "PTP-BROKER.bpmn"
+  },
+  {
+    "workflow_id": "PTP-PRECLEAR",
+    "title": "Obtain Pre-Clearance Before Trading",
+    "steps": 6,
+    "gateways": 1,
+    "confidence": 0.83,
+    "validation_errors": 0,
+    "json": "PTP-PRECLEAR.json",
+    "bpmn": "PTP-PRECLEAR.bpmn"
+  },
+  {
+    "workflow_id": "PTP-TXTYPE",
+    "title": "Apply Transaction-Type Pre-Clearance Rules",
+    "steps": 7,
+    "gateways": 0,
+    "confidence": 0.84,
+    "validation_errors": 0,
+    "json": "PTP-TXTYPE.json",
+    "bpmn": "PTP-TXTYPE.bpmn"
+  },
+  {
+    "workflow_id": "PTP-MANAGED",
+    "title": "Manage Exempt Managed Accounts",
+    "steps": 4,
+    "gateways": 0,
+    "confidence": 0.84,
+    "validation_errors": 0,
+    "json": "PTP-MANAGED.json",
+    "bpmn": "PTP-MANAGED.bpmn"
+  },
+  {
+    "workflow_id": "PTP-PROHIB",
+    "title": "Comply with Prohibited Investment Rules",
+    "steps": 1,
+    "gateways": 0,
+    "confidence": 0.88,
+    "validation_errors": 0,
+    "json": "PTP-PROHIB.json",
+    "bpmn": "PTP-PROHIB.bpmn"
+  },
+  {
+    "workflow_id": "PTP-BLACKOUT",
+    "title": "Observe Blackout Periods",
+    "steps": 3,
+    "gateways": 0,
+    "confidence": 0.87,
+    "validation_errors": 0,
+    "json": "PTP-BLACKOUT.json",
+    "bpmn": "PTP-BLACKOUT.bpmn"
+  },
+  {
+    "workflow_id": "PTP-SHORT",
+    "title": "Avoid Short-Term Trading Profits",
+    "steps": 1,
+    "gateways": 0,
+    "confidence": 0.87,
+    "validation_errors": 0,
+    "json": "PTP-SHORT.json",
+    "bpmn": "PTP-SHORT.bpmn"
+  },
+  {
+    "workflow_id": "PTP-PRIVATE",
+    "title": "Obtain Pre-Approval for Private Investments",
+    "steps": 2,
+    "gateways": 0,
+    "confidence": 0.81,
+    "validation_errors": 0,
+    "json": "PTP-PRIVATE.json",
+    "bpmn": "PTP-PRIVATE.bpmn"
+  },
+  {
+    "workflow_id": "PTP-BLK",
+    "title": "Trade BlackRock (BLK) Securities",
+    "steps": 6,
+    "gateways": 1,
+    "confidence": 0.84,
+    "validation_errors": 0,
+    "json": "PTP-BLK.json",
+    "bpmn": "PTP-BLK.bpmn"
+  },
+  {
+    "workflow_id": "PTP-INSIDER",
+    "title": "Prevent Insider Trading",
+    "steps": 1,
+    "gateways": 0,
+    "confidence": 0.87,
+    "validation_errors": 0,
+    "json": "PTP-INSIDER.json",
+    "bpmn": "PTP-INSIDER.bpmn"
+  },
+  {
+    "workflow_id": "PTP-VIOL",
+    "title": "Address Personal Trading Violations",
+    "steps": 1,
+    "gateways": 0,
+    "confidence": 0.75,
+    "validation_errors": 0,
+    "json": "PTP-VIOL.json",
+    "bpmn": "PTP-VIOL.bpmn"
+  },
+  {
+    "workflow_id": "PTP-CERT",
+    "title": "Complete Annual Certification",
+    "steps": 2,
+    "gateways": 1,
+    "confidence": 0.83,
+    "validation_errors": 0,
+    "json": "PTP-CERT.json",
+    "bpmn": "PTP-CERT.bpmn"
+  },
+  {
+    "workflow_id": "PTP-SEC-1",
+    "title": "Obligations in Section 1: Introduction",
+    "steps": 2,
+    "gateways": 0,
+    "confidence": 0.87,
+    "validation_errors": 0,
+    "json": "PTP-SEC-1.json",
+    "bpmn": "PTP-SEC-1.bpmn"
+  }
+]

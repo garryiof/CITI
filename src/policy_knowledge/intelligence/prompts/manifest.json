@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "aliases": {
+    "pass_a.md": "pass_a.system",
+    "pass_b.md": "pass_b.system",
+    "pass_c.md": "pass_c.system",
+    "pass_d.md": "pass_d.system",
+    "pass_e.md": "pass_e.system"
+  },
+  "prompts": {
+    "pass_a.system": {
+      "file": "extraction/pass_a.system.md",
+      "version": "1.0.0",
+      "required_vars": [],
+      "description": "Pass A system — source interpretation"
+    },
+    "pass_a.user": {
+      "file": "extraction/pass_a.user.md",
+      "version": "1.0.0",
+      "required_vars": ["source_blocks_payload"],
+      "description": "Pass A user — source blocks payload"
+    },
+    "pass_b.system": {
+      "file": "extraction/pass_b.system.md",
+      "version": "1.0.0",
+      "required_vars": [],
+      "description": "Pass B system — process candidates"
+    },
+    "pass_b.user": {
+      "file": "extraction/pass_b.user.md",
+      "version": "1.0.0",
+      "required_vars": ["source_blocks_payload"],
+      "description": "Pass B user — source blocks payload"
+    },
+    "pass_c.system": {
+      "file": "extraction/pass_c.system.md",
+      "version": "1.0.0",
+      "required_vars": [],
+      "description": "Pass C system — governance mapping"
+    },
+    "pass_c.user": {
+      "file": "extraction/pass_c.user.md",
+      "version": "1.0.0",
+      "required_vars": ["source_blocks_payload"],
+      "description": "Pass C user — source blocks payload"
+    },
+    "pass_d.system": {
+      "file": "extraction/pass_d.system.md",
+      "version": "1.0.0",
+      "required_vars": [],
+      "description": "Pass D system — relationships"
+    },
+    "pass_d.user": {
+      "file": "extraction/pass_d.user.md",
+      "version": "1.0.0",
+      "required_vars": ["source_blocks_payload"],
+      "description": "Pass D user — source blocks payload"
+    },
+    "pass_e.system": {
+      "file": "extraction/pass_e.system.md",
+      "version": "1.0.0",
+      "required_vars": [],
+      "description": "Pass E system — QA findings"
+    },
+    "pass_e.user": {
+      "file": "extraction/pass_e.user.md",
+      "version": "1.0.0",
+      "required_vars": ["source_blocks_payload"],
+      "description": "Pass E user — source blocks payload"
+    },
+    "schema_json_object": {
+      "file": "_shared/schema_json_object.md",
+      "version": "1.0.0",
+      "required_vars": ["schema_json"],
+      "description": "Structured-output schema hint wrapper"
+    },
+    "role_relevance.system": {
+      "file": "role_relevance/role_relevance.system.md",
+      "version": "1.0.0",
+      "required_vars": [],
+      "description": "Pass F system — three-role intelligence"
+    },
+    "role_relevance.user": {
+      "file": "role_relevance/role_relevance.user.md",
+      "version": "1.0.0",
+      "required_vars": ["policy_id", "policy_title", "canonical_json"],
+      "description": "Pass F user — canonical artifacts"
+    }
+  }
+}

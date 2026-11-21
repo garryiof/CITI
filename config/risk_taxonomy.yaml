@@ -1,0 +1,11 @@
+version: "0.1"
+risks:
+  - id: RISK_OPERATIONAL
+    label: Operational Risk
+    aliases: [ops risk, operational]
+  - id: RISK_COMPLIANCE
+    label: Compliance Risk
+    aliases: [regulatory, compliance]
+  - id: RISK_CONDUCT
+    label: Conduct Risk
+    aliases: [conduct, behavioral]

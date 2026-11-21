@@ -1,0 +1,351 @@
+{
+  "workflow_id": "PTP-TXTYPE",
+  "workflow_title": "Apply Transaction-Type Pre-Clearance Rules",
+  "workflow_summary": "Employee follows pre-clearance rules by transaction type.",
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html"
+  },
+  "source_references": [
+    {
+      "reference_id": "REF-001",
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "page": null,
+      "paragraph": 5,
+      "anchor": "policy-6-5",
+      "source_html": "policy_source.html",
+      "quoted_text": "1) Taiwan SITE BlackRock funds must be pre-cleared.",
+      "start_offset": 8242,
+      "end_offset": 8293
+    },
+    {
+      "reference_id": "REF-002",
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "page": null,
+      "paragraph": 9,
+      "anchor": "policy-6-9",
+      "source_html": "policy_source.html",
+      "quoted_text": "Investment Trusts must be pre-cleared.",
+      "start_offset": 8485,
+      "end_offset": 8523
+    },
+    {
+      "reference_id": "REF-003",
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "page": null,
+      "paragraph": 10,
+      "anchor": "policy-6-10",
+      "source_html": "policy_source.html",
+      "quoted_text": "Purchases of common stock under an Employee Stock Purchase Plan/vested Restricted Shares Units (however, sales of the same must be pre-cleared );",
+      "start_offset": 8524,
+      "end_offset": 8669
+    },
+    {
+      "reference_id": "REF-004",
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "page": null,
+      "paragraph": 14,
+      "anchor": "policy-6-14",
+      "source_html": "policy_source.html",
+      "quoted_text": "Securities acquired by an exercise of rights to the holders of a class of securities (however, sales of the same must be pre-cle ared);",
+      "start_offset": 8878,
+      "end_offset": 9013
+    },
+    {
+      "reference_id": "REF-005",
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "page": null,
+      "paragraph": 16,
+      "anchor": "policy-6-16",
+      "source_html": "policy_source.html",
+      "quoted_text": "Conversion of employee stock options (however, sales of the same must be p re-cle ared);",
+      "start_offset": 9078,
+      "end_offset": 9166
+    },
+    {
+      "reference_id": "REF-006",
+      "section_id": "6",
+      "section_title": "Transactions Type and Preclearance Requirements",
+      "page": null,
+      "paragraph": 23,
+      "anchor": "policy-6-23",
+      "source_html": "policy_source.html",
+      "quoted_text": "Any changes to the terms of such Monthly Investment Plan (MIP)/Systematic Investment Plan (SIP)including but not limited to, underlying security, amount or quantity that is traded or frequency must be notified to Compliance and precleared.",
+      "start_offset": 9992,
+      "end_offset": 10231
+    }
+  ],
+  "trigger": {
+    "type": "USER_INTENT",
+    "description": "Employee initiates activity under section 6."
+  },
+  "actors": [
+    {
+      "actor_id": "ACT-EMPLOYEE",
+      "name": "Employee",
+      "actor_type": "INDIVIDUAL",
+      "bpmn_lane": "Employee"
+    },
+    {
+      "actor_id": "ACT-COMPLIANCE",
+      "name": "Legal & Compliance",
+      "actor_type": "BUSINESS_FUNCTION",
+      "bpmn_lane": "Compliance"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-001",
+      "sequence": 1,
+      "title": "Identify intended activity",
+      "description": "The employee identifies the personal-trading activity that may be subject to this section.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "INFERRED",
+      "inference_reason": "Connective step required to start a readable process from a user-intent trigger; not an additional policy obligation.",
+      "confidence": 0.75,
+      "next_step_ids": [
+        "STEP-002"
+      ],
+      "preconditions": [],
+      "outputs": [
+        "intended_activity"
+      ],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-6.5-001-A001"
+    },
+    {
+      "step_id": "STEP-002",
+      "sequence": 2,
+      "title": "Submit required information",
+      "description": "1) Taiwan SITE BlackRock funds must be pre-cleared.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "SUBMISSION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.84,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.7,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-003"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-6.5-002-A002"
+    },
+    {
+      "step_id": "STEP-003",
+      "sequence": 3,
+      "title": "Submit required information",
+      "description": "Investment Trusts must be pre-cleared.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "SUBMISSION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-002"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.84,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.7,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-004"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-6.9-003-A003"
+    },
+    {
+      "step_id": "STEP-004",
+      "sequence": 4,
+      "title": "Submit required information",
+      "description": "Purchases of common stock under an Employee Stock Purchase Plan/vested Restricted Shares Units (however, sales of the same must be pre-cleared );",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "SUBMISSION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-003"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-005"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-6.10-004-A004"
+    },
+    {
+      "step_id": "STEP-005",
+      "sequence": 5,
+      "title": "Perform required action",
+      "description": "Securities acquired by an exercise of rights to the holders of a class of securities (however, sales of the same must be pre-cle ared);",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-004"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.84,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.7,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-006"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-6.14-005-A005"
+    },
+    {
+      "step_id": "STEP-006",
+      "sequence": 6,
+      "title": "Perform required action",
+      "description": "Conversion of employee stock options (however, sales of the same must be p re-cle ared);",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-005"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-007"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-6.16-006-A006"
+    },
+    {
+      "step_id": "STEP-007",
+      "sequence": 7,
+      "title": "Submit required information",
+      "description": "Any changes to the terms of such Monthly Investment Plan (MIP)/Systematic Investment Plan (SIP)including but not limited to, underlying security, amount or quantity that is traded or frequency must be notified to Compliance and precleared.",
+      "actor_id": "ACT-COMPLIANCE",
+      "action_type": "SUBMISSION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-006"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "END-001"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-6.23-007-A007"
+    }
+  ],
+  "gateways": [],
+  "events": [
+    {
+      "event_id": "START-001",
+      "event_type": "startEvent",
+      "title": "Employee initiates activity under section 6.",
+      "next_step_id": "STEP-001",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-6.5-001-E001"
+    },
+    {
+      "event_id": "END-001",
+      "event_type": "endEvent",
+      "title": "Process completed",
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-6-009-E002"
+    }
+  ],
+  "conditions": [],
+  "exceptions": [],
+  "deadlines": [],
+  "records": [],
+  "controls": [],
+  "ambiguities": [],
+  "overall_confidence": 0.84,
+  "review_status": "PENDING",
+  "section_id": "6",
+  "section_title": "Transactions Type and Preclearance Requirements"
+}

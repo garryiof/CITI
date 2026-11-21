@@ -1,0 +1,136 @@
+{
+  "workflow_id": "PTP-EXCEPTION",
+  "workflow_title": "Request Exception to This Policy",
+  "workflow_summary": "Any exception to this policy must be pre-approved by Legal & Compliance.",
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html"
+  },
+  "source_references": [
+    {
+      "reference_id": "REF-001",
+      "section_id": "2",
+      "section_title": "Scope",
+      "page": null,
+      "paragraph": 2,
+      "anchor": "policy-2-2",
+      "source_html": "policy_source.html",
+      "quoted_text": "Any exceptions to this policy must be pre-approved by Legal & Compliance.",
+      "start_offset": 1395,
+      "end_offset": 1468
+    }
+  ],
+  "trigger": {
+    "type": "USER_INTENT",
+    "description": "Employee requests an exception to the policy."
+  },
+  "actors": [
+    {
+      "actor_id": "ACT-EMPLOYEE",
+      "name": "Employee",
+      "actor_type": "INDIVIDUAL",
+      "bpmn_lane": "Employee"
+    },
+    {
+      "actor_id": "ACT-COMPLIANCE",
+      "name": "Legal & Compliance",
+      "actor_type": "BUSINESS_FUNCTION",
+      "bpmn_lane": "Compliance"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-001",
+      "sequence": 1,
+      "title": "Identify intended activity",
+      "description": "The employee identifies the personal-trading activity that may be subject to this section.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "INFERRED",
+      "inference_reason": "Connective step required to start a readable process from a user-intent trigger; not an additional policy obligation.",
+      "confidence": 0.75,
+      "next_step_ids": [
+        "STEP-002"
+      ],
+      "preconditions": [],
+      "outputs": [
+        "intended_activity"
+      ],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-2.2-001-A001"
+    },
+    {
+      "step_id": "STEP-002",
+      "sequence": 2,
+      "title": "Obtain pre-approval",
+      "description": "Any exceptions to this policy must be pre-approved by Legal & Compliance.",
+      "actor_id": "ACT-COMPLIANCE",
+      "action_type": "APPROVAL",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "END-001"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-2.2-002-A002"
+    }
+  ],
+  "gateways": [],
+  "events": [
+    {
+      "event_id": "START-001",
+      "event_type": "startEvent",
+      "title": "Employee requests an exception to the policy.",
+      "next_step_id": "STEP-001",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-2.2-001-E001"
+    },
+    {
+      "event_id": "END-001",
+      "event_type": "endEvent",
+      "title": "Process completed",
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-2-004-E002"
+    }
+  ],
+  "conditions": [],
+  "exceptions": [],
+  "deadlines": [],
+  "records": [],
+  "controls": [],
+  "ambiguities": [],
+  "overall_confidence": 0.81,
+  "review_status": "PENDING",
+  "section_id": "2",
+  "section_title": "Scope"
+}

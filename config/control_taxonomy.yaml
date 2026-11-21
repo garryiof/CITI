@@ -1,0 +1,11 @@
+version: "0.1"
+controls:
+  - id: CTL_PREVENTIVE
+    label: Preventive Control
+    aliases: [preventive, detective-preventive]
+  - id: CTL_DETECTIVE
+    label: Detective Control
+    aliases: [detective, monitoring]
+  - id: CTL_CORRECTIVE
+    label: Corrective Control
+    aliases: [corrective, remediation]

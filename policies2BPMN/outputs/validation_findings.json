@@ -1,0 +1,17 @@
+{
+  "PTP-EXCEPTION": [],
+  "PTP-DISC": [],
+  "PTP-BROKER": [],
+  "PTP-PRECLEAR": [],
+  "PTP-TXTYPE": [],
+  "PTP-MANAGED": [],
+  "PTP-PROHIB": [],
+  "PTP-BLACKOUT": [],
+  "PTP-SHORT": [],
+  "PTP-PRIVATE": [],
+  "PTP-BLK": [],
+  "PTP-INSIDER": [],
+  "PTP-VIOL": [],
+  "PTP-CERT": [],
+  "PTP-SEC-1": []
+}

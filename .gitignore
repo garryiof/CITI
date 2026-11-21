@@ -1,0 +1,53 @@
+# Runs and secrets
+policy_runs/
+.env
+.env.*
+!.env.example
+
+# Local policy files (keep README only)
+policies/*
+!policies/README.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Generated offline policies2BPMN-style pack (rebuild from notebook)
+notebooks/offline_p2b/
+notebooks/offline_p2b_OFFLINE_DEMO.zip
+notebooks/**/*_FULL.zip
+notebooks/**/*_DEMO.zip
+*.zip
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.cursor/
+
+# Superpowers scratch (also self-ignored)
+.superpowers/
+
+# Vite viewer deps/build (npm install in policies2BPMN/viewer when rebuilding bpmn-js vendor)
+policies2BPMN/viewer/node_modules/
+policies2BPMN/viewer/dist/
+policies2BPMN/viewer/*.tsbuildinfo
+
+# Stray / local-only
+policies2BPMN/Untitled

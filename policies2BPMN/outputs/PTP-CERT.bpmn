@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:policy="http://policies2bpmn.local/policy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Defs_PTP-CERT" targetNamespace="http://policies2bpmn.local/workflows" xsi:schemaLocation="">
+  <collaboration id="Collab_PTP-CERT">
+    <participant id="Participant_PTP-CERT" name="Global Personal Trading Policy" processRef="Process_PTP-CERT"/>
+  </collaboration>
+  <process id="Process_PTP-CERT" name="Complete Annual Certification" isExecutable="false">
+    <laneSet id="LaneSet_PTP-CERT">
+      <lane id="Lane_ACT-EMPLOYEE" name="Employee">
+        <flowNodeRef>STEP-001</flowNodeRef>
+        <flowNodeRef>GATEWAY-001</flowNodeRef>
+        <flowNodeRef>END-APPROVED</flowNodeRef>
+        <flowNodeRef>END-REJECTED</flowNodeRef>
+      </lane>
+      <lane id="Lane_ACT-COMPLIANCE" name="Compliance">
+        <flowNodeRef>START-001</flowNodeRef>
+        <flowNodeRef>STEP-002</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="START-001" name="Annual certification period begins.">
+      <extensionElements>
+        <policy:sourceReference sectionId="16" referenceId="REF-001" confidence="0.83" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </startEvent>
+    <userTask id="STEP-002" name="Review pre-clearance request">
+      <extensionElements>
+        <policy:sourceReference sectionId="16" referenceId="REF-001" confidence="0.8" extractionType="INFERRED"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="STEP-001" name="Attest to the accuracy and completeness of all…">
+      <extensionElements>
+        <policy:sourceReference sectionId="16" referenceId="REF-001" confidence="0.87" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="GATEWAY-001" name="Was the request approved?"/>
+    <endEvent id="END-APPROVED" name="Activity may proceed under approval"/>
+    <endEvent id="END-REJECTED" name="Activity must not proceed"/>
+    <sequenceFlow id="Flow_001" sourceRef="START-001" targetRef="STEP-002"/>
+    <sequenceFlow id="Flow_002" sourceRef="STEP-002" targetRef="STEP-001"/>
+    <sequenceFlow id="Flow_003" sourceRef="STEP-001" targetRef="GATEWAY-001"/>
+    <sequenceFlow id="Flow_004" sourceRef="GATEWAY-001" targetRef="END-APPROVED" name="Approved"/>
+    <sequenceFlow id="Flow_005" sourceRef="GATEWAY-001" targetRef="END-REJECTED" name="Rejected"/>
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_PTP-CERT">
+    <bpmndi:BPMNPlane id="Plane_PTP-CERT" bpmnElement="Process_PTP-CERT">
+      <bpmndi:BPMNShape id="Shape_START-001" bpmnElement="START-001">
+        <dc:Bounds x="117.0" y="262.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_STEP-002" bpmnElement="STEP-002">
+        <dc:Bounds x="270.0" y="240.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_STEP-001" bpmnElement="STEP-001">
+        <dc:Bounds x="470.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_GATEWAY-001" bpmnElement="GATEWAY-001">
+        <dc:Bounds x="710.0" y="85.0" width="50.0" height="50.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_END-APPROVED" bpmnElement="END-APPROVED" bioc:stroke="#2F7D4F" bioc:fill="#E4F2E9">
+        <dc:Bounds x="917.0" y="92.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_END-REJECTED" bpmnElement="END-REJECTED" bioc:stroke="#B3402E" bioc:fill="#F8E3DD">
+        <dc:Bounds x="917.0" y="197.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_001" bpmnElement="Flow_001">
+        <di:waypoint x="153.0" y="280.0"/>
+        <di:waypoint x="270.0" y="280.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_002" bpmnElement="Flow_002">
+        <di:waypoint x="400.0" y="280.0"/>
+        <di:waypoint x="435.0" y="280.0"/>
+        <di:waypoint x="435.0" y="110.0"/>
+        <di:waypoint x="470.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_003" bpmnElement="Flow_003">
+        <di:waypoint x="600.0" y="110.0"/>
+        <di:waypoint x="710.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_004" bpmnElement="Flow_004" bioc:stroke="#2F7D4F">
+        <di:waypoint x="760.0" y="110.0"/>
+        <di:waypoint x="917.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_005" bpmnElement="Flow_005" bioc:stroke="#B3402E">
+        <di:waypoint x="760.0" y="110.0"/>
+        <di:waypoint x="838.5" y="110.0"/>
+        <di:waypoint x="838.5" y="215.0"/>
+        <di:waypoint x="917.0" y="215.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

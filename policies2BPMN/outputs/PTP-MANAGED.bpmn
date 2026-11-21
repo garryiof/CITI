@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:policy="http://policies2bpmn.local/policy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Defs_PTP-MANAGED" targetNamespace="http://policies2bpmn.local/workflows" xsi:schemaLocation="">
+  <collaboration id="Collab_PTP-MANAGED">
+    <participant id="Participant_PTP-MANAGED" name="Global Personal Trading Policy" processRef="Process_PTP-MANAGED"/>
+  </collaboration>
+  <process id="Process_PTP-MANAGED" name="Manage Exempt Managed Accounts" isExecutable="false">
+    <laneSet id="LaneSet_PTP-MANAGED">
+      <lane id="Lane_ACT-EMPLOYEE" name="Employee">
+        <flowNodeRef>START-001</flowNodeRef>
+        <flowNodeRef>STEP-001</flowNodeRef>
+        <flowNodeRef>STEP-002</flowNodeRef>
+        <flowNodeRef>STEP-004</flowNodeRef>
+        <flowNodeRef>END-001</flowNodeRef>
+      </lane>
+      <lane id="Lane_ACT-COMPLIANCE" name="Compliance">
+        <flowNodeRef>STEP-003</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="START-001" name="Employee initiates activity under section 7.">
+      <extensionElements>
+        <policy:sourceReference sectionId="7" referenceId="REF-001" confidence="0.84" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </startEvent>
+    <userTask id="STEP-001" name="Identify intended activity">
+      <extensionElements>
+        <policy:sourceReference sectionId="7" referenceId="REF-001" confidence="0.75" extractionType="INFERRED"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="STEP-002" name="Disclose discretionary managed accounts">
+      <extensionElements>
+        <policy:sourceReference sectionId="7" referenceId="REF-001" confidence="0.87" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="STEP-003" name="Perform required action">
+      <extensionElements>
+        <policy:sourceReference sectionId="7" referenceId="REF-002" confidence="0.87" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <intermediateCatchEvent id="STEP-004" name="Meet deadline">
+      <timerEventDefinition id="Timer_STEP-004"/>
+      <extensionElements>
+        <policy:sourceReference sectionId="7" referenceId="REF-003" confidence="0.87" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </intermediateCatchEvent>
+    <endEvent id="END-001" name="Process completed"/>
+    <sequenceFlow id="Flow_001" sourceRef="START-001" targetRef="STEP-001"/>
+    <sequenceFlow id="Flow_002" sourceRef="STEP-001" targetRef="STEP-002"/>
+    <sequenceFlow id="Flow_003" sourceRef="STEP-002" targetRef="STEP-003"/>
+    <sequenceFlow id="Flow_004" sourceRef="STEP-003" targetRef="STEP-004"/>
+    <sequenceFlow id="Flow_005" sourceRef="STEP-004" targetRef="END-001"/>
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_PTP-MANAGED">
+    <bpmndi:BPMNPlane id="Plane_PTP-MANAGED" bpmnElement="Process_PTP-MANAGED">
+      <bpmndi:BPMNShape id="Shape_START-001" bpmnElement="START-001">
+        <dc:Bounds x="117.0" y="92.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_STEP-001" bpmnElement="STEP-001">
+        <dc:Bounds x="270.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_STEP-002" bpmnElement="STEP-002">
+        <dc:Bounds x="470.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_STEP-003" bpmnElement="STEP-003">
+        <dc:Bounds x="670.0" y="240.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_STEP-004" bpmnElement="STEP-004">
+        <dc:Bounds x="870.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_END-001" bpmnElement="END-001">
+        <dc:Bounds x="1117.0" y="92.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_001" bpmnElement="Flow_001">
+        <di:waypoint x="153.0" y="110.0"/>
+        <di:waypoint x="270.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_002" bpmnElement="Flow_002">
+        <di:waypoint x="400.0" y="110.0"/>
+        <di:waypoint x="470.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_003" bpmnElement="Flow_003">
+        <di:waypoint x="600.0" y="110.0"/>
+        <di:waypoint x="635.0" y="110.0"/>
+        <di:waypoint x="635.0" y="280.0"/>
+        <di:waypoint x="670.0" y="280.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_004" bpmnElement="Flow_004">
+        <di:waypoint x="800.0" y="280.0"/>
+        <di:waypoint x="835.0" y="280.0"/>
+        <di:waypoint x="835.0" y="110.0"/>
+        <di:waypoint x="870.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_005" bpmnElement="Flow_005">
+        <di:waypoint x="1000.0" y="110.0"/>
+        <di:waypoint x="1117.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

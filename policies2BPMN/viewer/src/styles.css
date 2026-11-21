@@ -1,0 +1,2072 @@
+/* ==========================================================================
+   LAYOUT & STRUCTURE — policies2BPMN viewer
+   ==========================================================================
+   All colors and font sizes come from theme.css (CSS variables).
+   Edit theme.css to restyle the app; edit this file for layout only.
+   ========================================================================== */
+
+/* Root element: base typography for the whole app */
+:root {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-app-bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+/* Global box model reset */
+* {
+  box-sizing: border-box;
+}
+
+/* Full-viewport shell without page scrollbars */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* Scroll horizontally instead of clipping when the window is narrower
+   than the three panels' combined minimum width. */
+body {
+  overflow-x: auto;
+}
+
+/* React mount point: enforces the minimum workspace width */
+#root {
+  min-width: 1190px;
+  height: 100%;
+}
+
+/* Form controls inherit the app font */
+button,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+/* Application shell: top bar row + workspace row, subtle vertical grid */
+.app-shell {
+  display: grid;
+  grid-template-rows: 74px minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(90deg, rgb(23 33 31 / 2%) 1px, transparent 1px) 0 0 / 28px 28px,
+    var(--color-app-bg);
+}
+
+/* Top bar: brand on the left, workspace status on the right */
+.topbar {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 26px;
+  color: var(--color-topbar-text);
+  background: var(--color-ink);
+  border-bottom: 3px solid var(--color-accent);
+}
+
+/* Shared horizontal flex rows */
+.brand,
+.header-status,
+.rail-heading,
+.diagram-heading,
+.diagram-actions,
+.id-row,
+.source-title,
+.source-meta,
+.diagram-footer > div {
+  display: flex;
+  align-items: center;
+}
+
+/* Brand block: logo mark + product name */
+.brand {
+  gap: 15px;
+}
+
+/* Decorative three-bar logo mark */
+.brand-mark {
+  display: flex;
+  align-items: end;
+  gap: 3px;
+  width: 31px;
+  height: 31px;
+  padding: 6px;
+  border: 1px solid rgb(255 255 255 / 35%);
+}
+
+.brand-mark span {
+  display: block;
+  width: 4px;
+  background: var(--color-topbar-text);
+}
+
+.brand-mark span:nth-child(1) {
+  height: 8px;
+}
+
+.brand-mark span:nth-child(2) {
+  height: 17px;
+  background: var(--color-brand-bar);
+}
+
+.brand-mark span:nth-child(3) {
+  height: 12px;
+}
+
+/* Small uppercase kicker labels above headings */
+.eyebrow,
+.section-kicker {
+  margin: 0 0 3px;
+  font: 500 var(--fs-tiny)/1.2 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  color: var(--color-topbar-muted);
+}
+
+/* Product name */
+.brand h1 {
+  margin: 0;
+  font: 600 var(--fs-brand)/1.1 var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+/* Right side of the top bar: local workspace status */
+.header-status {
+  gap: 9px;
+  font: 500 var(--fs-body) var(--font-mono);
+  color: var(--color-topbar-status);
+}
+
+/* Role selector: Viewer vs Policy owner (controls who can approve) */
+.role-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 var(--fs-tiny) var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-topbar-muted);
+}
+
+.role-switch select {
+  height: 28px;
+  padding: 0 8px;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: 1px solid var(--color-line-dark);
+  font: 500 var(--fs-tiny) var(--font-mono);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+/* Native option list: force dark text on a light surface for every role */
+.role-switch select option {
+  color: var(--color-ink);
+  background: var(--color-paper);
+}
+
+.role-switch select:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Green "online" dot */
+.status-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--color-status-dot);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgb(121 169 145 / 13%);
+}
+
+/* Thin vertical divider inside the status row */
+.separator {
+  width: 1px;
+  height: 13px;
+  margin: 0 4px;
+  background: var(--color-topbar-separator);
+}
+
+/* Workspace: three columns — workflow rail | diagram | detail panel */
+.workspace {
+  display: grid;
+  grid-template-columns: 272px minmax(520px, 1fr) 334px;
+  min-height: 0;
+  margin: 14px;
+  background: var(--color-paper);
+  border: 1px solid var(--color-line-dark);
+  box-shadow: var(--shadow-workspace);
+}
+
+/* Detail panel collapsed to a slim rail */
+.workspace.detail-collapsed {
+  grid-template-columns: 272px minmax(520px, 1fr) 44px;
+}
+
+.workflow-rail,
+.detail-panel,
+.diagram-panel {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Left rail: list of extracted workflows */
+.workflow-rail {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-line);
+  background: var(--color-panel-bg);
+}
+
+/* Rail header: kicker + "Workflows" + count badge */
+.rail-heading {
+  justify-content: space-between;
+  padding: 22px 20px 16px;
+}
+
+.section-kicker {
+  color: var(--color-label);
+}
+
+/* Panel headings */
+.rail-heading h2,
+.detail-heading h2 {
+  margin: 0;
+  font: 600 var(--fs-panel-title)/1.1 var(--font-display);
+}
+
+/* Workflow count badge */
+.count-badge {
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 24px;
+  padding: 0 7px;
+  font: 500 var(--fs-small) var(--font-mono);
+  color: var(--color-topbar-text);
+  background: var(--color-ink);
+}
+
+/* Workflow search field */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  margin: 0 14px 12px;
+  padding: 0 11px;
+  color: var(--color-search-text);
+  background: var(--color-search-bg);
+  border: 1px solid var(--color-line);
+}
+
+.search-box:focus-within {
+  color: var(--color-ink);
+  border-color: var(--color-search-focus);
+  box-shadow: 0 0 0 2px rgb(23 33 31 / 7%);
+}
+
+.search-box input {
+  width: 100%;
+  color: var(--color-ink);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-size: var(--fs-text);
+}
+
+/* Scrollable workflow list */
+.workflow-list {
+  overflow-y: auto;
+  padding: 0 8px 18px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent;
+}
+
+/* One workflow row: number | title + meta | chevron */
+.workflow-item {
+  display: grid;
+  grid-template-columns: 27px minmax(0, 1fr) 15px;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 10px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-list-divider);
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.workflow-item:hover {
+  background: var(--color-list-hover);
+}
+
+/* Currently selected workflow */
+.workflow-item.active {
+  color: #fff;
+  background: var(--color-ink);
+  border-bottom-color: var(--color-ink);
+}
+
+.workflow-item.active:hover {
+  transform: translateX(2px);
+}
+
+/* Two-digit index in the row */
+.workflow-number {
+  align-self: start;
+  padding-top: 2px;
+  font: 500 var(--fs-tiny) var(--font-mono);
+  color: var(--color-list-number);
+}
+
+.workflow-item.active .workflow-number {
+  color: var(--color-list-number-active);
+}
+
+.workflow-copy {
+  min-width: 0;
+}
+
+/* Workflow title in the list */
+.workflow-copy strong {
+  display: block;
+  overflow: hidden;
+  margin-bottom: 6px;
+  font-size: var(--fs-text);
+  line-height: 1.3;
+  text-overflow: ellipsis;
+}
+
+/* Workflow meta: action count and confidence */
+.workflow-copy small {
+  font: 400 var(--fs-tiny) var(--font-mono);
+  color: var(--color-list-meta);
+}
+
+.workflow-item.active small {
+  color: var(--color-list-meta-active);
+}
+
+/* Center column: header, overview bar, stage, dirty bar, footer */
+.diagram-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--color-canvas);
+}
+
+/* Diagram header: workflow title + zoom/export actions */
+.diagram-heading {
+  position: relative;
+  flex-shrink: 0;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 114px;
+  padding: 19px 22px 16px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* Confirmation after Save BPMN / Save JSON writes to outputs/ */
+.save-notice {
+  position: absolute;
+  right: 22px;
+  bottom: 6px;
+  margin: 0;
+  color: var(--color-verbatim-text);
+  font: 500 var(--fs-tiny) var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.diagram-title {
+  min-width: 0;
+}
+
+/* Workflow ID and review-status pill row */
+.id-row {
+  gap: 8px;
+  margin-bottom: 5px;
+  font: 500 var(--fs-tiny) var(--font-mono);
+  color: var(--color-label);
+  letter-spacing: 0.08em;
+}
+
+.review-pill {
+  padding: 3px 6px 2px;
+  color: var(--color-badge-text);
+  background: var(--color-accent-soft);
+  font: 500 var(--fs-tiny) var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Approved review status — green */
+.review-pill.status-approved {
+  color: var(--color-verbatim-text);
+  background: var(--color-green-soft);
+}
+
+/* Policy owner can change status via this select */
+.review-pill.editable {
+  height: 22px;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  appearance: auto;
+}
+
+.review-pill.editable.status-pending {
+  border-color: #e0b8a9;
+}
+
+.review-pill.editable.status-approved {
+  border-color: #a9c4b8;
+}
+
+.review-status-control {
+  display: inline-flex;
+}
+
+/* Workflow title above the diagram */
+.diagram-title h2 {
+  overflow: hidden;
+  margin: 0 0 5px;
+  font: 600 var(--fs-diagram-title)/1.15 var(--font-display);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* One-line workflow summary */
+.diagram-title p {
+  overflow: hidden;
+  max-width: 680px;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--fs-body);
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.diagram-actions {
+  flex-shrink: 0;
+  gap: 7px;
+}
+
+/* Grouped buttons: legend info, zoom out, zoom in, fit, reset */
+.zoom-group {
+  display: flex;
+  border: 1px solid var(--color-line);
+}
+
+.zoom-group button,
+.export-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  background: var(--color-button-bg);
+  border: 0;
+  cursor: pointer;
+}
+
+.zoom-group button {
+  width: 34px;
+  border-right: 1px solid var(--color-line);
+}
+
+.zoom-group button:last-child {
+  border-right: 0;
+}
+
+.zoom-group button:hover,
+.export-button:hover {
+  background: var(--color-button-hover);
+}
+
+/* Legend info button while the explainer panel is open */
+.zoom-group button.active {
+  color: var(--color-topbar-text);
+  background: var(--color-ink);
+}
+
+/* BPMN / JSON download buttons */
+.export-button {
+  gap: 6px;
+  padding: 0 10px;
+  font: 500 var(--fs-tiny) var(--font-mono);
+  border: 1px solid var(--color-line);
+}
+
+.export-button:disabled {
+  cursor: wait;
+  opacity: 0.45;
+}
+
+/* Diagram stage: dotted canvas hosting the bpmn-js viewer — fills all remaining flex space */
+.diagram-stage {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle, var(--color-stage-dots) 0.7px, transparent 0.8px) 0 0 / 18px 18px,
+    var(--color-stage-bg);
+}
+
+.bpmn-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Centered loading / error message on the stage */
+.stage-state {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 15px;
+  color: var(--color-legend-text);
+  background: rgb(249 248 242 / 92%);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 8px 26px rgb(23 33 31 / 10%);
+  transform: translate(-50%, -50%);
+  font: 500 var(--fs-small) var(--font-mono);
+}
+
+.stage-state.error {
+  max-width: 400px;
+  color: var(--color-rejected);
+  background: var(--color-rejected-fill);
+  border-color: var(--color-badge-border);
+}
+
+/* Spinner animation on the loading icon */
+.spin {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Bar below the stage: shown only while a layout edit is pending */
+.stage-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  min-height: 34px;
+  padding: 0 14px;
+  background: var(--color-panel-bg);
+  border-top: 1px solid var(--color-line);
+}
+
+/* Compact legend row under the diagram */
+.canvas-legend {
+  display: flex;
+  gap: 14px;
+  color: var(--color-legend-text);
+  font: 500 var(--fs-micro) var(--font-mono);
+  text-transform: uppercase;
+}
+
+.canvas-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Legend swatch: policy-explicit (solid ink outline) */
+.canvas-legend i {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--color-ink);
+}
+
+/* Legend swatch: inferred connector (purple, dashed) */
+.canvas-legend .legend-inferred {
+  background: var(--color-inferred-fill);
+  border: 1.5px dashed var(--color-inferred);
+}
+
+/* Legend swatch: approved path (green) */
+.canvas-legend .legend-approved {
+  background: var(--color-approved-fill);
+  border-color: var(--color-approved);
+}
+
+/* Legend swatch: rejected path (red) */
+.canvas-legend .legend-rejected {
+  background: var(--color-rejected-fill);
+  border-color: var(--color-rejected);
+}
+
+/* "Drag elements to rearrange" hint at the end of the legend */
+.legend-hint {
+  padding-left: 12px;
+  color: var(--color-legend-hint);
+  border-left: 1px solid var(--color-line);
+}
+
+/* "Layout edited" badge shown after the user drags elements */
+.layout-badge {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  color: var(--color-badge-text);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-badge-border);
+  font: 500 var(--fs-micro) var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   LEGEND EXPLAINER PANEL (opened via the info button)
+   ========================================================================== */
+
+/* Floating card over the stage explaining every legend entry and element */
+.legend-panel {
+  position: absolute;
+  z-index: 6;
+  top: 12px;
+  bottom: 12px;
+  left: 14px;
+  display: flex;
+  flex-direction: column;
+  width: 318px;
+  overflow-y: auto;
+  padding: 16px 16px 18px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-line-dark);
+  box-shadow: 0 14px 38px rgb(23 33 31 / 14%);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent;
+}
+
+/* ==========================================================================
+   DUPLICATED LABELS PANEL (ScanSearch button, left of legend info)
+   ========================================================================== */
+
+/* Wider floating card: duplicate label table + side-by-side compare */
+.duplicates-panel {
+  position: absolute;
+  z-index: 6;
+  top: 12px;
+  bottom: 12px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  flex-direction: column;
+  max-width: min(1100px, calc(100% - 28px));
+  overflow: hidden;
+  padding: 16px 16px 18px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-line-dark);
+  box-shadow: 0 14px 38px rgb(23 33 31 / 14%);
+}
+
+.duplicates-loading,
+.duplicates-empty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 0;
+  color: var(--color-muted);
+  font-size: var(--fs-body);
+}
+
+.duplicates-table-wrap {
+  flex: 0 0 auto;
+  max-height: 38%;
+  overflow: auto;
+  margin-top: 4px;
+  border: 1px solid var(--color-line);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent;
+}
+
+.duplicates-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-small);
+}
+
+.duplicates-table th,
+.duplicates-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-line);
+  vertical-align: top;
+}
+
+.duplicates-table th {
+  position: sticky;
+  top: 0;
+  background: var(--color-card-bg);
+  color: var(--color-label);
+  font: 500 var(--fs-micro) var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.duplicates-table tbody tr {
+  cursor: pointer;
+}
+
+.duplicates-table tbody tr:hover {
+  background: var(--color-list-hover);
+}
+
+.duplicates-table tbody tr.selected {
+  background: var(--color-prohibited-fill);
+}
+
+.duplicates-table td:nth-child(2) {
+  width: 64px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.dup-diagrams {
+  color: var(--color-muted);
+  font: 500 var(--fs-tiny) var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.duplicates-compare {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin-top: 14px;
+}
+
+.duplicates-compare h4 {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 8px;
+  font: 500 var(--fs-micro) var(--font-mono);
+  color: var(--color-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 6px;
+}
+
+.duplicates-compare h4 span {
+  color: var(--color-muted);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-family: var(--font-body);
+  font-size: var(--fs-small);
+  font-weight: 500;
+}
+
+.compare-scroll {
+  flex: 1 1 auto;
+  overflow: auto;
+  border: 1px solid var(--color-line);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent;
+}
+
+.compare-table {
+  border-collapse: collapse;
+  min-width: 100%;
+  font-size: var(--fs-small);
+}
+
+.compare-table th,
+.compare-table td {
+  min-width: 180px;
+  max-width: 280px;
+  padding: 9px 11px;
+  text-align: left;
+  border-right: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  vertical-align: top;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.compare-table th.compare-attr,
+.compare-table td.compare-attr,
+.compare-table .compare-attr {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  min-width: 140px;
+  max-width: 160px;
+  background: var(--color-card-bg);
+  color: var(--color-label);
+  font: 500 var(--fs-micro) var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.compare-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--color-card-bg);
+}
+
+.compare-table thead th.compare-attr {
+  z-index: 3;
+}
+
+.compare-col-id {
+  display: block;
+  margin-bottom: 6px;
+  font: 600 var(--fs-body) var(--font-mono);
+  color: var(--color-ink);
+  letter-spacing: 0.02em;
+}
+
+.compare-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 7px;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  border: 1px solid var(--color-line-dark);
+  font: 500 var(--fs-tiny) var(--font-body);
+  cursor: pointer;
+}
+
+.compare-jump:hover {
+  background: var(--color-button-hover);
+}
+
+/* Workflow analysis panel (? button) — scrollable body + section grid */
+.analytics-panel {
+  overflow: hidden;
+}
+
+.analytics-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 16px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent;
+}
+
+.analytics-section h4 {
+  margin: 0 0 8px;
+  font: 500 var(--fs-micro) var(--font-mono);
+  color: var(--color-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 6px;
+}
+
+.analytics-blurb {
+  margin: 0 0 8px;
+  color: var(--color-muted);
+  font-size: var(--fs-small);
+  line-height: 1.45;
+}
+
+.analytics-table-wrap {
+  max-height: none;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.analytics-recommendations {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--color-ink);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+}
+
+.analytics-recommendations li {
+  margin-bottom: 6px;
+}
+
+/* ==========================================================================
+   POLICY OVERVIEW — compact bar + collapsible drawer
+   Rendered between the diagram heading and the canvas when PTP-POLICY is
+   selected. Default: collapsed so the diagram gets maximum space.
+   ========================================================================== */
+
+/* Slim always-visible bar: toggle arrow + phase pill row */
+.overview-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  height: 40px;
+  background: var(--color-card-bg);
+  border-bottom: 1px solid var(--color-line);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Toggle chevron button */
+.overview-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  padding: 4px 6px;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  background: var(--color-button-bg);
+  color: var(--color-muted);
+  font: 500 var(--fs-tiny) var(--font-mono);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.overview-toggle:hover {
+  background: var(--color-button-hover);
+  color: var(--color-ink);
+}
+
+.overview-toggle svg {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.overview-toggle.open svg {
+  transform: rotate(90deg);
+}
+
+/* Scrollable phase pill strip in the bar */
+.overview-bar-phases {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.overview-bar-phases::-webkit-scrollbar { height: 3px; }
+.overview-bar-phases::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 2px; }
+
+/* Phase pill in the bar (clickable → right panel detail) */
+.overview-phase-pill {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 3px 9px;
+  background: var(--color-button-bg);
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  color: var(--color-muted);
+  font: 500 var(--fs-tiny) var(--font-mono);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  white-space: nowrap;
+}
+
+.overview-phase-pill:hover,
+.overview-phase-pill.active {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* Collapsible drawer — the expanded content area */
+.policy-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px 22px 16px;
+  background: var(--color-card-bg);
+  border-bottom: 1px solid var(--color-line);
+  overflow-y: auto;
+  max-height: 280px;
+  flex-shrink: 0;
+}
+
+.policy-overview::-webkit-scrollbar { width: 5px; }
+.policy-overview::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 3px; }
+
+/* "Purpose" intro block */
+.overview-purpose {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.overview-purpose-kicker {
+  font: 500 var(--fs-micro) var(--font-mono);
+  color: var(--color-label);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.overview-purpose p {
+  margin: 0;
+  font-size: var(--fs-body);
+  color: var(--color-ink);
+  line-height: 1.6;
+}
+
+/* Full phase cards (inside drawer) */
+.overview-phases {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.overview-phases-heading {
+  font: 500 var(--fs-micro) var(--font-mono);
+  color: var(--color-label);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.overview-phase-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.overview-phase-list::-webkit-scrollbar { height: 4px; }
+.overview-phase-list::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 3px; }
+
+.phase-card {
+  flex: 0 0 auto;
+  width: 200px;
+  padding: 12px 14px;
+  background: var(--color-button-bg);
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.phase-card:hover {
+  border-color: var(--color-ink);
+  box-shadow: 0 2px 8px rgb(23 33 31 / 10%);
+}
+
+.phase-card.active {
+  border-color: var(--color-green);
+  background: var(--color-green-soft);
+}
+
+.phase-card-num {
+  font: 600 var(--fs-tiny) var(--font-mono);
+  color: var(--color-label);
+}
+
+.phase-card-title {
+  font: 600 var(--fs-body) var(--font-display);
+  color: var(--color-ink);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.phase-card-desc {
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+  line-height: 1.45;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.phase-card-ids {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.phase-id-chip {
+  font: 500 var(--fs-tiny) var(--font-mono);
+  color: var(--color-label);
+  background: var(--color-button-bg);
+  border: 1px solid var(--color-line);
+  border-radius: 3px;
+  padding: 1px 5px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.phase-id-chip:hover {
+  background: var(--color-button-hover);
+  color: var(--color-ink);
+}
+
+/* "Recommended next steps" card */
+.overview-recommendations {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.overview-rec-card {
+  background: var(--color-recommended-fill);
+  border: 1px solid var(--color-recommended);
+  border-radius: 4px;
+  padding: 12px 14px;
+}
+
+.overview-rec-heading {
+  font: 600 var(--fs-body) var(--font-display);
+  color: var(--color-recommended);
+  margin: 0 0 8px;
+}
+
+.overview-rec-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.overview-rec-list li {
+  font-size: var(--fs-body);
+  color: var(--color-ink);
+  line-height: 1.5;
+}
+
+/* ---- Phase detail in the right panel ---- */
+.phase-detail-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.phase-detail-num {
+  font: 600 var(--fs-tiny) var(--font-mono);
+  color: var(--color-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.phase-detail-title {
+  margin: 0 0 4px;
+  font: 600 var(--fs-detail-title) var(--font-display);
+  color: var(--color-ink);
+  line-height: 1.2;
+}
+
+.phase-detail-desc {
+  margin: 0;
+  font-size: var(--fs-body);
+  color: var(--color-wording);
+  line-height: 1.6;
+}
+
+.phase-workflows-heading {
+  margin: 16px 0 8px;
+  font: 500 var(--fs-tiny) var(--font-mono);
+  color: var(--color-label);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.phase-workflow-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.phase-workflow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  color: var(--color-ink);
+  font-size: var(--fs-body);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.phase-workflow-btn:hover {
+  background: var(--color-button-hover);
+  border-color: var(--color-ink);
+}
+
+.phase-workflow-id {
+  font: 500 var(--fs-tiny) var(--font-mono);
+  color: var(--color-label);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* Panel header row: title + close button */
+.legend-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.legend-panel-head h3 {
+  margin: 0;
+  font: 600 var(--fs-empty-title) var(--font-display);
+}
+
+.legend-panel-head button {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  color: var(--color-legend-text);
+  background: transparent;
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+}
+
+.legend-panel-head button:hover {
+  color: var(--color-ink);
+  background: var(--color-button-hover);
+}
+
+/* Intro sentence below the panel title */
+.legend-panel-intro {
+  margin: 0 0 14px;
+  color: var(--color-muted);
+  font-size: var(--fs-body);
+  line-height: 1.5;
+}
+
+/* Section titles inside the panel ("Extraction markers", "BPMN elements") */
+.legend-panel h4 {
+  margin: 14px 0 8px;
+  font: 500 var(--fs-micro) var(--font-mono);
+  color: var(--color-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 6px;
+}
+
+.legend-panel section:first-of-type h4 {
+  margin-top: 0;
+}
+
+/* Entry list: swatch/glyph + name + explanation */
+.legend-panel ul {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend-panel li {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.legend-panel li strong {
+  display: block;
+  margin-bottom: 2px;
+  font-size: var(--fs-body);
+}
+
+.legend-panel li span {
+  display: block;
+  color: var(--color-muted);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+}
+
+/* --- Color chips in the "Extraction markers" section --- */
+.legend-panel .chip {
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+}
+
+/* Chip: policy explicit (verbatim wording) */
+.chip-explicit {
+  background: var(--color-bpmn-fill);
+  border: 1.5px solid var(--color-ink);
+}
+
+/* Chip: inferred connector — purple dashed */
+.chip-inferred {
+  background: var(--color-inferred-fill);
+  border: 1.5px dashed var(--color-inferred);
+}
+
+/* Chip: approved path — green */
+.chip-approved {
+  background: var(--color-approved-fill);
+  border: 1.5px solid var(--color-approved);
+}
+
+/* Chip: rejected path — red */
+.chip-rejected {
+  background: var(--color-rejected-fill);
+  border: 1.5px solid var(--color-rejected);
+}
+
+/* Chip: prohibited action — orange negative outcome */
+.chip-prohibited {
+  background: var(--color-prohibited-fill);
+  border: 1.5px solid var(--color-prohibited);
+}
+
+/* Chip: recommended control — teal dashed */
+.chip-recommended {
+  background: var(--color-recommended-fill);
+  border: 1.5px dashed var(--color-recommended);
+}
+
+/* --- Shape glyphs in the "BPMN elements" section --- */
+.legend-panel .glyph {
+  position: relative;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Glyph: task — rounded rectangle */
+.glyph-task {
+  width: 22px;
+  height: 15px;
+  background: var(--color-bpmn-fill);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 4px;
+}
+
+/* Glyph: gateway — rotated square (diamond) */
+.glyph-gateway {
+  width: 13px;
+  height: 13px;
+  margin-left: 4px;
+  background: var(--color-bpmn-fill);
+  border: 1.5px solid var(--color-ink);
+  transform: rotate(45deg);
+}
+
+/* Glyph: start event — thin circle */
+.glyph-start {
+  width: 15px;
+  height: 15px;
+  margin-left: 3px;
+  background: var(--color-bpmn-fill);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 50%;
+}
+
+/* Glyph: end event — thick circle */
+.glyph-end {
+  width: 15px;
+  height: 15px;
+  margin-left: 3px;
+  background: var(--color-bpmn-fill);
+  border: 3px solid var(--color-ink);
+  border-radius: 50%;
+}
+
+/* Glyph: sequence flow — horizontal line with arrowhead */
+.glyph-flow {
+  width: 22px;
+  height: 2px;
+  margin-top: 9px;
+  background: var(--color-ink);
+}
+
+.glyph-flow::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: -1px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid var(--color-ink);
+}
+
+/* ==========================================================================
+   BPMN-JS OVERRIDES
+   ========================================================================== */
+
+/* Rearrange-only mode: hide creation palette and context pad so the
+   diagram can be moved around but not structurally edited. */
+.djs-palette,
+.djs-context-pad,
+.djs-popup {
+  display: none !important;
+}
+
+/* Hide the bpmn.io watermark */
+.bjs-powered-by {
+  display: none !important;
+}
+
+/* Inferred connective steps in the diagram: purple dashed outline */
+.inferred-node .djs-visual > :first-child {
+  fill: var(--color-inferred-fill) !important;
+  stroke: var(--color-inferred) !important;
+  stroke-dasharray: 5 3 !important;
+}
+
+/* Recommended control steps in the diagram: teal dashed outline */
+.recommended-node .djs-visual > :first-child {
+  fill: var(--color-recommended-fill) !important;
+  stroke: var(--color-recommended) !important;
+  stroke-dasharray: 6 3 !important;
+}
+
+/* Let the dotted stage background show through the SVG */
+.djs-container,
+.djs-container svg {
+  background: transparent !important;
+}
+
+/* Labels inside the BPMN diagram */
+.djs-label {
+  font-family: var(--font-body) !important;
+  font-size: var(--fs-bpmn-label) !important;
+  fill: var(--color-ink) !important;
+}
+
+/* Hover / selection outline around diagram elements */
+.djs-element.hover .djs-outline,
+.djs-element.selected .djs-outline {
+  stroke: var(--color-accent) !important;
+  stroke-width: 2px !important;
+}
+
+/* Footer under the diagram: actions / decisions / actors counters */
+.diagram-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex-shrink: 0;
+  height: 54px;
+  border-top: 1px solid var(--color-line);
+  background: var(--color-panel-bg);
+}
+
+.diagram-footer > div {
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 16px;
+  border-right: 1px solid var(--color-line);
+}
+
+.diagram-footer > div:last-child {
+  border-right: 0;
+}
+
+/* Uppercase labels in the footer */
+.footer-label {
+  font: 500 var(--fs-micro) var(--font-mono);
+  color: var(--color-footer-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.diagram-footer strong {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-small);
+}
+
+/* ==========================================================================
+   DETAIL PANEL (right column)
+   ========================================================================== */
+
+/* Right column: details of the selected diagram element */
+.detail-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-panel-bg);
+  border-left: 1px solid var(--color-line);
+}
+
+/* Panel header: kicker + "Element detail" + collapse button */
+.detail-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 22px 20px 17px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* Collapse / expand button for the detail panel */
+.panel-toggle {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--color-legend-text);
+  background: var(--color-button-bg);
+  border: 1px solid var(--color-line);
+  cursor: pointer;
+}
+
+.panel-toggle:hover {
+  color: var(--color-ink);
+  background: var(--color-button-hover);
+}
+
+/* Slim vertical rail shown when the detail panel is collapsed */
+.detail-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0;
+  background: var(--color-panel-bg);
+  border-left: 1px solid var(--color-line);
+}
+
+/* Vertical "Element detail" label on the collapsed rail */
+.rail-label {
+  color: var(--color-label);
+  font: 500 var(--fs-micro) var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+/* Placeholder shown before any element is selected */
+.empty-detail {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 35px;
+  text-align: center;
+}
+
+/* Rotated diamond glyph in the empty state */
+.empty-glyph {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 18px;
+  color: var(--color-label);
+  background: var(--color-chip-bg);
+  border: 1px solid var(--color-line-dark);
+  transform: rotate(45deg);
+}
+
+.empty-glyph svg {
+  transform: rotate(-45deg);
+}
+
+.empty-detail h3 {
+  margin: 0 0 8px;
+  font: 600 var(--fs-empty-title) var(--font-display);
+}
+
+.empty-detail p {
+  max-width: 235px;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+}
+
+/* Scrollable body of the detail panel */
+.detail-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar) transparent;
+}
+
+/* Title block: element ID, origin badges, title, wording */
+.detail-title-block {
+  padding-bottom: 17px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* Dark chip showing the BPMN element ID — full width */
+.element-id {
+  display: block;
+  width: 100%;
+  padding: 5px 8px;
+  color: var(--color-topbar-text);
+  background: var(--color-ink);
+  font: 500 var(--fs-micro) var(--font-mono);
+  letter-spacing: 0.06em;
+}
+
+/* Clickable code chip button (same look as .element-id) */
+button.element-id.code-chip-btn {
+  width: 100%;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+button.element-id.code-chip-btn:hover,
+button.element-id.code-chip-btn.open {
+  background: #2a3633;
+}
+
+.code-chip-wrap {
+  width: 100%;
+}
+
+/* Codification explainer opened under the black chip */
+.code-explainer {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+}
+
+.code-explainer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.code-explainer-head strong {
+  font: 600 var(--fs-body) var(--font-display);
+  color: var(--color-ink);
+}
+
+.code-explainer-close {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.code-explainer-close:hover {
+  background: var(--color-button-hover);
+  color: var(--color-ink);
+}
+
+.code-explainer-pattern {
+  margin: 0 0 10px;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}
+
+.code-explainer-pattern code {
+  font: 500 var(--fs-tiny) var(--font-mono);
+  color: var(--color-ink);
+}
+
+.code-explainer-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.code-explainer-table th {
+  width: 64px;
+  padding: 4px 8px 4px 0;
+  vertical-align: top;
+  text-align: left;
+  font: 600 var(--fs-tiny) var(--font-mono);
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.code-explainer-table td {
+  padding: 4px 0;
+  font-size: var(--fs-small);
+  color: var(--color-wording);
+  line-height: 1.4;
+}
+
+.code-explainer-fallback {
+  margin: 0 0 8px;
+  font-size: var(--fs-small);
+  color: var(--color-muted);
+}
+
+.code-explainer-policy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font: 500 var(--fs-tiny) var(--font-mono);
+  color: var(--color-green);
+  text-decoration: none;
+}
+
+.code-explainer-policy:hover {
+  text-decoration: underline;
+}
+
+/* Row holding the element-ID chip and (optionally) the prohibited badge */
+.detail-origin-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 9px;
+}
+
+/* Badge: whether wording is verbatim policy text or inferred */
+.wording-origin {
+  padding: 3px 6px;
+  font: 500 var(--fs-micro) var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* "Policy verbatim" — green */
+.wording-origin.verbatim {
+  color: var(--color-verbatim-text);
+  background: var(--color-green-soft);
+}
+
+/* "Inferred connective" — purple, matches the diagram marker */
+.wording-origin.inferred {
+  color: var(--color-inferred);
+  background: var(--color-inferred-fill);
+}
+
+/* "Prohibited — negative outcome" — orange */
+.wording-origin.prohibited {
+  color: var(--color-prohibited);
+  background: var(--color-prohibited-fill);
+}
+
+/* Selected element title */
+.detail-title-block h3 {
+  margin: 0 0 8px;
+  font: 600 var(--fs-detail-title)/1.15 var(--font-display);
+}
+
+/* Element title as a link into the original policy HTML */
+.policy-jump {
+  display: inline;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid var(--color-quote-border);
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.policy-jump:hover {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+.policy-jump svg {
+  margin-left: 6px;
+  vertical-align: baseline;
+}
+
+/* "View in original policy" link on each source card */
+.view-in-policy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  color: var(--color-verbatim-text);
+  text-decoration: none;
+  font: 500 var(--fs-tiny) var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-green-soft);
+}
+
+.view-in-policy:hover {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+/* Label above the complete policy wording */
+.detail-wording-label {
+  display: block;
+  margin: 14px 0 6px;
+  font: 500 var(--fs-micro) var(--font-mono);
+  color: var(--color-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.detail-origin-row + .detail-wording-label {
+  margin-top: 0;
+}
+
+.detail-title-block p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+}
+
+/* Full policy sentence shown in serif */
+.detail-title-block .complete-wording {
+  color: var(--color-wording);
+  font: 500 var(--fs-text)/1.6 var(--font-display);
+}
+
+/* Extracted atomic action phrase */
+.atomic-phrase {
+  margin-top: 12px;
+  padding: 9px 10px;
+  background: var(--color-chip-bg);
+  border-left: 2px solid var(--color-atomic-border);
+}
+
+.atomic-phrase > span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--color-label);
+  font: 500 var(--fs-micro) var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.atomic-phrase p {
+  color: var(--color-atomic-text);
+  font-size: var(--fs-small);
+}
+
+/* Element attributes as an executive spec list: one row each,
+   label on the left, value right-aligned. Avoids cramped columns. */
+.attribute-grid {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.attribute-grid > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  min-width: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.attribute-grid > div:last-child {
+  border-bottom: 0;
+}
+
+/* Uppercase labels for sources, branches, inference note */
+.source-title,
+.branch-section > span {
+  margin-bottom: 6px;
+  font: 500 var(--fs-micro) var(--font-mono);
+  color: var(--color-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Keep the attribute label on one line and pinned to the left */
+.attribute-grid dt {
+  flex-shrink: 0;
+  margin: 0;
+  font: 500 var(--fs-micro) var(--font-mono);
+  color: var(--color-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.attribute-grid dd {
+  min-width: 0;
+  margin: 0;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  text-align: right;
+  text-transform: capitalize;
+}
+
+/* Attribute value "inferred" — purple to match the diagram */
+.attribute-grid dd.inferred {
+  color: var(--color-inferred);
+}
+
+/* Attribute value "explicit" — green */
+.attribute-grid dd.explicit {
+  color: var(--color-green);
+}
+
+/* Attribute value "prohibited" — orange negative outcome */
+.attribute-grid dd.prohibited {
+  color: var(--color-prohibited);
+}
+
+/* Orange callout for policy prohibitions (negative outcome) */
+.prohibition-note {
+  margin-top: 16px;
+  padding: 12px;
+  background: var(--color-prohibited-fill);
+  border-left: 3px solid var(--color-prohibited);
+}
+
+.prohibition-note > span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--color-prohibited);
+  font: 600 var(--fs-small) var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.prohibition-note > p {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: var(--fs-body);
+  line-height: 1.45;
+}
+
+.source-section,
+.branch-section {
+  margin-top: 19px;
+}
+
+.source-title {
+  justify-content: space-between;
+}
+
+/* Card containing one policy source reference */
+.source-card {
+  padding: 14px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 5px 15px rgb(23 33 31 / 4%);
+}
+
+/* Row of section/paragraph chips on the source card */
+.source-meta {
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.source-meta span {
+  padding: 3px 5px;
+  color: var(--color-chip-text);
+  background: var(--color-chip-bg);
+  font: 500 var(--fs-micro) var(--font-mono);
+}
+
+/* Source section title */
+.source-card h4 {
+  margin: 0 0 9px;
+  font: 600 var(--fs-card-title) var(--font-display);
+}
+
+/* Verbatim policy quotation */
+.source-card blockquote {
+  margin: 0 0 10px;
+  padding-left: 11px;
+  color: var(--color-quote);
+  border-left: 2px solid var(--color-quote-border);
+  font: 500 var(--fs-text)/1.55 var(--font-display);
+}
+
+/* One outgoing branch (gateway rows) */
+.branch-row {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.branch-row strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--fs-body);
+}
+
+/* Branch condition expression */
+.branch-row code {
+  color: var(--color-condition);
+  font: 400 var(--fs-tiny)/1.4 var(--font-mono);
+}
+
+/* Narrow-window adjustments */
+@media (max-width: 1250px) {
+  .workspace {
+    grid-template-columns: 236px minmax(500px, 1fr) 290px;
+  }
+
+  .diagram-title p {
+    max-width: 420px;
+  }
+
+  .export-button {
+    width: 34px;
+    padding: 0;
+    font-size: 0;
+  }
+}

@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:policy="http://policies2bpmn.local/policy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Defs_PTP-PRIVATE" targetNamespace="http://policies2bpmn.local/workflows" xsi:schemaLocation="">
+  <collaboration id="Collab_PTP-PRIVATE">
+    <participant id="Participant_PTP-PRIVATE" name="Global Personal Trading Policy" processRef="Process_PTP-PRIVATE"/>
+  </collaboration>
+  <process id="Process_PTP-PRIVATE" name="Obtain Pre-Approval for Private Investments" isExecutable="false">
+    <laneSet id="LaneSet_PTP-PRIVATE">
+      <lane id="Lane_ACT-EMPLOYEE" name="Employee">
+        <flowNodeRef>START-001</flowNodeRef>
+        <flowNodeRef>STEP-001</flowNodeRef>
+      </lane>
+      <lane id="Lane_ACT-COMPLIANCE" name="Compliance">
+        <flowNodeRef>STEP-002</flowNodeRef>
+        <flowNodeRef>END-001</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="START-001" name="Employee initiates activity under section 12.">
+      <extensionElements>
+        <policy:sourceReference sectionId="12" referenceId="REF-001" confidence="0.81" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </startEvent>
+    <userTask id="STEP-001" name="Identify intended activity">
+      <extensionElements>
+        <policy:sourceReference sectionId="12" referenceId="REF-001" confidence="0.75" extractionType="INFERRED"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="STEP-002" name="Obtain pre-approval">
+      <extensionElements>
+        <policy:sourceReference sectionId="12" referenceId="REF-001" confidence="0.87" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <endEvent id="END-001" name="Process completed"/>
+    <sequenceFlow id="Flow_001" sourceRef="START-001" targetRef="STEP-001"/>
+    <sequenceFlow id="Flow_002" sourceRef="STEP-001" targetRef="STEP-002"/>
+    <sequenceFlow id="Flow_003" sourceRef="STEP-002" targetRef="END-001"/>
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_PTP-PRIVATE">
+    <bpmndi:BPMNPlane id="Plane_PTP-PRIVATE" bpmnElement="Process_PTP-PRIVATE">
+      <bpmndi:BPMNShape id="Shape_START-001" bpmnElement="START-001">
+        <dc:Bounds x="117.0" y="92.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_STEP-001" bpmnElement="STEP-001">
+        <dc:Bounds x="270.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_STEP-002" bpmnElement="STEP-002">
+        <dc:Bounds x="470.0" y="240.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_END-001" bpmnElement="END-001">
+        <dc:Bounds x="717.0" y="262.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_001" bpmnElement="Flow_001">
+        <di:waypoint x="153.0" y="110.0"/>
+        <di:waypoint x="270.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_002" bpmnElement="Flow_002">
+        <di:waypoint x="400.0" y="110.0"/>
+        <di:waypoint x="435.0" y="110.0"/>
+        <di:waypoint x="435.0" y="280.0"/>
+        <di:waypoint x="470.0" y="280.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_003" bpmnElement="Flow_003">
+        <di:waypoint x="600.0" y="280.0"/>
+        <di:waypoint x="717.0" y="280.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
