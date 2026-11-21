@@ -27,12 +27,11 @@ venv/
 # Jupyter
 .ipynb_checkpoints/
 
-# Generated offline policies2BPMN-style pack (rebuild from notebook)
+# Generated offline pack folder (rebuild from notebook); zip is committed for handoff
 notebooks/offline_p2b/
-notebooks/offline_p2b_OFFLINE_DEMO.zip
 notebooks/**/*_FULL.zip
-notebooks/**/*_DEMO.zip
 *.zip
+!notebooks/offline_p2b_OFFLINE_DEMO.zip
 
 # OS / IDE
 .DS_Store
