@@ -65,8 +65,20 @@ def _schema_hint(schema: type[BaseModel]) -> str:
         )
 
 
+def _unwrap_completion(result: Any) -> Any:
+    """
+    Hub `guardrail_last.GuardRail.CHAT_COMPLETIONS_*` returns
+    `(r2d2_request_id, completion)` — unwrap to the completion object.
+    Plain completions (tests / older stubs) pass through unchanged.
+    """
+    if isinstance(result, tuple) and len(result) >= 2:
+        return result[1]
+    return result
+
+
 def _completion_text(completion: Any) -> str:
     """Best-effort extract text from GuardRail-shaped completions."""
+    completion = _unwrap_completion(completion)
     if completion is None:
         return ""
     if isinstance(completion, str):
@@ -295,6 +307,29 @@ class GuardRailClient:
         raise last_error
 
 
+def _backend_has_create(obj: Any) -> bool:
+    return callable(getattr(obj, "CHAT_COMPLETIONS_CREATE", None))
+
+
+def resolve_guardrail_backend(module_or_backend: Any) -> Any:
+    """
+    Prefer the Hub `GuardRail` class when `guardrail_last` exposes it.
+
+    Hub shape (see attached guardrail_last.py):
+        from guardrail_last import GuardRail
+        GuardRail.INITIALIZE(soeId)
+        GuardRail.CHAT_COMPLETIONS_CREATE(...)
+    """
+    if module_or_backend is None:
+        return None
+    if _backend_has_create(module_or_backend):
+        return module_or_backend
+    nested = getattr(module_or_backend, "GuardRail", None)
+    if nested is not None and _backend_has_create(nested):
+        return nested
+    return module_or_backend
+
+
 def discover_guardrail_module() -> Optional[Any]:
     """Attempt known-safe discovery only — do not invent package paths beyond these probes."""
     candidates = [
@@ -306,9 +341,14 @@ def discover_guardrail_module() -> Optional[Any]:
     ]
     for name in candidates:
         try:
-            return importlib.import_module(name)
+            mod = importlib.import_module(name)
         except ImportError:
             continue
+        resolved = resolve_guardrail_backend(mod)
+        if _backend_has_create(resolved):
+            return resolved
+        if resolved is not None:
+            return resolved
     return None
 
 
@@ -335,7 +375,7 @@ def create_guardrail_client(
         model
         or os.environ.get("POLICY_LLM_MODEL")
         or os.environ.get("GUARDRAIL_MODEL")
-        or "Llama-4-Scout"
+        or "Llama-4-Scout-17B-16E-Instruct"
     )
     resolved_narrative = (
         narrative_model
@@ -344,12 +384,15 @@ def create_guardrail_client(
     )
     resolved_soeid = soeid or os.environ.get("SOEID") or os.environ.get("POLICY_SOEID")
 
-    mod = backend if backend is not None else discover_guardrail_module()
+    mod = resolve_guardrail_backend(
+        backend if backend is not None else discover_guardrail_module()
+    )
     if mod is None:
         if require_live:
             raise GuardRailUnavailable(
                 "GUARDRAIL_NOT_CONNECTED: GuardRail module not found. "
-                "On CITI Hub, ensure GuardRail is importable; for offline tests use mock."
+                "On CITI Hub: `from guardrail_last import GuardRail`. "
+                "For offline tests use mock."
             )
         return MockLLMAdapter()
 
@@ -357,8 +400,9 @@ def create_guardrail_client(
     if not callable(create):
         if require_live:
             raise GuardRailUnavailable(
-                "GUARDRAIL_NOT_CONNECTED: GuardRail module imported but "
-                "CHAT_COMPLETIONS_CREATE is missing. See docs/guardrail_integration.md."
+                "GUARDRAIL_NOT_CONNECTED: GuardRail backend imported but "
+                "CHAT_COMPLETIONS_CREATE is missing. "
+                "Expected guardrail_last.GuardRail.CHAT_COMPLETIONS_CREATE."
             )
         return MockLLMAdapter()
 

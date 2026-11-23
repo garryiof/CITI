@@ -23,10 +23,10 @@ class WorkspaceConfig:
 @dataclass
 class LLMConfig:
     # mock | guardrail | llama4 (alias→guardrail).
-    # CITI Hub: guardrail/llama4 + POLICY_LLM_MODEL (e.g. Llama-4-Scout).
+    # CITI Hub: guardrail/llama4 + POLICY_LLM_MODEL (Hub model id).
     # Tests / offline: mock.
     provider: str = "guardrail"
-    model: Optional[str] = "Llama-4-Scout"
+    model: Optional[str] = "Llama-4-Scout-17B-16E-Instruct"
     narrative_model: Optional[str] = None
     temperature: float = 0.0
     n: int = 1

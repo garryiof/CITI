@@ -75,18 +75,24 @@ def test_llama4_alias_uses_guardrail_client_when_backend_injected(monkeypatch):
 
         @staticmethod
         def CHAT_COMPLETIONS_CREATE(**kwargs):
-            assert kwargs["model"] == "Llama-4-Scout"
-            return _Completion('{"name":"llama","count":1}')
+            assert kwargs["model"] == "Llama-4-Scout-17B-16E-Instruct"
+            # Hub returns (request_id, completion)
+            return ("req-1", _Completion('{"name":"llama","count":1}'))
+
+        @staticmethod
+        def CHAT_COMPLETIONS_PARSE(**kwargs):
+            return ("req-2", _Completion('{"name":"llama","count":1}'))
 
     monkeypatch.setenv("SOEID", "TESTSOE")
     llm = gr.create_guardrail_client(
         require_live=True,
-        model="Llama-4-Scout",
+        model="Llama-4-Scout-17B-16E-Instruct",
         backend=FakeGuardRail,
         max_retries=0,
     )
     assert type(llm).__name__ == "GuardRailClient"
     assert FakeGuardRail.INITIALIZED is True
+    assert llm.generate_text([{"role": "user", "content": "x"}]).startswith("{")
     result = llm.parse_structured(
         [{"role": "user", "content": "go"}],
         TinySchema,
@@ -95,7 +101,7 @@ def test_llama4_alias_uses_guardrail_client_when_backend_injected(monkeypatch):
     assert result.name == "llama"
     status = llm_runtime_status(llm)
     assert status["llm_status"] == "GUARDRAIL_CONNECTED"
-    assert status["llm_model"] == "Llama-4-Scout"
+    assert status["llm_model"] == "Llama-4-Scout-17B-16E-Instruct"
 
 
 def test_create_llm_client_llama4_provider():
@@ -103,23 +109,23 @@ def test_create_llm_client_llama4_provider():
     assert type(llm).__name__ in {"MockLLMAdapter", "SyntheticMockLLM", "GuardRailClient"}
 
 
-def test_discover_prefers_guardrail_last(monkeypatch):
+def test_discover_prefers_guardrail_last_class(monkeypatch):
     from policy_knowledge.intelligence import guardrail_client as gr
 
-    class FakeGuardRailLast:
+    class FakeGuardRail:
         @staticmethod
         def CHAT_COMPLETIONS_CREATE(**kwargs):
-            return type("C", (), {"choices": []})()
+            return ("id", type("C", (), {"choices": []})())
 
     import sys
     import types
 
     mod = types.ModuleType("guardrail_last")
-    mod.CHAT_COMPLETIONS_CREATE = FakeGuardRailLast.CHAT_COMPLETIONS_CREATE  # type: ignore[attr-defined]
+    mod.GuardRail = FakeGuardRail  # type: ignore[attr-defined]
     monkeypatch.setitem(sys.modules, "guardrail_last", mod)
 
     discovered = gr.discover_guardrail_module()
-    assert discovered is mod
+    assert discovered is FakeGuardRail
 
 
 def test_env_provider_override(monkeypatch, tmp_path):
