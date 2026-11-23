@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass, field, fields
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import yaml
 
@@ -13,9 +13,9 @@ import yaml
 @dataclass
 class WorkspaceConfig:
     id: str = "POLICY_001"
-    policy_path: str | None = None
+    policy_path: Optional[str] = None
     output_root: str = "policy_runs"
-    run_id: str | None = None
+    run_id: Optional[str] = None
     allow_source_copy: bool = False
     overwrite: bool = False
 
@@ -26,8 +26,8 @@ class LLMConfig:
     # CITI Hub: guardrail/llama4 + POLICY_LLM_MODEL (e.g. Llama-4-Scout).
     # Home check: openai (+ OPENAI_API_KEY). Tests: mock.
     provider: str = "guardrail"
-    model: str | None = "Llama-4-Scout"
-    narrative_model: str | None = None
+    model: Optional[str] = "Llama-4-Scout"
+    narrative_model: Optional[str] = None
     temperature: float = 0.0
     n: int = 1
     max_chunk_chars: int = 12000
@@ -95,7 +95,7 @@ class AppConfig:
     transfer: TransferPolicy = field(default_factory=TransferPolicy)
 
 
-def _merge_dataclass(cls: type, data: dict[str, Any] | None) -> Any:
+def _merge_dataclass(cls: type, data: Optional[dict[str, Any]]) -> Any:
     if not data:
         return cls()
     allowed = {f.name for f in fields(cls)}
@@ -134,7 +134,7 @@ def _apply_env_overrides(config: AppConfig) -> AppConfig:
     return config
 
 
-def load_config(path: Path | None = None) -> AppConfig:
+def load_config(path: Optional[Path] = None) -> AppConfig:
     """Load AppConfig from YAML (optional) and env overrides."""
     if path is None:
         return _apply_env_overrides(AppConfig())

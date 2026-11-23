@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -52,7 +52,7 @@ class RoleAssessment(BaseModel):
     relevance: Relevance
     why_relevant: str
     interpretation_basis: InterpretationBasis
-    confidence: float | None = None
+    confidence: Optional[float] = None
     source_refs: list[str] = Field(default_factory=list)
     associated_action_ids: list[str] = Field(default_factory=list)
     associated_risk_ids: list[str] = Field(default_factory=list)

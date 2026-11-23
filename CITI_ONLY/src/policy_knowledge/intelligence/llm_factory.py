@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Optional, Union
 
 from policy_knowledge.config import AppConfig, LLMConfig
 from policy_knowledge.intelligence.guardrail_client import (
@@ -16,7 +16,7 @@ SUPPORTED_PROVIDERS = frozenset(
 )
 
 
-def normalize_provider(provider: str | None) -> str:
+def normalize_provider(provider: Optional[str]) -> str:
     value = (provider or "mock").strip().lower()
     if value in {"", "mock", "synthetic"}:
         return "mock"
@@ -54,9 +54,9 @@ def llm_runtime_status(llm: Any) -> dict[str, str]:
 
 
 def create_llm_client(
-    config: AppConfig | LLMConfig | None = None,
+    config: Optional[Union[AppConfig, LLMConfig]] = None,
     *,
-    provider: str | None = None,
+    provider: Optional[str] = None,
     require_live: bool = False,
 ) -> LLMAdapter:
     """

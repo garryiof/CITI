@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
+
 import json
 import shutil
 from dataclasses import dataclass, field
@@ -27,7 +30,7 @@ class VendorReadiness:
     notes: list[str] = field(default_factory=list)
 
 
-def check_vendor_readiness(vendor_dir: Path | None = None) -> VendorReadiness:
+def check_vendor_readiness(vendor_dir: Optional[Path] = None) -> VendorReadiness:
     vendor_dir = Path(vendor_dir or VENDOR_DIR)
     missing: list[str] = []
     notes: list[str] = []
@@ -52,10 +55,10 @@ def _js_string(obj: object) -> str:
 
 
 def _prepare_role_relevance(
-    role_relevance: dict | None,
+    role_relevance: Optional[dict],
     *,
     redacted: bool,
-) -> dict | None:
+) -> Optional[dict]:
     """Embed role_relevance; redact why_relevant text when excerpts are disabled."""
     if not role_relevance:
         return None
@@ -85,8 +88,8 @@ def build_offline_demo(
     knowledge: PolicyKnowledge,
     run_dir: Path,
     *,
-    transfer_policy: TransferPolicy | None = None,
-    role_relevance: dict | None = None,
+    transfer_policy: Optional[TransferPolicy] = None,
+    role_relevance: Optional[dict] = None,
 ) -> Path:
     run_dir = Path(run_dir)
     transfer_policy = transfer_policy or TransferPolicy()

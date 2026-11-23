@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
+
 from dataclasses import dataclass, field
 
 from policy_knowledge.model.schemas import SourceBlock
@@ -28,7 +31,7 @@ def chunk_blocks(
     buf_len = 0
     seq = 1
 
-    def flush(carry: list[SourceBlock] | None = None) -> None:
+    def flush(carry: Optional[list[SourceBlock]] = None) -> None:
         nonlocal seq, buf, buf_len
         if not buf:
             return

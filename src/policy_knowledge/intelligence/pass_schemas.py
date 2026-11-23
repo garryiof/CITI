@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -20,13 +20,13 @@ class PassARequirement(BaseModel):
 
 class PassARole(BaseModel):
     name: str
-    description: str | None = None
+    description: Optional[str] = None
     source_refs: list[str] = Field(default_factory=list)
 
 
 class PassAResult(BaseModel):
-    title: str | None = None
-    version: str | None = None
+    title: Optional[str] = None
+    version: Optional[str] = None
     requirements: list[PassARequirement] = Field(default_factory=list)
     roles: list[PassARole] = Field(default_factory=list)
     notes: list[str] = Field(default_factory=list)
@@ -47,7 +47,7 @@ class PassBDecision(BaseModel):
 
 
 class PassBResult(BaseModel):
-    process_name: str | None = None
+    process_name: Optional[str] = None
     modeling_status: Literal["supported", "unsupported", "partial", "needs_review"] = "needs_review"
     actions: list[PassBAction] = Field(default_factory=list)
     decisions: list[PassBDecision] = Field(default_factory=list)
@@ -56,7 +56,7 @@ class PassBResult(BaseModel):
 
 class PassCRisk(BaseModel):
     name: str
-    description: str | None = None
+    description: Optional[str] = None
     source_refs: list[str] = Field(default_factory=list)
 
 
@@ -64,13 +64,13 @@ class PassCControl(BaseModel):
     name: str
     description: str
     owner_role_names: list[str] = Field(default_factory=list)
-    frequency: str | None = None
+    frequency: Optional[str] = None
     source_refs: list[str] = Field(default_factory=list)
 
 
 class PassCEvidence(BaseModel):
     name: str
-    description: str | None = None
+    description: Optional[str] = None
     related_control_names: list[str] = Field(default_factory=list)
     source_refs: list[str] = Field(default_factory=list)
 

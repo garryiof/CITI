@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, Optional
 
 from policy_knowledge.intelligence.guardrail_client import LLMAdapter, build_messages
 from policy_knowledge.intelligence.prompt_loader import load_prompt, prompt_execution_metadata
@@ -22,7 +22,7 @@ from policy_knowledge.validation.role_relevance_validator import (
 _TEXT_LIMIT = 500
 
 
-def _truncate(text: str | None, limit: int = _TEXT_LIMIT) -> str:
+def _truncate(text: Optional[str], limit: int = _TEXT_LIMIT) -> str:
     if not text:
         return ""
     text = str(text)
@@ -137,9 +137,9 @@ def analyze_role_relevance(
     knowledge: PolicyKnowledge,
     llm: LLMAdapter,
     *,
-    provider: str | None = None,
-    model: str | None = None,
-    temperature: float | None = None,
+    provider: Optional[str] = None,
+    model: Optional[str] = None,
+    temperature: Optional[float] = None,
 ) -> RoleRelevanceDocument:
     """Run Pass F and return a validated RoleRelevanceDocument."""
     system = load_prompt("role_relevance.system")

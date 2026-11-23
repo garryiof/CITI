@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
+
 import json
 import shutil
 from dataclasses import dataclass, field
@@ -51,9 +54,9 @@ def run_policy_demo(
     config: AppConfig,
     llm: LLMAdapter,
     *,
-    run_id: str | None = None,
-    overwrite: bool | None = None,
-    transfer_policy: TransferPolicy | None = None,
+    run_id: Optional[str] = None,
+    overwrite: Optional[bool] = None,
+    transfer_policy: Optional[TransferPolicy] = None,
 ) -> PipelineResult:
     policy_path = Path(policy_path)
     run_id = run_id or config.workspace.run_id or _default_run_id()

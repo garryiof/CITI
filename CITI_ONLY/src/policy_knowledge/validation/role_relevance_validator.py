@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
+
 from policy_knowledge.intelligence.role_relevance_schemas import (
     RoleAssessment,
     RoleRelevanceDocument,
@@ -41,7 +44,7 @@ def _filter_assessment(
     known: set[str],
     index: dict[str, dict],
     source_ids: set[str],
-) -> tuple[RoleAssessment | None, list[str]]:
+) -> Optional[tuple[RoleAssessment], list[str]]:
     notes: list[str] = []
     if assessment.artifact_id not in known:
         notes.append(f"drop unknown artifact_id {assessment.artifact_id}")

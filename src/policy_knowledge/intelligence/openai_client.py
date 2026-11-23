@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 import os
 import time
-from typing import Any
+from typing import Any, Optional
 
 from pydantic import BaseModel
 
@@ -44,13 +44,13 @@ class OpenAIAdapter:
     def __init__(
         self,
         *,
-        api_key: str | None = None,
+        api_key: Optional[str] = None,
         model: str = "gpt-4o-mini",
-        narrative_model: str | None = None,
+        narrative_model: Optional[str] = None,
         temperature: float = 0.0,
         max_retries: int = 3,
-        extra_body: dict[str, Any] | None = None,
-        client: Any | None = None,
+        extra_body: Optional[dict[str, Any]] = None,
+        client: Optional[Any] = None,
     ) -> None:
         self.model = model
         self.narrative_model = narrative_model or model
@@ -66,7 +66,7 @@ class OpenAIAdapter:
             )
 
     @classmethod
-    def from_config(cls, llm_config: Any, *, client: Any | None = None) -> OpenAIAdapter:
+    def from_config(cls, llm_config: Any, *, client: Optional[Any] = None) -> OpenAIAdapter:
         model = (
             getattr(llm_config, "model", None)
             or os.environ.get("OPENAI_MODEL")
@@ -97,7 +97,7 @@ class OpenAIAdapter:
         self._client = OpenAI(api_key=self._api_key)
         return self._client
 
-    def _create(self, messages: list[dict], *, model: str, response_format: dict | None = None) -> str:
+    def _create(self, messages: list[dict], *, model: str, response_format: Optional[dict] = None) -> str:
         client = self._get_client()
         kwargs: dict[str, Any] = {
             "model": model,
@@ -139,7 +139,7 @@ class OpenAIAdapter:
         else:
             enriched = [{"role": "system", "content": _schema_hint(schema)}, *enriched]
 
-        last_error: Exception | None = None
+        last_error: Optional[Exception] = None
         attempts = 0
         while attempts <= max_retries:
             attempts += 1

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import yaml
 
@@ -12,8 +12,8 @@ import yaml
 @dataclass
 class TaxonomyMatch:
     status: str  # exact | alias | unmapped | not_specified
-    code: str | None = None
-    label: str | None = None
+    code: Optional[str] = None
+    label: Optional[str] = None
     input_label: str = ""
 
 
@@ -22,7 +22,7 @@ def _load_entries(path: Path, key: str) -> list[dict[str, Any]]:
     return list(data.get(key) or [])
 
 
-def map_label(label: str | None, path: Path, key: str) -> TaxonomyMatch:
+def map_label(label: Optional[str], path: Path, key: str) -> TaxonomyMatch:
     if label is None or not str(label).strip():
         return TaxonomyMatch(status="not_specified", input_label=label or "")
     needle = label.strip().lower()
@@ -39,13 +39,13 @@ def map_label(label: str | None, path: Path, key: str) -> TaxonomyMatch:
     return TaxonomyMatch(status="unmapped", input_label=label)
 
 
-def map_role_label(label: str | None, taxonomy_path: Path) -> TaxonomyMatch:
+def map_role_label(label: Optional[str], taxonomy_path: Path) -> TaxonomyMatch:
     return map_label(label, taxonomy_path, "roles")
 
 
-def map_risk_label(label: str | None, taxonomy_path: Path) -> TaxonomyMatch:
+def map_risk_label(label: Optional[str], taxonomy_path: Path) -> TaxonomyMatch:
     return map_label(label, taxonomy_path, "risks")
 
 
-def map_control_label(label: str | None, taxonomy_path: Path) -> TaxonomyMatch:
+def map_control_label(label: Optional[str], taxonomy_path: Path) -> TaxonomyMatch:
     return map_label(label, taxonomy_path, "controls")

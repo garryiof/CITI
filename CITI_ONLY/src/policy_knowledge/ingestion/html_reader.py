@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
+
 from pathlib import Path
 
 from bs4 import BeautifulSoup, NavigableString, Tag
@@ -14,7 +17,7 @@ SKIP_TAGS = {"script", "style", "nav", "footer", "header", "noscript"}
 
 def _dom_path(el: Tag) -> str:
     parts: list[str] = []
-    cur: Tag | None = el
+    cur: Optional[Tag] = el
     while cur is not None and getattr(cur, "name", None):
         parent = cur.parent if isinstance(cur.parent, Tag) else None
         if parent:

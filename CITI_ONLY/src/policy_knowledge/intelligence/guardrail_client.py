@@ -6,7 +6,7 @@ import importlib
 import json
 import os
 import time
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable, Optional
 
 from pydantic import BaseModel
 
@@ -99,9 +99,9 @@ class MockLLMAdapter:
 
     def __init__(
         self,
-        responses: dict[str, str] | None = None,
-        structured_responses: dict[str, dict[str, Any]] | None = None,
-        raw_structured_responses: dict[str, str] | None = None,
+        responses: Optional[dict[str, str]] = None,
+        structured_responses: Optional[dict[str, dict[str, Any]]] = None,
+        raw_structured_responses: Optional[dict[str, str]] = None,
         fail_times_before_success: int = 0,
         default_text: str = "",
     ) -> None:
@@ -129,7 +129,7 @@ class MockLLMAdapter:
         max_retries = int(kwargs.get("max_retries", 0))
         key = _user_key(messages)
         attempts = 0
-        last_error: Exception | None = None
+        last_error: Optional[Exception] = None
         while True:
             attempts += 1
             self.attempt_count = attempts
@@ -160,12 +160,12 @@ class GuardRailClient:
         backend: Any,
         *,
         model: str,
-        narrative_model: str | None = None,
-        soeid: str | None = None,
+        narrative_model: Optional[str] = None,
+        soeid: Optional[str] = None,
         temperature: float = 0.0,
         max_retries: int = 3,
-        extra_body: dict[str, Any] | None = None,
-        parse_extra_body: dict[str, Any] | None = None,
+        extra_body: Optional[dict[str, Any]] = None,
+        parse_extra_body: Optional[dict[str, Any]] = None,
         n: int = 1,
     ) -> None:
         self.backend = backend
@@ -197,7 +197,7 @@ class GuardRailClient:
             )
         return create
 
-    def _parse_callable(self) -> Any | None:
+    def _parse_callable(self) -> Optional[Any]:
         parse = getattr(self.backend, "CHAT_COMPLETIONS_PARSE", None)
         return parse if callable(parse) else None
 
@@ -206,7 +206,7 @@ class GuardRailClient:
         messages: list[dict],
         *,
         model: str,
-        extra_body: dict[str, Any] | None = None,
+        extra_body: Optional[dict[str, Any]] = None,
     ) -> str:
         create = self._create_callable()
         kwargs: dict[str, Any] = {
@@ -254,7 +254,7 @@ class GuardRailClient:
             enriched = [{"role": "system", "content": _schema_hint(schema)}, *enriched]
 
         parse = self._parse_callable()
-        last_error: Exception | None = None
+        last_error: Optional[Exception] = None
         attempts = 0
         while attempts <= max_retries:
             attempts += 1
@@ -295,7 +295,7 @@ class GuardRailClient:
         raise last_error
 
 
-def discover_guardrail_module() -> Any | None:
+def discover_guardrail_module() -> Optional[Any]:
     """Attempt known-safe discovery only — do not invent package paths beyond these probes."""
     candidates = [
         "guardrail_last",  # CITI Hub module name
@@ -315,15 +315,15 @@ def discover_guardrail_module() -> Any | None:
 def create_guardrail_client(
     *,
     require_live: bool = False,
-    soeid: str | None = None,
-    model: str | None = None,
-    narrative_model: str | None = None,
+    soeid: Optional[str] = None,
+    model: Optional[str] = None,
+    narrative_model: Optional[str] = None,
     temperature: float = 0.0,
     max_retries: int = 3,
-    extra_body: dict[str, Any] | None = None,
-    parse_extra_body: dict[str, Any] | None = None,
+    extra_body: Optional[dict[str, Any]] = None,
+    parse_extra_body: Optional[dict[str, Any]] = None,
     n: int = 1,
-    backend: Any | None = None,
+    backend: Optional[Any] = None,
 ) -> LLMAdapter:
     """
     Return a live GuardRailClient when the module exposes CREATE; otherwise Mock.

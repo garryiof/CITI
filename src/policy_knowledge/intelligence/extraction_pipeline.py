@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import Any, Optional
 
 from policy_knowledge.intelligence.guardrail_client import LLMAdapter, build_messages
 from policy_knowledge.intelligence.pass_schemas import (
@@ -55,7 +55,7 @@ def extract_policy(
     policy_id: str,
     title: str,
     input_path: str = "",
-    source_hash: str | None = None,
+    source_hash: Optional[str] = None,
     require_source_refs: bool = True,
 ) -> PolicyKnowledge:
     available = {b.id for b in blocks}

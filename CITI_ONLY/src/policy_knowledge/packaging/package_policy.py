@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
+
 import json
 import zipfile
 from dataclasses import dataclass
@@ -16,9 +19,9 @@ from policy_knowledge.packaging.content_review import decide_inclusions, invento
 
 @dataclass
 class ArchiveResult:
-    full_zip: Path | None
-    demo_zip: Path | None
-    checksums_path: Path | None
+    full_zip: Optional[Path]
+    demo_zip: Optional[Path]
+    checksums_path: Optional[Path]
     report_path: Path
     passed: bool
 
@@ -51,12 +54,12 @@ def archive_policy_run(run_dir: Path, transfer_policy: TransferPolicy) -> Archiv
     run_id = run_dir.name
     stamp = _zip_timestamp()
     # FULL run ZIP disabled — offline handoff is notebooks/offline_p2b_OFFLINE_DEMO.zip
-    full_zip: Path | None = None
-    demo_zip_path: Path | None = archive_dir / f"{policy_id}_{stamp}_DEMO.zip"
+    full_zip: Optional[Path] = None
+    demo_zip_path: Optional[Path] = archive_dir / f"{policy_id}_{stamp}_DEMO.zip"
 
     include_set = {row["path"] for row in decisions["full_include"]}
 
-    demo_zip: Path | None = None
+    demo_zip: Optional[Path] = None
     demo_blocked_reason = None
     if decisions["demo_allowed"]:
         demo_root = run_dir / "demo"

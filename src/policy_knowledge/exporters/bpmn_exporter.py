@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
+
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -25,11 +28,11 @@ NSMAP = {
 
 @dataclass
 class BPMNExportResult:
-    bpmn_path: Path | None
-    no_process_path: Path | None
-    mappings_path: Path | None
-    validation_path: Path | None
-    process_index_path: Path | None
+    bpmn_path: Optional[Path]
+    no_process_path: Optional[Path]
+    mappings_path: Optional[Path]
+    validation_path: Optional[Path]
+    process_index_path: Optional[Path]
 
 
 def export_bpmn(knowledge: PolicyKnowledge, output_dir: Path) -> BPMNExportResult:

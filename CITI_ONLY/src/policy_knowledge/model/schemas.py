@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -30,8 +30,8 @@ class Policy(BaseModel):
     input_path: str
     source_hash: str
     review_status: ReviewStatus
-    version: str | None = None
-    effective_date: str | None = None
+    version: Optional[str] = None
+    effective_date: Optional[str] = None
 
 
 class SourceBlock(BaseModel):
@@ -52,15 +52,15 @@ class Requirement(BaseModel):
     type: str
     source_refs: list[str]
     review_status: ReviewStatus
-    confidence: float | None = None
+    confidence: Optional[float] = None
 
 
 class Role(BaseModel):
     id: str
     name: str
     source_refs: list[str]
-    description: str | None = None
-    taxonomy_code: str | None = None
+    description: Optional[str] = None
+    taxonomy_code: Optional[str] = None
 
 
 class Action(BaseModel):
@@ -69,8 +69,8 @@ class Action(BaseModel):
     description: str
     actor_role_ids: list[str] = Field(default_factory=list)
     source_refs: list[str]
-    preconditions: list[str] | None = None
-    outputs: list[str] | None = None
+    preconditions: Optional[list[str]] = None
+    outputs: Optional[list[str]] = None
 
 
 class Process(BaseModel):
@@ -94,8 +94,8 @@ class Risk(BaseModel):
     id: str
     name: str
     source_refs: list[str]
-    description: str | None = None
-    risk_code: str | None = None
+    description: Optional[str] = None
+    risk_code: Optional[str] = None
     classification_origin: ClassificationOrigin = "source_stated"
 
 
@@ -105,8 +105,8 @@ class Control(BaseModel):
     description: str
     owner_role_ids: list[str] = Field(default_factory=list)
     source_refs: list[str]
-    frequency: str | None = None
-    type: str | None = None
+    frequency: Optional[str] = None
+    type: Optional[str] = None
     classification_origin: ClassificationOrigin = "source_stated"
 
 
@@ -114,7 +114,7 @@ class Evidence(BaseModel):
     id: str
     name: str
     source_refs: list[str]
-    description: str | None = None
+    description: Optional[str] = None
     related_control_ids: list[str] = Field(default_factory=list)
 
 
@@ -126,7 +126,7 @@ class KnowledgeEdge(BaseModel):
     source_refs: list[str]
     derivation: Derivation
     review_status: ReviewStatus
-    confidence: float | None = None
+    confidence: Optional[float] = None
 
 
 class ReviewFinding(BaseModel):

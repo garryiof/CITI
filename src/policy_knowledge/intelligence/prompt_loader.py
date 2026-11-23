@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional, Union
 
 PROMPTS_DIR = Path(__file__).parent / "prompts"
 _VAR_PATTERN = re.compile(r"\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}")
@@ -26,7 +26,7 @@ class PromptTemplate:
     path: Path
     description: str = ""
 
-    def render(self, variables: dict[str, Any] | None = None) -> str:
+    def render(self, variables: Optional[dict[str, Any]] = None) -> str:
         return render_template(self.text, variables or {}, required_vars=self.required_vars)
 
 
@@ -46,7 +46,7 @@ def clear_prompt_cache() -> None:
     _load_manifest.cache_clear()
 
 
-def list_prompt_ids(*, prompts_dir: Path | None = None) -> list[str]:
+def list_prompt_ids(*, prompts_dir: Optional[Path] = None) -> list[str]:
     root = Path(prompts_dir or PROMPTS_DIR)
     manifest = _load_manifest(str(root.resolve()))
     return sorted(manifest["prompts"].keys())
@@ -55,8 +55,8 @@ def list_prompt_ids(*, prompts_dir: Path | None = None) -> list[str]:
 def load_prompt(
     prompt_id: str,
     *,
-    variables: dict[str, Any] | None = None,
-    prompts_dir: Path | None = None,
+    variables: Optional[dict[str, Any]] = None,
+    prompts_dir: Optional[Path] = None,
 ) -> PromptTemplate:
     """Load a prompt by id from manifest.json and optionally render variables."""
     root = Path(prompts_dir or PROMPTS_DIR)
@@ -103,7 +103,7 @@ def render_template(
     text: str,
     variables: dict[str, Any],
     *,
-    required_vars: tuple[str, ...] | list[str] = (),
+    required_vars: Union[tuple[str, ...], list[str]] = (),
 ) -> str:
     """Substitute {{var}} placeholders; fail on missing required or unknown vars."""
     found = set(_VAR_PATTERN.findall(text))
@@ -125,9 +125,9 @@ def render_template(
 
 def prompt_execution_metadata(
     *templates: PromptTemplate,
-    provider: str | None = None,
-    model: str | None = None,
-    temperature: float | None = None,
+    provider: Optional[str] = None,
+    model: Optional[str] = None,
+    temperature: Optional[float] = None,
 ) -> dict[str, Any]:
     """Compact execution metadata for run artifacts (no full prompt bodies)."""
     return {

@@ -3,7 +3,7 @@ name = "policy-knowledge-poc"
 version = "0.1.0"
 description = "One-policy JupyterHub POC: DOCX/PDF/HTML → canonical model → OKF + BPMN + offline demo"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.9"
 license = { text = "Proprietary — internal POC" }
 authors = [{ name = "Policy Intelligence POC" }]
 
