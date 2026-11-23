@@ -1,0 +1,16 @@
+{
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html",
+    "issuer": "BlackRock, Inc.",
+    "section_count": 17,
+    "paragraph_count": 140,
+    "character_count": 20592
+  },
+  "candidates": 40,
+  "atomic_actions": 41,
+  "workflows": 15,
+  "outputs": "D:\\PORTFOLIO\\CRPI_STARTER\\policies2BPMN\\outputs"
+}

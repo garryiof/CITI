@@ -1,0 +1,217 @@
+{
+  "workflow_id": "PTP-BLACKOUT",
+  "workflow_title": "Observe Blackout Periods",
+  "workflow_summary": "Employee must not trade against clients during blackout periods.",
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html"
+  },
+  "source_references": [
+    {
+      "reference_id": "REF-001",
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "page": null,
+      "paragraph": 2,
+      "anchor": "policy-10-2",
+      "source_html": "policy_source.html",
+      "quoted_text": "Specific Knowledge Blackout Period: You may not trade in a security or futures contract at a time when you know of another\u2019s intention to trade that same security or futures contract on behalf of a client.",
+      "start_offset": 14048,
+      "end_offset": 14253
+    },
+    {
+      "reference_id": "REF-002",
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "page": null,
+      "paragraph": 4,
+      "anchor": "policy-10-4",
+      "source_html": "policy_source.html",
+      "quoted_text": "7 Day Blackout Period: Portfolio Employees may not trade in a security or futures contract within 7 calen dar days before or after the trade date of a transaction in that security with respect to a client/fund account over which the Portfolio Employee\u2019s team has authority.",
+      "start_offset": 14291,
+      "end_offset": 14564
+    },
+    {
+      "reference_id": "REF-003",
+      "section_id": "10",
+      "section_title": "Blackout Periods \u2013 Trading Against Clients",
+      "page": null,
+      "paragraph": 5,
+      "anchor": "policy-10-5",
+      "source_html": "policy_source.html",
+      "quoted_text": "15 Day Blackout Period: Portfolio Employees may not trade in a security that the Portfolio Employee is considering, or has considered and rejected for purchase or sale, for a client within the 15 calendar days preceding the proposed t rade unless pre-approval is obtained by Legal & Compliance in consultation with the employee\u2019s supervisor.",
+      "start_offset": 14565,
+      "end_offset": 14906
+    }
+  ],
+  "trigger": {
+    "type": "POLICY_RULE",
+    "description": "Policy rule in section 10 applies."
+  },
+  "actors": [
+    {
+      "actor_id": "ACT-EMPLOYEE",
+      "name": "Employee",
+      "actor_type": "INDIVIDUAL",
+      "bpmn_lane": "Employee"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-001",
+      "sequence": 1,
+      "title": "Not trade in a security or futures contract at a time when you k",
+      "description": "Specific Knowledge Blackout Period: You may not trade in a security or futures contract at a time when you know of another\u2019s intention to trade that same security or futures contract on behalf of a client.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "PROHIBITED_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.93,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.93,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-002"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "PROHIBITED",
+      "color": "#C45E12",
+      "step_code": "P-10.2-001-A001"
+    },
+    {
+      "step_id": "STEP-002",
+      "sequence": 2,
+      "title": "Not trade in a security or futures contract within 7 calen dar d",
+      "description": "7 Day Blackout Period: Portfolio Employees may not trade in a security or futures contract within 7 calen dar days before or after the trade date of a transaction in that security with respect to a client/fund account over which the Portfolio Employee\u2019s team has authority.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "PROHIBITED_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-002"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.93,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.93,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-003"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "PROHIBITED",
+      "color": "#C45E12",
+      "step_code": "P-10.4-002-A002"
+    },
+    {
+      "step_id": "STEP-003",
+      "sequence": 3,
+      "title": "Pre-approval is obtained by Legal & Compliance in consultation\u2026",
+      "description": "15 Day Blackout Period: Portfolio Employees may not trade in a security that the Portfolio Employee is considering, or has considered and rejected for purchase or sale, for a client within the 15 calendar days preceding the proposed t rade unless pre-approval is obtained by Legal & Compliance in consultation with the employee\u2019s supervisor.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "PROHIBITED_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-003"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.93,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.93,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "END-PROHIBITED"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "PROHIBITED",
+      "color": "#C45E12",
+      "step_code": "P-10.5-003-A003"
+    }
+  ],
+  "gateways": [],
+  "events": [
+    {
+      "event_id": "START-001",
+      "event_type": "startEvent",
+      "title": "Policy rule in section 10 applies.",
+      "next_step_id": "STEP-001",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-10.2-001-E001"
+    },
+    {
+      "event_id": "END-PROHIBITED",
+      "event_type": "endEvent",
+      "title": "Must not proceed \u2014 prohibited by policy",
+      "path_outcome": "PROHIBITED",
+      "color": "#C45E12",
+      "event_code": "P-10-005-E002"
+    }
+  ],
+  "conditions": [],
+  "exceptions": [],
+  "deadlines": [],
+  "records": [],
+  "controls": [
+    {
+      "control_id": "CTRL-001",
+      "title": "Not trade in a security or futures contract at a time when you k",
+      "control_type": "PREVENTIVE",
+      "performed_by": "ACT-EMPLOYEE",
+      "source_reference_ids": [
+        "REF-001"
+      ]
+    },
+    {
+      "control_id": "CTRL-002",
+      "title": "Not trade in a security or futures contract within 7 calen dar d",
+      "control_type": "PREVENTIVE",
+      "performed_by": "ACT-EMPLOYEE",
+      "source_reference_ids": [
+        "REF-002"
+      ]
+    },
+    {
+      "control_id": "CTRL-003",
+      "title": "Pre-approval is obtained by Legal & Compliance in consultation\u2026",
+      "control_type": "PREVENTIVE",
+      "performed_by": "ACT-EMPLOYEE",
+      "source_reference_ids": [
+        "REF-003"
+      ]
+    }
+  ],
+  "ambiguities": [],
+  "overall_confidence": 0.87,
+  "review_status": "PENDING",
+  "section_id": "10",
+  "section_title": "Blackout Periods \u2013 Trading Against Clients"
+}

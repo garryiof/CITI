@@ -8,12 +8,12 @@ workspace:
   overwrite: false
 
 llm:
-  # Switch: mock | openai | guardrail
-  # Home full check: openai (+ OPENAI_API_KEY, optional openai package)
-  # Hub: guardrail  |  offline synthetic: mock
-  # Override without editing YAML: POLICY_LLM_PROVIDER=openai
-  provider: mock
-  model: null  # openai default gpt-4o-mini when null; or set POLICY_LLM_MODEL / OPENAI_MODEL
+  # Switch: mock | openai | guardrail | llama4 (llama4 → guardrail)
+  # CITI Hub: guardrail/llama4 + POLICY_LLM_MODEL (exact Hub model id)
+  # Home check: openai (+ OPENAI_API_KEY)
+  # Offline synthetic: mock
+  provider: guardrail
+  model: Llama-4-Scout  # override with POLICY_LLM_MODEL if Hub id differs
   narrative_model: null
   temperature: 0.0
   n: 1

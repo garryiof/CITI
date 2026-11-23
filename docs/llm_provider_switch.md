@@ -1,30 +1,37 @@
-# LLM provider switch (mock / OpenAI / GuardRail)
+# LLM provider switch (mock / Llama 4 GuardRail / OpenAI)
 
-**Full home guide (policy folder + API key):** [`home_setup.md`](home_setup.md)
+**Full home guide:** [`home_setup.md`](home_setup.md) · **Hub GuardRail:** [`guardrail_integration.md`](guardrail_integration.md) · **CITI Llama 4 + `partial`:** [`citi_llama4_guardrail_partial.md`](citi_llama4_guardrail_partial.md)
 
-Use `llm.provider` (YAML), `POLICY_LLM_PROVIDER` (env / `.env`), or the notebook `LLM_PROVIDER` cell to select the adapter. All providers implement the same `LLMAdapter` protocol.
+Use `llm.provider` (YAML), `POLICY_LLM_PROVIDER` (env / `.env`), or the notebook `LLM_PROVIDER` cell.
 
 | Provider | When | Requirements |
 |---|---|---|
-| `mock` | Offline / tests / Hub without GuardRail | None — uses `SyntheticMockLLM` |
-| `openai` | **Home full-pipeline check** | `OPENAI_API_KEY`; local `openai` package; optional `POLICY_LLM_MODEL` (default `gpt-4o-mini`) |
-| `guardrail` | CITI JupyterHub live path | Org GuardRail wiring — see `guardrail_integration.md` |
+| `mock` | Offline / tests | None — `SyntheticMockLLM` |
+| `llama4` / `guardrail` | **CITI JupyterHub** | GuardRail import + `CHAT_COMPLETIONS_CREATE`; `POLICY_LLM_MODEL` (exact Hub id); `SOEID` if required |
+| `openai` | Home full-pipeline check only | `OPENAI_API_KEY`; local `openai` package |
 
-## Home run (OpenAI)
+`llama4`, `llama-4`, and `llama` are aliases for `guardrail`. Runtime model is **not** OpenAI — it is whatever Hub-approved id you set (default label `Llama-4-Scout`).
 
-1. Notebook **section 0** once → restart kernel.
-2. Copy policy into `policies/` → set `POLICY_PATH` in Config (see `policies/README.md`).
-3. `Copy-Item .env.example .env` → set `OPENAI_API_KEY` and `POLICY_LLM_PROVIDER=openai`.
-4. Run All from Bootstrap. Expect `OPENAI_CONNECTED`.
+## CITI Hub (Llama 4)
 
-Factory: `policy_knowledge.intelligence.llm_factory.create_llm_client`.
+```text
+POLICY_LLM_PROVIDER=llama4
+POLICY_LLM_MODEL=<exact Hub model id>
+SOEID=<your soeid>
+```
 
-## Hub run (GuardRail)
+In the notebook, Run All. Expect `GUARDRAIL_CONNECTED` and `model=…`. If GuardRail is missing, the cell falls back to mock and prints a hint — do **not** claim live Llama connectivity.
 
-Keep `llm.provider: guardrail`. Do not set `OPENAI_API_KEY` on Hub. If GuardRail is unavailable, notebook falls back to mock (`GUARDRAIL_NOT_CONNECTED`).
+## Home (OpenAI, optional)
+
+```text
+POLICY_LLM_PROVIDER=openai
+OPENAI_API_KEY=sk-...
+POLICY_LLM_MODEL=gpt-4o-mini
+```
 
 ## Honesty rules
 
 - Manifest records `llm_provider` / `llm_status` (`MOCK` | `OPENAI_CONNECTED` | `GUARDRAIL_CONNECTED`).
-- Never claim GuardRail connectivity when using OpenAI or mock.
-- Never write API keys into tracked files or run snapshots.
+- Never claim GuardRail/Llama connectivity when using OpenAI or mock.
+- Never write API keys or SOEID into tracked files.

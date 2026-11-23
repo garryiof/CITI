@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Policy Knowledge Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="demo-header">
+    <div class="header-row">
+      <div>
+        <p class="brand">Policy Knowledge POC</p>
+        <h1 id="policy-title">Policy</h1>
+        <p id="demo-mode" class="mode-banner"></p>
+      </div>
+      <label class="role-switch">
+        <span>Intelligence role</span>
+        <select id="role-select" aria-label="Intelligence role">
+          <option value="business_owner">Business Owner</option>
+          <option value="compliance_officer">Compliance Officer</option>
+          <option value="policy_owner">Policy Owner</option>
+        </select>
+      </label>
+    </div>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Views">
+    <button type="button" data-tab="overview" class="active">Overview</button>
+    <button type="button" data-tab="intelligence">Role Intelligence</button>
+    <button type="button" data-tab="map">Knowledge Map</button>
+    <button type="button" data-tab="bpmn">BPMN</button>
+    <button type="button" data-tab="okf">OKF</button>
+    <button type="button" data-tab="roles">Roles</button>
+    <button type="button" data-tab="risks">Risks &amp; Controls</button>
+    <button type="button" data-tab="sources">Sources</button>
+    <button type="button" data-tab="qa">QA</button>
+  </nav>
+  <main>
+    <section id="tab-overview" class="tab-panel active"></section>
+    <section id="tab-intelligence" class="tab-panel"></section>
+    <section id="tab-map" class="tab-panel"><div id="cy"></div><p id="map-status" class="muted"></p></section>
+    <section id="tab-bpmn" class="tab-panel"><div id="bpmn-canvas"></div><p id="bpmn-status" class="muted"></p></section>
+    <section id="tab-okf" class="tab-panel"></section>
+    <section id="tab-roles" class="tab-panel"></section>
+    <section id="tab-risks" class="tab-panel"></section>
+    <section id="tab-sources" class="tab-panel"></section>
+    <section id="tab-qa" class="tab-panel"></section>
+  </main>
+  <aside id="selection" class="selection" hidden></aside>
+  <script src="vendor/cytoscape.min.js"></script>
+  <script src="vendor/bpmn-navigated-viewer.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

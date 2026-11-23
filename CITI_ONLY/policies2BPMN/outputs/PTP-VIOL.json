@@ -1,0 +1,110 @@
+{
+  "workflow_id": "PTP-VIOL",
+  "workflow_title": "Address Personal Trading Violations",
+  "workflow_summary": "Suspected or confirmed personal trading violations are escalated and addressed.",
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html"
+  },
+  "source_references": [
+    {
+      "reference_id": "REF-001",
+      "section_id": "15",
+      "section_title": "Personal Trading Violations",
+      "page": null,
+      "paragraph": 2,
+      "anchor": "policy-15-2",
+      "source_html": "policy_source.html",
+      "quoted_text": "BlackRock will determine on a case by case basis what remedial action should be taken in response to any violation.",
+      "start_offset": 19638,
+      "end_offset": 19753
+    }
+  ],
+  "trigger": {
+    "type": "VIOLATION_DETECTED",
+    "description": "A personal trading violation is suspected or detected."
+  },
+  "actors": [
+    {
+      "actor_id": "ACT-EMPLOYEE",
+      "name": "Employee",
+      "actor_type": "INDIVIDUAL",
+      "bpmn_lane": "Employee"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-001",
+      "sequence": 1,
+      "title": "Escalate issue",
+      "description": "BlackRock will determine on a case by case basis what remedial action should be taken in response to any violation.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "ESCALATION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.75,
+      "confidence_detail": {
+        "action_detection": 0.7,
+        "actor_identification": 0.7,
+        "action_interpretation": 0.7,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "END-001"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-15.2-001-A001"
+    }
+  ],
+  "gateways": [],
+  "events": [
+    {
+      "event_id": "START-001",
+      "event_type": "startEvent",
+      "title": "A personal trading violation is suspected or detected.",
+      "next_step_id": "STEP-001",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-15.2-001-E001"
+    },
+    {
+      "event_id": "END-001",
+      "event_type": "endEvent",
+      "title": "Process completed",
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-15-003-E002"
+    }
+  ],
+  "conditions": [],
+  "exceptions": [],
+  "deadlines": [],
+  "records": [],
+  "controls": [],
+  "ambiguities": [
+    {
+      "ambiguity_id": "AMB-001",
+      "description": "Lower confidence for step 'Escalate issue'. Review actor and obligation strength.",
+      "impact": "May require human confirmation before operationalizing.",
+      "requires_human_review": true
+    }
+  ],
+  "overall_confidence": 0.75,
+  "review_status": "PENDING",
+  "section_id": "15",
+  "section_title": "Personal Trading Violations"
+}

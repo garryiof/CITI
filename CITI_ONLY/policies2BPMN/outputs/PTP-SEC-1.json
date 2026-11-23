@@ -1,0 +1,156 @@
+{
+  "workflow_id": "PTP-SEC-1",
+  "workflow_title": "Obligations in Section 1: Introduction",
+  "workflow_summary": "Actionable obligations extracted from section 1.",
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html"
+  },
+  "source_references": [
+    {
+      "reference_id": "REF-001",
+      "section_id": "1",
+      "section_title": "Introduction",
+      "page": null,
+      "paragraph": 1,
+      "anchor": "policy-1-1",
+      "source_html": "policy_source.html",
+      "quoted_text": "For example, employees may not induce clients to purchase securities that they own to increase the value of that security.",
+      "start_offset": 329,
+      "end_offset": 451
+    },
+    {
+      "reference_id": "REF-002",
+      "section_id": "1",
+      "section_title": "Introduction",
+      "page": null,
+      "paragraph": 1,
+      "anchor": "policy-1-1",
+      "source_html": "policy_source.html",
+      "quoted_text": "In addition, you must consider, when making a personal investment, whether that transaction may also be appropriate for a client.",
+      "start_offset": 452,
+      "end_offset": 581
+    }
+  ],
+  "trigger": {
+    "type": "POLICY_RULE",
+    "description": "Obligations under section 1 apply."
+  },
+  "actors": [
+    {
+      "actor_id": "ACT-EMPLOYEE",
+      "name": "Employee",
+      "actor_type": "INDIVIDUAL",
+      "bpmn_lane": "Employee"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-001",
+      "sequence": 1,
+      "title": "Not induce clients to purchase securities that they own to incre",
+      "description": "For example, employees may not induce clients to purchase securities that they own to increase the value of that security.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "PROHIBITED_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.93,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.93,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-002"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "PROHIBITED",
+      "color": "#C45E12",
+      "step_code": "P-1.1-001-A001"
+    },
+    {
+      "step_id": "STEP-002",
+      "sequence": 2,
+      "title": "Perform required action",
+      "description": "In addition, you must consider, when making a personal investment, whether that transaction may also be appropriate for a client.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-002"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "END-001"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-1.1-002-A002"
+    }
+  ],
+  "gateways": [],
+  "events": [
+    {
+      "event_id": "START-001",
+      "event_type": "startEvent",
+      "title": "Obligations under section 1 apply.",
+      "next_step_id": "STEP-001",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-1.1-001-E001"
+    },
+    {
+      "event_id": "END-001",
+      "event_type": "endEvent",
+      "title": "Process completed",
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-1-004-E002"
+    }
+  ],
+  "conditions": [],
+  "exceptions": [],
+  "deadlines": [],
+  "records": [],
+  "controls": [
+    {
+      "control_id": "CTRL-001",
+      "title": "Not induce clients to purchase securities that they own to incre",
+      "control_type": "PREVENTIVE",
+      "performed_by": "ACT-EMPLOYEE",
+      "source_reference_ids": [
+        "REF-001"
+      ]
+    }
+  ],
+  "ambiguities": [],
+  "overall_confidence": 0.87,
+  "review_status": "PENDING",
+  "section_id": "1",
+  "section_title": "Introduction"
+}

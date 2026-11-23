@@ -1,0 +1,22 @@
+# Dependency inventory for JupyterHub review — NOT an install script.
+# Do not run pip install -r requirements.txt unless approved by platform owners.
+# Verified / expected Hub libs for this POC:
+
+pandas
+pydantic
+python-docx
+beautifulsoup4
+lxml
+jinja2
+networkx
+pytest
+IPython
+PyYAML
+
+# PDF (any one available is enough; prefer pypdf)
+pypdf
+# PyPDF2
+# pdfminer.six
+
+# GuardRail is provided on CITI Hub as module: guardrail_last
+# Do not pip-install OpenAI — not used in this CITI_ONLY package.

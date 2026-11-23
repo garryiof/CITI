@@ -1,0 +1,616 @@
+[
+  {
+    "candidate_id": "CAN-001",
+    "text": "For example, employees may not induce clients to purchase securities that they own to increase the value of that security.",
+    "section_id": "1",
+    "section_title": "Introduction",
+    "paragraph": 1,
+    "start_offset": 329,
+    "end_offset": 451,
+    "action_type": "PROHIBITED_ACTION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmay not\\b"
+  },
+  {
+    "candidate_id": "CAN-002",
+    "text": "In addition, you must consider, when making a personal investment, whether that transaction may also be appropriate for a client.",
+    "section_id": "1",
+    "section_title": "Introduction",
+    "paragraph": 1,
+    "start_offset": 452,
+    "end_offset": 581,
+    "action_type": "MANDATORY_ACTION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-003",
+    "text": "Any exceptions to this policy must be pre-approved by Legal & Compliance.",
+    "section_id": "2",
+    "section_title": "Scope",
+    "paragraph": 2,
+    "start_offset": 1395,
+    "end_offset": 1468,
+    "action_type": "APPROVAL",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-COMPLIANCE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-004",
+    "text": "You must disclose brokerage or other investment accounts, including private investments, trusts or investment clubs in which you make investment decisions or have direct influence or control (such as joint ownership, trading authorization, or the authority to exercise investment discretion) or a direct or indirect beneficial ownership interest by entering them into the Personal Trading Assistant (\u201cPTA\u201d). 2",
+    "section_id": "3",
+    "section_title": "Account Disclosure",
+    "paragraph": 2,
+    "start_offset": 1544,
+    "end_offset": 1953,
+    "action_type": "DISCLOSURE",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-SYSTEM"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-005",
+    "text": "Donation, reward, and debt based crowdfunding initiatives (however, note that equity and investment- based crowdfunding must be pre-cleared); and",
+    "section_id": "3",
+    "section_title": "Account Disclosure",
+    "paragraph": 16,
+    "start_offset": 3684,
+    "end_offset": 3829,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-006",
+    "text": "Initial Holdings Certification : Within ten days of joining BlackRock, you must provide your securities holdings information, as well as account information for every account required to be disclosed in accordance with Section 3.2.",
+    "section_id": "3",
+    "section_title": "Account Disclosure",
+    "paragraph": 19,
+    "start_offset": 3940,
+    "end_offset": 4171,
+    "action_type": "DISCLOSURE",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-007",
+    "text": "You are required to complete this certification even if you have no accounts or holdings to report in PTA.",
+    "section_id": "3",
+    "section_title": "Account Disclosure",
+    "paragraph": 19,
+    "start_offset": 4172,
+    "end_offset": 4278,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-SYSTEM"
+    ],
+    "modal_matched": "\\bare required to\\b"
+  },
+  {
+    "candidate_id": "CAN-008",
+    "text": "Current Information : The information you provide must be current (no older than 45 calendar days, prior to your commencing employment with BlackRock).",
+    "section_id": "3",
+    "section_title": "Account Disclosure",
+    "paragraph": 20,
+    "start_offset": 4279,
+    "end_offset": 4430,
+    "action_type": "MANDATORY_ACTION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-009",
+    "text": "All employees are required to conduct their personal trading through a broker listed on the Global Approved Broker List (an \u201cApproved Broker\u201d). 4 Approved Brokers generally provide an electronic feed of employee personal trading activity directly to BlackRock.",
+    "section_id": "4",
+    "section_title": "Approved Broker Requirements for all Accounts",
+    "paragraph": 2,
+    "start_offset": 4477,
+    "end_offset": 4737,
+    "action_type": "APPROVAL",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-BROKER"
+    ],
+    "modal_matched": "\\bare required to\\b"
+  },
+  {
+    "candidate_id": "CAN-010",
+    "text": "Brokers that do not provide electronic feeds may pose a risk to BlackRock and, for this reason, any exception to this requirement to maintain account(s) with a Non Approved Broker must be approved by both a member of the Global Executive Committee and Legal & Compliance. 5",
+    "section_id": "4",
+    "section_title": "Approved Broker Requirements for all Accounts",
+    "paragraph": 2,
+    "start_offset": 4738,
+    "end_offset": 5011,
+    "action_type": "APPROVAL",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-COMPLIANCE",
+      "ACT-BROKER"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-011",
+    "text": "Disclosing your Account Information : Except as noted in Section 3.2, all accounts must be disclosed in PTA.",
+    "section_id": "4",
+    "section_title": "Approved Broker Requirements for all Accounts",
+    "paragraph": 7,
+    "start_offset": 5763,
+    "end_offset": 5871,
+    "action_type": "DISCLOSURE",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-SYSTEM"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-012",
+    "text": "Any employee who maintains an account with a broker that does not submit reportable transactions and holdings information to BlackRock via an electronic feed is required to provide such information to BlackRock as follows:",
+    "section_id": "4",
+    "section_title": "Approved Broker Requirements for all Accounts",
+    "paragraph": 8,
+    "start_offset": 5872,
+    "end_offset": 6094,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-BROKER"
+    ],
+    "modal_matched": "\\bis required to\\b"
+  },
+  {
+    "candidate_id": "CAN-013",
+    "text": "Trade confirmations must be submitted to BlackRock within five (5) calendar days of trade execution; and",
+    "section_id": "4",
+    "section_title": "Approved Broker Requirements for all Accounts",
+    "paragraph": 9,
+    "start_offset": 6095,
+    "end_offset": 6199,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-014",
+    "text": "Quarterly statements must be submitted to BlackRock within thirty (30) calendar days of quarter end.",
+    "section_id": "4",
+    "section_title": "Approved Broker Requirements for all Accounts",
+    "paragraph": 10,
+    "start_offset": 6200,
+    "end_offset": 6300,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-015",
+    "text": "If you transact directly with the issuer in a direct stock purchase plan or Dividend Reinvestment Plan (\u201cDRIP\u201d), you must disclose the account information and the name of the transfer agent or bank that executes such transactions to the extent available.",
+    "section_id": "4",
+    "section_title": "Approved Broker Requirements for all Accounts",
+    "paragraph": 12,
+    "start_offset": 6596,
+    "end_offset": 6850,
+    "action_type": "DISCLOSURE",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-016",
+    "text": "You must submit a pre-clearance request in PTA and receive an approval before undertaking any personal investment transactions permitted under this policy, including purchases, sales, stock options exercises, ETFs and gifts.",
+    "section_id": "5",
+    "section_title": "Transaction Pre-Clearance Requirement",
+    "paragraph": 2,
+    "start_offset": 6889,
+    "end_offset": 7113,
+    "action_type": "APPROVAL",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-SYSTEM"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-017",
+    "text": "Your order must be executed on the same day by the time the market closes, on which the security is traded.",
+    "section_id": "5",
+    "section_title": "Transaction Pre-Clearance Requirement",
+    "paragraph": 3,
+    "start_offset": 7239,
+    "end_offset": 7346,
+    "action_type": "MANDATORY_ACTION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-018",
+    "text": "When such requests are made employees must provide the statements to the Legal & Compliance within 30 days of the request..",
+    "section_id": "5",
+    "section_title": "Transaction Pre-Clearance Requirement",
+    "paragraph": 4,
+    "start_offset": 7703,
+    "end_offset": 7826,
+    "action_type": "DEADLINE",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-COMPLIANCE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-019",
+    "text": "1) Taiwan SITE BlackRock funds must be pre-cleared.",
+    "section_id": "6",
+    "section_title": "Transactions Type and Preclearance Requirements",
+    "paragraph": 5,
+    "start_offset": 8242,
+    "end_offset": 8293,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-020",
+    "text": "Investment Trusts must be pre-cleared.",
+    "section_id": "6",
+    "section_title": "Transactions Type and Preclearance Requirements",
+    "paragraph": 9,
+    "start_offset": 8485,
+    "end_offset": 8523,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-021",
+    "text": "Purchases of common stock under an Employee Stock Purchase Plan/vested Restricted Shares Units (however, sales of the same must be pre-cleared );",
+    "section_id": "6",
+    "section_title": "Transactions Type and Preclearance Requirements",
+    "paragraph": 10,
+    "start_offset": 8524,
+    "end_offset": 8669,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-022",
+    "text": "Securities acquired by an exercise of rights to the holders of a class of securities (however, sales of the same must be pre-cle ared);",
+    "section_id": "6",
+    "section_title": "Transactions Type and Preclearance Requirements",
+    "paragraph": 14,
+    "start_offset": 8878,
+    "end_offset": 9013,
+    "action_type": "MANDATORY_ACTION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-023",
+    "text": "Conversion of employee stock options (however, sales of the same must be p re-cle ared);",
+    "section_id": "6",
+    "section_title": "Transactions Type and Preclearance Requirements",
+    "paragraph": 16,
+    "start_offset": 9078,
+    "end_offset": 9166,
+    "action_type": "MANDATORY_ACTION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-024",
+    "text": "Any changes to the terms of such Monthly Investment Plan (MIP)/Systematic Investment Plan (SIP)including but not limited to, underlying security, amount or quantity that is traded or frequency must be notified to Compliance and precleared.",
+    "section_id": "6",
+    "section_title": "Transactions Type and Preclearance Requirements",
+    "paragraph": 23,
+    "start_offset": 9992,
+    "end_offset": 10231,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-COMPLIANCE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-025",
+    "text": "While you are required to disclose discretionary managed accounts, you are not required to obtain pre- clearance approval with respect to transactions in the Managed Account, provided you obtain written confirmation from the investment adviser/manager, or trustee managing your account that the account is managed on a discretionary basis and/or that you (or, if applicable, your spouse, domestic partner, or dependent child) do not exercise investment discretion or otherwise have direct or indirect influence or control over investment decisions.",
+    "section_id": "7",
+    "section_title": "Managed Accounts",
+    "paragraph": 1,
+    "start_offset": 10518,
+    "end_offset": 11066,
+    "action_type": "APPROVAL",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-MANAGER"
+    ],
+    "modal_matched": "\\bare required to\\b"
+  },
+  {
+    "candidate_id": "CAN-026",
+    "text": "The investment manager\u2019s written confirmation must be in a form acceptable to Legal & Compliance.",
+    "section_id": "7",
+    "section_title": "Managed Accounts",
+    "paragraph": 1,
+    "start_offset": 11067,
+    "end_offset": 11164,
+    "action_type": "MANDATORY_ACTION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-COMPLIANCE",
+      "ACT-MANAGER"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-027",
+    "text": "When such requests are made employees must provide the statements to the Legal & Compliance within 30 days of the request.",
+    "section_id": "7",
+    "section_title": "Managed Accounts",
+    "paragraph": 3,
+    "start_offset": 11335,
+    "end_offset": 11457,
+    "action_type": "DEADLINE",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-COMPLIANCE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-028",
+    "text": "You are prohibited from transacting in the following:",
+    "section_id": "8",
+    "section_title": "Prohibited Investments",
+    "paragraph": 2,
+    "start_offset": 12102,
+    "end_offset": 12155,
+    "action_type": "PROHIBITED_ACTION",
+    "actionability_score": 0.94,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bare prohibited\\b"
+  },
+  {
+    "candidate_id": "CAN-029",
+    "text": "Specific Knowledge Blackout Period: You may not trade in a security or futures contract at a time when you know of another\u2019s intention to trade that same security or futures contract on behalf of a client.",
+    "section_id": "10",
+    "section_title": "Blackout Periods \u2013 Trading Against Clients",
+    "paragraph": 2,
+    "start_offset": 14048,
+    "end_offset": 14253,
+    "action_type": "PROHIBITED_ACTION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmay not\\b"
+  },
+  {
+    "candidate_id": "CAN-030",
+    "text": "7 Day Blackout Period: Portfolio Employees may not trade in a security or futures contract within 7 calen dar days before or after the trade date of a transaction in that security with respect to a client/fund account over which the Portfolio Employee\u2019s team has authority.",
+    "section_id": "10",
+    "section_title": "Blackout Periods \u2013 Trading Against Clients",
+    "paragraph": 4,
+    "start_offset": 14291,
+    "end_offset": 14564,
+    "action_type": "PROHIBITED_ACTION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmay not\\b"
+  },
+  {
+    "candidate_id": "CAN-031",
+    "text": "15 Day Blackout Period: Portfolio Employees may not trade in a security that the Portfolio Employee is considering, or has considered and rejected for purchase or sale, for a client within the 15 calendar days preceding the proposed t rade unless pre-approval is obtained by Legal & Compliance in consultation with the employee\u2019s supervisor.",
+    "section_id": "10",
+    "section_title": "Blackout Periods \u2013 Trading Against Clients",
+    "paragraph": 5,
+    "start_offset": 14565,
+    "end_offset": 14906,
+    "action_type": "PROHIBITED_ACTION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-COMPLIANCE",
+      "ACT-MANAGER"
+    ],
+    "modal_matched": "\\bmay not\\b"
+  },
+  {
+    "candidate_id": "CAN-032",
+    "text": "You may not profit from the purchase then sale, or the sale then purchase, of the same security within a 60-calendar day period and are only permitted to trade on the 61st day 9 .",
+    "section_id": "11",
+    "section_title": "Ban on Short-Term Trading Profits",
+    "paragraph": 2,
+    "start_offset": 15600,
+    "end_offset": 15779,
+    "action_type": "PROHIBITED_ACTION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmay not\\b"
+  },
+  {
+    "candidate_id": "CAN-033",
+    "text": "Private Investment Questionnaire : Private investments (including hedge funds, private equity funds, or private placements of securities) must be pre-approved by your line manager and Legal & Compliance.",
+    "section_id": "12",
+    "section_title": "Private Investment Pre-Approval Process",
+    "paragraph": 2,
+    "start_offset": 17616,
+    "end_offset": 17819,
+    "action_type": "APPROVAL",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-COMPLIANCE",
+      "ACT-MANAGER"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-034",
+    "text": "Trading Window: You may only transfer (resulting in change to beneficial ownership), gift, or trade (purchase, sell, or exercise employee stock options) BLK, TCPC and BKCC during open trading window periods.",
+    "section_id": "13",
+    "section_title": "Trading in BlackRock, Inc. (BLK)",
+    "paragraph": 2,
+    "start_offset": 17927,
+    "end_offset": 18134,
+    "action_type": "CONDITIONAL_ACTION",
+    "actionability_score": 0.9,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmay only\\b"
+  },
+  {
+    "candidate_id": "CAN-035",
+    "text": "Pre-Clearance of BLK, TCPC, BKCC is required: Even during open trading windows, you are required to pre-clear all of your transactions in BLK, TCPC and BKCC.",
+    "section_id": "13",
+    "section_title": "Trading in BlackRock, Inc. (BLK)",
+    "paragraph": 3,
+    "start_offset": 18312,
+    "end_offset": 18469,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bare required to\\b"
+  },
+  {
+    "candidate_id": "CAN-036",
+    "text": "Pre-Clearance of BlackRock\u2019s Employee Stock Purchase Plan (ESPP) Restricted Share Units (RSU) : You are required to pre-clear sales of BlackRock common stock from BlackRock\u2019s ESPP/vested RSU (purchases in the ESPP/vested RSU do not require pre-clearance).",
+    "section_id": "13",
+    "section_title": "Trading in BlackRock, Inc. (BLK)",
+    "paragraph": 4,
+    "start_offset": 18536,
+    "end_offset": 18791,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bare required to\\b"
+  },
+  {
+    "candidate_id": "CAN-037",
+    "text": "Restrictions on Trading in BlackRock Securities: You may not:",
+    "section_id": "13",
+    "section_title": "Trading in BlackRock, Inc. (BLK)",
+    "paragraph": 5,
+    "start_offset": 18792,
+    "end_offset": 18853,
+    "action_type": "PROHIBITED_ACTION",
+    "actionability_score": 0.93,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmay not\\b"
+  },
+  {
+    "candidate_id": "CAN-038",
+    "text": "In addition, you must notify Legal & Compliance immediately if you receive, or expect to receive, material non-public information.",
+    "section_id": "14",
+    "section_title": "Insider Trading",
+    "paragraph": 1,
+    "start_offset": 19250,
+    "end_offset": 19380,
+    "action_type": "NOTIFICATION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE",
+      "ACT-COMPLIANCE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  },
+  {
+    "candidate_id": "CAN-039",
+    "text": "BlackRock will determine on a case by case basis what remedial action should be taken in response to any violation.",
+    "section_id": "15",
+    "section_title": "Personal Trading Violations",
+    "paragraph": 2,
+    "start_offset": 19638,
+    "end_offset": 19753,
+    "action_type": "ESCALATION",
+    "actionability_score": 0.7,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bshould\\b"
+  },
+  {
+    "candidate_id": "CAN-040",
+    "text": "Employee must attest to the accuracy and completeness of all information(account details, security holdings, etc.) provided to BlackRock on an annual basis.",
+    "section_id": "16",
+    "section_title": "Annual Certification",
+    "paragraph": 2,
+    "start_offset": 20131,
+    "end_offset": 20287,
+    "action_type": "SUBMISSION",
+    "actionability_score": 0.92,
+    "actors": [
+      "ACT-EMPLOYEE"
+    ],
+    "modal_matched": "\\bmust\\b"
+  }
+]

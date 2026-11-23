@@ -1,0 +1,113 @@
+{
+  "workflow_id": "PTP-SHORT",
+  "workflow_title": "Avoid Short-Term Trading Profits",
+  "workflow_summary": "Employee complies with the ban on short-term trading profits.",
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html"
+  },
+  "source_references": [
+    {
+      "reference_id": "REF-001",
+      "section_id": "11",
+      "section_title": "Ban on Short-Term Trading Profits",
+      "page": null,
+      "paragraph": 2,
+      "anchor": "policy-11-2",
+      "source_html": "policy_source.html",
+      "quoted_text": "You may not profit from the purchase then sale, or the sale then purchase, of the same security within a 60-calendar day period and are only permitted to trade on the 61st day 9 .",
+      "start_offset": 15600,
+      "end_offset": 15779
+    }
+  ],
+  "trigger": {
+    "type": "POLICY_RULE",
+    "description": "Policy rule in section 11 applies."
+  },
+  "actors": [
+    {
+      "actor_id": "ACT-EMPLOYEE",
+      "name": "Employee",
+      "actor_type": "INDIVIDUAL",
+      "bpmn_lane": "Employee"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-001",
+      "sequence": 1,
+      "title": "Not profit from the purchase then sale",
+      "description": "You may not profit from the purchase then sale, or the sale then purchase, of the same security within a 60-calendar day period and are only permitted to trade on the 61st day 9 .",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "PROHIBITED_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.93,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.93,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "END-PROHIBITED"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "PROHIBITED",
+      "color": "#C45E12",
+      "step_code": "P-11.2-001-A001"
+    }
+  ],
+  "gateways": [],
+  "events": [
+    {
+      "event_id": "START-001",
+      "event_type": "startEvent",
+      "title": "Policy rule in section 11 applies.",
+      "next_step_id": "STEP-001",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-11.2-001-E001"
+    },
+    {
+      "event_id": "END-PROHIBITED",
+      "event_type": "endEvent",
+      "title": "Must not proceed \u2014 prohibited by policy",
+      "path_outcome": "PROHIBITED",
+      "color": "#C45E12",
+      "event_code": "P-11-003-E002"
+    }
+  ],
+  "conditions": [],
+  "exceptions": [],
+  "deadlines": [],
+  "records": [],
+  "controls": [
+    {
+      "control_id": "CTRL-001",
+      "title": "Not profit from the purchase then sale",
+      "control_type": "PREVENTIVE",
+      "performed_by": "ACT-EMPLOYEE",
+      "source_reference_ids": [
+        "REF-001"
+      ]
+    }
+  ],
+  "ambiguities": [],
+  "overall_confidence": 0.87,
+  "review_status": "PENDING",
+  "section_id": "11",
+  "section_title": "Ban on Short-Term Trading Profits"
+}

@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:policy="http://policies2bpmn.local/policy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Defs_PTP-POLICY" targetNamespace="http://policies2bpmn.local/workflows" xsi:schemaLocation="">
+  <collaboration id="Collab_PTP-POLICY">
+    <participant id="Participant_PTP-POLICY" name="Global Personal Trading Policy" processRef="Process_PTP-POLICY"/>
+  </collaboration>
+  <process id="Process_PTP-POLICY" name="Entire Personal Trading Policy" isExecutable="false">
+    <laneSet id="LaneSet_PTP-POLICY">
+      <lane id="Lane_ACT-EMPLOYEE" name="Employee">
+        <flowNodeRef>OV-START-001</flowNodeRef>
+        <flowNodeRef>OV-STEP-001</flowNodeRef>
+        <flowNodeRef>OV-STEP-002</flowNodeRef>
+        <flowNodeRef>OV-STEP-003</flowNodeRef>
+        <flowNodeRef>OV-STEP-004</flowNodeRef>
+        <flowNodeRef>OV-STEP-005</flowNodeRef>
+        <flowNodeRef>OV-STEP-006</flowNodeRef>
+        <flowNodeRef>OV-GATEWAY-001</flowNodeRef>
+        <flowNodeRef>OV-END-001</flowNodeRef>
+        <flowNodeRef>OV-END-REJECTED</flowNodeRef>
+      </lane>
+      <lane id="Lane_ACT-COMPLIANCE" name="Legal &amp; Compliance"/>
+      <lane id="Lane_ACT-SYSTEM" name="Automated System (Recommended)">
+        <flowNodeRef>OV-STEP-REC</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="OV-START-001" name="Employee joins BlackRock or initiates a personal trade.">
+      <extensionElements>
+        <policy:sourceReference sectionId="1" referenceId="OV-REF-001" confidence="0.9" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </startEvent>
+    <userTask id="OV-STEP-001" name="Disclose all reportable accounts in PTA">
+      <extensionElements>
+        <policy:sourceReference sectionId="3" referenceId="OV-REF-003" confidence="0.9" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="OV-STEP-002" name="Maintain accounts with approved brokers">
+      <extensionElements>
+        <policy:sourceReference sectionId="4" referenceId="OV-REF-004" confidence="0.88" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="OV-STEP-003" name="Check transaction against prohibited and blackout rules">
+      <extensionElements>
+        <policy:sourceReference sectionId="8" referenceId="OV-REF-006" confidence="0.87" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="OV-STEP-REC" name="Automate pre-clearance evidence capture and broker feeds into PTA">
+      <extensionElements>
+        <policy:sourceReference confidence="0.95" extractionType="INFERRED"/>
+      </extensionElements>
+    </serviceTask>
+    <userTask id="OV-STEP-004" name="Submit pre-clearance request and receive approval">
+      <extensionElements>
+        <policy:sourceReference sectionId="5" referenceId="OV-REF-005" confidence="0.9" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="OV-STEP-005" name="Execute approved trade and provide broker statements within 30 days">
+      <extensionElements>
+        <policy:sourceReference sectionId="5" referenceId="OV-REF-005" confidence="0.87" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="OV-STEP-006" name="Complete annual certification of compliance">
+      <extensionElements>
+        <policy:sourceReference sectionId="14" referenceId="OV-REF-007" confidence="0.9" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="OV-GATEWAY-001" name="Is the request approved and transaction permitted?"/>
+    <endEvent id="OV-END-001" name="Policy complied with"/>
+    <endEvent id="OV-END-REJECTED" name="Must not proceed — prohibited or rejected"/>
+    <sequenceFlow id="Flow_001" sourceRef="OV-START-001" targetRef="OV-STEP-001"/>
+    <sequenceFlow id="Flow_002" sourceRef="OV-STEP-001" targetRef="OV-STEP-002"/>
+    <sequenceFlow id="Flow_003" sourceRef="OV-STEP-002" targetRef="OV-STEP-003"/>
+    <sequenceFlow id="Flow_004" sourceRef="OV-STEP-003" targetRef="OV-STEP-REC"/>
+    <sequenceFlow id="Flow_005" sourceRef="OV-STEP-REC" targetRef="OV-STEP-004"/>
+    <sequenceFlow id="Flow_006" sourceRef="OV-STEP-004" targetRef="OV-GATEWAY-001"/>
+    <sequenceFlow id="Flow_007" sourceRef="OV-STEP-005" targetRef="OV-STEP-006"/>
+    <sequenceFlow id="Flow_008" sourceRef="OV-STEP-006" targetRef="OV-END-001"/>
+    <sequenceFlow id="Flow_009" sourceRef="OV-GATEWAY-001" targetRef="OV-STEP-005" name="Approved"/>
+    <sequenceFlow id="Flow_010" sourceRef="OV-GATEWAY-001" targetRef="OV-END-REJECTED" name="Rejected / Prohibited"/>
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_PTP-POLICY">
+    <bpmndi:BPMNPlane id="Plane_PTP-POLICY" bpmnElement="Process_PTP-POLICY">
+      <bpmndi:BPMNShape id="Shape_OV-START-001" bpmnElement="OV-START-001">
+        <dc:Bounds x="117.0" y="92.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-STEP-001" bpmnElement="OV-STEP-001">
+        <dc:Bounds x="270.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-STEP-002" bpmnElement="OV-STEP-002">
+        <dc:Bounds x="470.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-STEP-003" bpmnElement="OV-STEP-003">
+        <dc:Bounds x="670.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-STEP-REC" bpmnElement="OV-STEP-REC">
+        <dc:Bounds x="870.0" y="410.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-STEP-004" bpmnElement="OV-STEP-004">
+        <dc:Bounds x="1070.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-STEP-005" bpmnElement="OV-STEP-005" bioc:stroke="#2F7D4F" bioc:fill="#E4F2E9">
+        <dc:Bounds x="1470.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-STEP-006" bpmnElement="OV-STEP-006" bioc:stroke="#2F7D4F" bioc:fill="#E4F2E9">
+        <dc:Bounds x="1670.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-GATEWAY-001" bpmnElement="OV-GATEWAY-001">
+        <dc:Bounds x="1310.0" y="85.0" width="50.0" height="50.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-END-001" bpmnElement="OV-END-001" bioc:stroke="#2F7D4F" bioc:fill="#E4F2E9">
+        <dc:Bounds x="1917.0" y="92.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_OV-END-REJECTED" bpmnElement="OV-END-REJECTED" bioc:stroke="#B3402E" bioc:fill="#F8E3DD">
+        <dc:Bounds x="1517.0" y="197.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_001" bpmnElement="Flow_001">
+        <di:waypoint x="153.0" y="110.0"/>
+        <di:waypoint x="270.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_002" bpmnElement="Flow_002">
+        <di:waypoint x="400.0" y="110.0"/>
+        <di:waypoint x="470.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_003" bpmnElement="Flow_003">
+        <di:waypoint x="600.0" y="110.0"/>
+        <di:waypoint x="670.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_004" bpmnElement="Flow_004">
+        <di:waypoint x="800.0" y="110.0"/>
+        <di:waypoint x="835.0" y="110.0"/>
+        <di:waypoint x="835.0" y="450.0"/>
+        <di:waypoint x="870.0" y="450.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_005" bpmnElement="Flow_005">
+        <di:waypoint x="1000.0" y="450.0"/>
+        <di:waypoint x="1035.0" y="450.0"/>
+        <di:waypoint x="1035.0" y="110.0"/>
+        <di:waypoint x="1070.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_006" bpmnElement="Flow_006">
+        <di:waypoint x="1200.0" y="110.0"/>
+        <di:waypoint x="1310.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_007" bpmnElement="Flow_007" bioc:stroke="#2F7D4F">
+        <di:waypoint x="1600.0" y="110.0"/>
+        <di:waypoint x="1670.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_008" bpmnElement="Flow_008" bioc:stroke="#2F7D4F">
+        <di:waypoint x="1800.0" y="110.0"/>
+        <di:waypoint x="1917.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_009" bpmnElement="Flow_009" bioc:stroke="#2F7D4F">
+        <di:waypoint x="1360.0" y="110.0"/>
+        <di:waypoint x="1470.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_010" bpmnElement="Flow_010" bioc:stroke="#B3402E">
+        <di:waypoint x="1360.0" y="110.0"/>
+        <di:waypoint x="1438.5" y="110.0"/>
+        <di:waypoint x="1438.5" y="215.0"/>
+        <di:waypoint x="1517.0" y="215.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

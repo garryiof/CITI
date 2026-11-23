@@ -1,0 +1,428 @@
+{
+  "workflow_id": "PTP-POLICY",
+  "workflow_title": "Entire Personal Trading Policy",
+  "workflow_summary": "Executive lifecycle overview of the BlackRock Global Personal Trading Policy \u2014 five phases from account disclosure through annual certification.",
+  "purpose": "The BlackRock Global Personal Trading Policy (effective 28\u202fSeptember 2021) requires all employees and contingent workers globally to place client interests first in every personal investment decision. It governs account disclosure, broker selection, transaction pre-clearance, investment prohibitions, blackout periods, short-term trading restrictions, and annual certification\u2014all enforced through the Personal Trading Assistant (PTA). Exceptions must be pre-approved by Legal\u202f&\u202fCompliance. Violations may result in disciplinary action up to and including termination.",
+  "high_level_plan": [
+    {
+      "phase": 1,
+      "title": "Onboarding & Account Disclosure",
+      "description": "Within 10 days of joining, disclose all investment accounts and initial holdings in PTA. Maintain accounts only with approved brokers.",
+      "workflow_ids": [
+        "PTP-DISC",
+        "PTP-BROKER"
+      ]
+    },
+    {
+      "phase": 2,
+      "title": "Pre-Trade Clearance",
+      "description": "Before any personal investment transaction, submit a pre-clearance request in PTA and receive Legal\u202f&\u202fCompliance approval. Different rules apply to BLK securities, private investments, and ETFs.",
+      "workflow_ids": [
+        "PTP-PRECLEAR",
+        "PTP-TXTYPE",
+        "PTP-PRIVATE",
+        "PTP-BLK"
+      ]
+    },
+    {
+      "phase": 3,
+      "title": "Trading Restrictions",
+      "description": "Prohibited investments, blackout periods, and short-term trading restrictions must be observed at all times. Trading on material non-public information (insider trading) is strictly prohibited.",
+      "workflow_ids": [
+        "PTP-PROHIB",
+        "PTP-BLACKOUT",
+        "PTP-SHORT",
+        "PTP-INSIDER"
+      ]
+    },
+    {
+      "phase": 4,
+      "title": "Certification & Monitoring",
+      "description": "Complete an annual certification of compliance. Managed accounts that meet exemption criteria must be registered and monitored in PTA.",
+      "workflow_ids": [
+        "PTP-CERT",
+        "PTP-MANAGED"
+      ]
+    },
+    {
+      "phase": 5,
+      "title": "Exceptions & Enforcement",
+      "description": "Any exception must be pre-approved by Legal\u202f&\u202fCompliance. Violations may result in disciplinary action, including termination. Trades generating prohibited profits may be reversed.",
+      "workflow_ids": [
+        "PTP-EXCEPTION",
+        "PTP-VIOL"
+      ]
+    }
+  ],
+  "recommendations": [
+    "Automate pre-clearance evidence capture: connect broker statement feeds directly into PTA to reduce manual uploads and improve audit completeness.",
+    "Source grounding rate: track the percentage of workflow steps with a linked policy paragraph or quoted text \u2014 target 100\u202f% for all explicit steps.",
+    "Approval-gate coverage: confirm every pre-clearance workflow contains at least one Approved\u202f/\u202fRejected decision gateway.",
+    "Deadline inventory: maintain a live registry of all time-bound obligations (10-day holdings disclosure, same-day trade execution, 30-day statement submission, annual certification).",
+    "Control ownership (RACI): map each workflow step to an explicit owner \u2014 Employee, Legal\u202f&\u202fCompliance, or Automated System \u2014 and reconcile against the current RACI matrix.",
+    "Exception register: track all pre-approved policy exceptions with owner, expiry date, and rationale in PTA.",
+    "Review aging: monitor the number of days each workflow remains PENDING since its last policy review cycle; escalate workflows exceeding 90\u202fdays."
+  ],
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html"
+  },
+  "source_references": [
+    {
+      "reference_id": "OV-REF-001",
+      "section_id": "1",
+      "section_title": "Introduction",
+      "page": null,
+      "paragraph": 1,
+      "anchor": "policy-1-1",
+      "source_html": "policy_source.html",
+      "quoted_text": "Employees are required to place the interests of our clients first and avoid transactions, activities and relationships that might interfere or appear to interfere with making decisions in the best interests of clients of BlackRock.",
+      "start_offset": 0,
+      "end_offset": 0
+    },
+    {
+      "reference_id": "OV-REF-002",
+      "section_id": "2",
+      "section_title": "Scope",
+      "page": null,
+      "paragraph": 1,
+      "anchor": "policy-2-1",
+      "source_html": "policy_source.html",
+      "quoted_text": "This policy governs the personal trading and investments of all employees and Contingent Workers (collectively, \u2018employees\u2019) of BlackRock, Inc. and its subsidiaries (\u2018BlackRock\u2019) globally. Any exceptions to this policy must be pre-approved by Legal & Compliance.",
+      "start_offset": 0,
+      "end_offset": 0
+    },
+    {
+      "reference_id": "OV-REF-003",
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "page": null,
+      "paragraph": 2,
+      "anchor": "policy-3-2",
+      "source_html": "policy_source.html",
+      "quoted_text": "You must disclose brokerage or other investment accounts, including private investments, trusts or investment clubs in which you make investment decisions or have direct influence or control \u2026 by entering them into the Personal Trading Assistant (\u2018PTA\u2019).",
+      "start_offset": 0,
+      "end_offset": 0
+    },
+    {
+      "reference_id": "OV-REF-004",
+      "section_id": "4",
+      "section_title": "Approved Brokers",
+      "page": null,
+      "paragraph": 1,
+      "anchor": "policy-4-1",
+      "source_html": "policy_source.html",
+      "quoted_text": "You must maintain your accounts with a broker approved by Legal & Compliance.",
+      "start_offset": 0,
+      "end_offset": 0
+    },
+    {
+      "reference_id": "OV-REF-005",
+      "section_id": "5",
+      "section_title": "Transaction Pre-Clearance Requirement",
+      "page": null,
+      "paragraph": 2,
+      "anchor": "policy-5-2",
+      "source_html": "policy_source.html",
+      "quoted_text": "You must submit a pre-clearance request in PTA and receive an approval before undertaking any personal investment transactions permitted under this policy, including purchases, sales, stock options exercises, ETFs and gifts.",
+      "start_offset": 0,
+      "end_offset": 0
+    },
+    {
+      "reference_id": "OV-REF-006",
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "page": null,
+      "paragraph": 1,
+      "anchor": "policy-8-1",
+      "source_html": "policy_source.html",
+      "quoted_text": "Certain personal investments are prohibited under this policy, including securities placed on the Restricted List and securities subject to blackout periods. Short-term trading profits within 60 days are also prohibited.",
+      "start_offset": 0,
+      "end_offset": 0
+    },
+    {
+      "reference_id": "OV-REF-007",
+      "section_id": "14",
+      "section_title": "Annual Certification",
+      "page": null,
+      "paragraph": 1,
+      "anchor": "policy-14-1",
+      "source_html": "policy_source.html",
+      "quoted_text": "You are required to complete an annual certification confirming compliance with this policy.",
+      "start_offset": 0,
+      "end_offset": 0
+    },
+    {
+      "reference_id": "OV-REF-008",
+      "section_id": "15",
+      "section_title": "Violations",
+      "page": null,
+      "paragraph": 1,
+      "anchor": "policy-15-1",
+      "source_html": "policy_source.html",
+      "quoted_text": "Violations of this policy may result in disciplinary action, up to and including termination of employment.",
+      "start_offset": 0,
+      "end_offset": 0
+    }
+  ],
+  "trigger": {
+    "type": "POLICY_SCOPE",
+    "description": "Employee joins BlackRock or initiates a personal trading transaction."
+  },
+  "actors": [
+    {
+      "actor_id": "ACT-EMPLOYEE",
+      "name": "Employee",
+      "actor_type": "INDIVIDUAL",
+      "bpmn_lane": "Employee"
+    },
+    {
+      "actor_id": "ACT-COMPLIANCE",
+      "name": "Legal & Compliance",
+      "actor_type": "BUSINESS_FUNCTION",
+      "bpmn_lane": "Legal & Compliance"
+    },
+    {
+      "actor_id": "ACT-SYSTEM",
+      "name": "Automated System",
+      "actor_type": "SYSTEM",
+      "bpmn_lane": "Automated System (Recommended)"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "OV-STEP-001",
+      "sequence": 1,
+      "title": "Disclose all reportable accounts in PTA",
+      "description": "Within ten days of joining BlackRock, disclose all brokerage and investment accounts\u2014including private investments and trusts\u2014in the Personal Trading Assistant (PTA). Complete the initial holdings certification even if you have no holdings to report.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "OV-REF-003"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.9,
+      "next_step_ids": [
+        "OV-STEP-002"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-3.2-001-A001"
+    },
+    {
+      "step_id": "OV-STEP-002",
+      "sequence": 2,
+      "title": "Maintain accounts with approved brokers",
+      "description": "All personal trading accounts must be held with a broker approved by Legal & Compliance. Accounts at unapproved brokers must be transferred or closed before any trading activity.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "OV-REF-004"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.88,
+      "next_step_ids": [
+        "OV-STEP-003"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-4.1-002-A002"
+    },
+    {
+      "step_id": "OV-STEP-003",
+      "sequence": 3,
+      "title": "Check transaction against prohibited and blackout rules",
+      "description": "Before submitting any pre-clearance request, confirm: the security is not on the Restricted List, no blackout period applies, the transaction is not a prohibited type (e.g. a short-term profit within 60 days), and the employee holds no material non-public information about the issuer.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "REVIEW",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "OV-REF-006"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "next_step_ids": [
+        "OV-STEP-REC"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-8.1-003-A003"
+    },
+    {
+      "step_id": "OV-STEP-REC",
+      "sequence": 4,
+      "title": "Automate pre-clearance evidence capture and broker feeds into PTA",
+      "description": "Recommended control: automatically ingest broker statement feeds and pre-clearance evidence into PTA to reduce manual effort, improve audit trail completeness, and enable real-time compliance monitoring across all employee accounts.",
+      "actor_id": "ACT-SYSTEM",
+      "action_type": "RECOMMENDED_ACTION",
+      "bpmn_type": "serviceTask",
+      "source_reference_ids": [],
+      "explicit_or_inferred": "INFERRED",
+      "inference_reason": "Recommended automation control\u2014not an explicit policy obligation. Surfaced to improve evidence completeness and reduce manual compliance burden.",
+      "recommended": true,
+      "confidence": 0.95,
+      "next_step_ids": [
+        "OV-STEP-004"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-0-004-A004"
+    },
+    {
+      "step_id": "OV-STEP-004",
+      "sequence": 5,
+      "title": "Submit pre-clearance request and receive approval",
+      "description": "Submit a pre-clearance request in PTA. Legal & Compliance must approve the request before any personal investment transaction is undertaken. Orders must be executed on the same day the approval is granted.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "SUBMISSION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "OV-REF-005"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.9,
+      "next_step_ids": [
+        "OV-GATEWAY-001"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-5.2-005-A005"
+    },
+    {
+      "step_id": "OV-STEP-005",
+      "sequence": 6,
+      "title": "Execute approved trade and provide broker statements within 30 days",
+      "description": "Execute the approved transaction on the same day approval is received. Provide broker statements to Legal & Compliance within 30 days of the transaction date.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "OV-REF-005"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "next_step_ids": [
+        "OV-STEP-006"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "APPROVED",
+      "color": "#2F7D4F",
+      "step_code": "P-5.2-006-A006"
+    },
+    {
+      "step_id": "OV-STEP-006",
+      "sequence": 7,
+      "title": "Complete annual certification of compliance",
+      "description": "Complete the annual certification in PTA, confirming compliance with the Global Personal Trading Policy. The certification must be completed within the period designated by Legal & Compliance.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "OV-REF-007"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.9,
+      "next_step_ids": [
+        "OV-END-001"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "APPROVED",
+      "color": "#2F7D4F",
+      "step_code": "P-14.1-007-A007"
+    }
+  ],
+  "gateways": [
+    {
+      "gateway_id": "OV-GATEWAY-001",
+      "gateway_type": "exclusiveGateway",
+      "question": "Is the request approved and transaction permitted?",
+      "incoming_step_ids": [
+        "OV-STEP-004"
+      ],
+      "branches": [
+        {
+          "label": "Approved",
+          "condition": "approval_status == 'approved' and no restrictions apply",
+          "target_step_id": "OV-STEP-005",
+          "color": "#2F7D4F"
+        },
+        {
+          "label": "Rejected / Prohibited",
+          "condition": "approval_status == 'rejected' or prohibited rule applies",
+          "target_event_id": "OV-END-REJECTED",
+          "color": "#B3402E"
+        }
+      ],
+      "gateway_code": "P-5.2-006-G001"
+    }
+  ],
+  "events": [
+    {
+      "event_id": "OV-START-001",
+      "event_type": "startEvent",
+      "title": "Employee joins BlackRock or initiates a personal trade.",
+      "next_step_id": "OV-STEP-001",
+      "source_reference_ids": [
+        "OV-REF-001"
+      ],
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-1.1-001-E001"
+    },
+    {
+      "event_id": "OV-END-001",
+      "event_type": "endEvent",
+      "title": "Policy complied with",
+      "path_outcome": "APPROVED",
+      "color": "#2F7D4F",
+      "event_code": "P-0-009-E002"
+    },
+    {
+      "event_id": "OV-END-REJECTED",
+      "event_type": "endEvent",
+      "title": "Must not proceed \u2014 prohibited or rejected",
+      "path_outcome": "REJECTED",
+      "color": "#B3402E",
+      "event_code": "P-0-010-E003"
+    }
+  ],
+  "deadlines": [],
+  "conditions": [],
+  "records": [],
+  "controls": [],
+  "ambiguities": [],
+  "overall_confidence": 0.9,
+  "review_status": "PENDING",
+  "section_id": "ALL",
+  "section_title": "Global Personal Trading Policy"
+}

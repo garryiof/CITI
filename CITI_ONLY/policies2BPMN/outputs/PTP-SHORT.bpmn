@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:policy="http://policies2bpmn.local/policy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" id="Defs_PTP-SHORT" targetNamespace="http://policies2bpmn.local/workflows" xsi:schemaLocation="">
+  <collaboration id="Collab_PTP-SHORT">
+    <participant id="Participant_PTP-SHORT" name="Global Personal Trading Policy" processRef="Process_PTP-SHORT"/>
+  </collaboration>
+  <process id="Process_PTP-SHORT" name="Avoid Short-Term Trading Profits" isExecutable="false">
+    <laneSet id="LaneSet_PTP-SHORT">
+      <lane id="Lane_ACT-EMPLOYEE" name="Employee">
+        <flowNodeRef>START-001</flowNodeRef>
+        <flowNodeRef>STEP-001</flowNodeRef>
+        <flowNodeRef>END-PROHIBITED</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="START-001" name="Policy rule in section 11 applies.">
+      <extensionElements>
+        <policy:sourceReference sectionId="11" referenceId="REF-001" confidence="0.87" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </startEvent>
+    <userTask id="STEP-001" name="Not profit from the purchase then sale">
+      <extensionElements>
+        <policy:sourceReference sectionId="11" referenceId="REF-001" confidence="0.87" extractionType="EXPLICIT"/>
+      </extensionElements>
+    </userTask>
+    <endEvent id="END-PROHIBITED" name="Must not proceed — prohibited by policy"/>
+    <sequenceFlow id="Flow_001" sourceRef="START-001" targetRef="STEP-001"/>
+    <sequenceFlow id="Flow_002" sourceRef="STEP-001" targetRef="END-PROHIBITED"/>
+  </process>
+  <bpmndi:BPMNDiagram id="Diagram_PTP-SHORT">
+    <bpmndi:BPMNPlane id="Plane_PTP-SHORT" bpmnElement="Process_PTP-SHORT">
+      <bpmndi:BPMNShape id="Shape_START-001" bpmnElement="START-001">
+        <dc:Bounds x="117.0" y="92.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_STEP-001" bpmnElement="STEP-001" bioc:stroke="#C45E12" bioc:fill="#FCE8D5">
+        <dc:Bounds x="270.0" y="70.0" width="130.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_END-PROHIBITED" bpmnElement="END-PROHIBITED" bioc:stroke="#C45E12" bioc:fill="#FCE8D5">
+        <dc:Bounds x="517.0" y="92.0" width="36.0" height="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_Flow_001" bpmnElement="Flow_001">
+        <di:waypoint x="153.0" y="110.0"/>
+        <di:waypoint x="270.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_Flow_002" bpmnElement="Flow_002" bioc:stroke="#C45E12">
+        <di:waypoint x="400.0" y="110.0"/>
+        <di:waypoint x="517.0" y="110.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

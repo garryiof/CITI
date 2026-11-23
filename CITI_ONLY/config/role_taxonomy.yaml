@@ -1,0 +1,15 @@
+# Approved role taxonomy for mapping / alias normalization.
+version: "0.1"
+roles:
+  - id: ROLE_POLICY_OWNER
+    label: Policy Owner
+    aliases: [policy owner, document owner]
+  - id: ROLE_CONTROL_OWNER
+    label: Control Owner
+    aliases: [control owner, control responsible]
+  - id: ROLE_PROCESS_PERFORMER
+    label: Process Performer
+    aliases: [performer, analyst, processor]
+  - id: ROLE_APPROVER
+    label: Approver
+    aliases: [approver, reviewer, manager]

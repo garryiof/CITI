@@ -54,17 +54,23 @@ os.environ["OPENAI_API_KEY"] = "sk-..."   # clear before sharing the notebook
 
 Do not leave a real key in a saved `.ipynb`.
 
-## 4. Switch provider to OpenAI
+## 4. Choose provider
 
-In the LLM cell:
+**CITI Hub (default):** Llama 4 via GuardRail — do **not** set an OpenAI key.
 
-```python
-LLM_PROVIDER = "openai"
+```text
+POLICY_LLM_PROVIDER=llama4
+POLICY_LLM_MODEL=<exact Hub model id>
+SOEID=<your soeid>
 ```
 
-Or in `.env` / shell: `POLICY_LLM_PROVIDER=openai`.
+**Home OpenAI (optional):**
 
-Optional model: `POLICY_LLM_MODEL=gpt-4o-mini` (default if unset).
+```text
+POLICY_LLM_PROVIDER=openai
+OPENAI_API_KEY=sk-...
+POLICY_LLM_MODEL=gpt-4o-mini
+```
 
 ## 5. Run
 

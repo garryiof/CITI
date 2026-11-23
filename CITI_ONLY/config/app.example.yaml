@@ -1,0 +1,57 @@
+workspace:
+  id: POLICY_001
+  # Absolute external JupyterHub-accessible path set in notebook; never commit a real policy.
+  policy_path: null
+  output_root: policy_runs
+  run_id: null
+  allow_source_copy: false
+  overwrite: false
+
+llm:
+  # Switch: mock | guardrail | llama4 (llama4 → guardrail)
+  # CITI Hub: guardrail/llama4 + POLICY_LLM_MODEL (exact Hub model id)
+  # Offline synthetic: mock
+  provider: guardrail
+  model: Llama-4-Scout  # override with POLICY_LLM_MODEL if Hub id differs
+  narrative_model: null
+  temperature: 0.0
+  n: 1
+  max_chunk_chars: 12000
+  max_retries: 3
+  extra_body: {}
+  parse_extra_body: {}
+  log_prompt_text: false
+  log_completion_text: false
+
+processing:
+  allow_ocr: false
+  require_source_refs: true
+  enable_inferred_mappings: true
+  inferred_mappings_need_review: true
+
+viewer:
+  offline_assets: true
+  file_url_compatible: true
+  embed_viewer_data: true
+  default_tab: knowledge_map
+  renderer_bpmn: bpmn_js_navigated_viewer
+  renderer_graph: cytoscape_js
+  js_assets_root: src/policy_knowledge/viewer/vendor
+  javascript_mode: classic_script
+  require_browser_verification: true
+  fail_demo_ready_on_missing_vendor_assets: true
+
+packaging:
+  create_full_archive: true
+  create_demo_archive: true
+  exclude_archive_dir_from_full_zip: true
+  include_intermediate_in_full_archive: false
+  allow_confidential_demo_export: false
+  allow_workstation_transfer: false
+
+# data.js population (feeds demo/index.html). Excerpts on by default.
+transfer:
+  workstation_transfer_approved: false
+  include_source_in_full: false
+  include_intermediate_in_full: false
+  include_policy_excerpts_in_demo: true

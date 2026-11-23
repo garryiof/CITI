@@ -1,0 +1,113 @@
+{
+  "workflow_id": "PTP-PROHIB",
+  "workflow_title": "Comply with Prohibited Investment Rules",
+  "workflow_summary": "Employee must not invest in prohibited instruments.",
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html"
+  },
+  "source_references": [
+    {
+      "reference_id": "REF-001",
+      "section_id": "8",
+      "section_title": "Prohibited Investments",
+      "page": null,
+      "paragraph": 2,
+      "anchor": "policy-8-2",
+      "source_html": "policy_source.html",
+      "quoted_text": "You are prohibited from transacting in the following:",
+      "start_offset": 12102,
+      "end_offset": 12155
+    }
+  ],
+  "trigger": {
+    "type": "POLICY_RULE",
+    "description": "Policy rule in section 8 applies."
+  },
+  "actors": [
+    {
+      "actor_id": "ACT-EMPLOYEE",
+      "name": "Employee",
+      "actor_type": "INDIVIDUAL",
+      "bpmn_lane": "Employee"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-001",
+      "sequence": 1,
+      "title": "Prohibited \u2014 must not proceed",
+      "description": "You are prohibited from transacting in the following:",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "PROHIBITED_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.88,
+      "confidence_detail": {
+        "action_detection": 0.94,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.94,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "END-PROHIBITED"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "PROHIBITED",
+      "color": "#C45E12",
+      "step_code": "P-8.2-001-A001"
+    }
+  ],
+  "gateways": [],
+  "events": [
+    {
+      "event_id": "START-001",
+      "event_type": "startEvent",
+      "title": "Policy rule in section 8 applies.",
+      "next_step_id": "STEP-001",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-8.2-001-E001"
+    },
+    {
+      "event_id": "END-PROHIBITED",
+      "event_type": "endEvent",
+      "title": "Must not proceed \u2014 prohibited by policy",
+      "path_outcome": "PROHIBITED",
+      "color": "#C45E12",
+      "event_code": "P-8-003-E002"
+    }
+  ],
+  "conditions": [],
+  "exceptions": [],
+  "deadlines": [],
+  "records": [],
+  "controls": [
+    {
+      "control_id": "CTRL-001",
+      "title": "Prohibited \u2014 must not proceed",
+      "control_type": "PREVENTIVE",
+      "performed_by": "ACT-EMPLOYEE",
+      "source_reference_ids": [
+        "REF-001"
+      ]
+    }
+  ],
+  "ambiguities": [],
+  "overall_confidence": 0.88,
+  "review_status": "PENDING",
+  "section_id": "8",
+  "section_title": "Prohibited Investments"
+}

@@ -22,9 +22,11 @@ class WorkspaceConfig:
 
 @dataclass
 class LLMConfig:
-    # mock | openai | guardrail — Hub uses guardrail; home full runs use openai; tests use mock.
-    provider: str = "mock"
-    model: str | None = None
+    # mock | openai | guardrail | llama4 (alias→guardrail).
+    # CITI Hub: guardrail/llama4 + POLICY_LLM_MODEL (e.g. Llama-4-Scout).
+    # Home check: openai (+ OPENAI_API_KEY). Tests: mock.
+    provider: str = "guardrail"
+    model: str | None = "Llama-4-Scout"
     narrative_model: str | None = None
     temperature: float = 0.0
     n: int = 1

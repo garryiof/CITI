@@ -4,14 +4,17 @@
 
 For switching among **mock / OpenAI (home) / GuardRail (Hub)**, see [`llm_provider_switch.md`](llm_provider_switch.md).
 
+**Detailed CITI steps (disable OpenAI, bind Llama 4 with `functools.partial`):** [`citi_llama4_guardrail_partial.md`](citi_llama4_guardrail_partial.md).
+
 ## Bootstrap (live Hub path)
 
-1. Set `llm.provider: guardrail` (or `POLICY_LLM_PROVIDER=guardrail`).
-2. Discover the approved import path for `GuardRail` in the Hub environment (do not invent package names).
-3. Call the organization-approved initialize pattern (e.g. `GuardRail.INITIALIZE(SOEID)` if that is the local contract).
-4. Wire CREATE/PARSE (or equivalent) callables into `GuardRailClient`.
-5. Keep `SOEID`, certificates, and endpoints out of tracked files — use env / Hub secrets.
-6. If GuardRail is unavailable, use `create_llm_client` with `mock` and do **not** claim live connectivity.
+1. Set `POLICY_LLM_PROVIDER=llama4` (or `guardrail`) and `POLICY_LLM_MODEL` to the **exact** Hub Llama 4 model id.
+2. Set `SOEID` / `POLICY_SOEID` via Hub secrets if `GuardRail.INITIALIZE` requires it.
+3. Ensure `GuardRail` (or discovered module) exposes `CHAT_COMPLETIONS_CREATE` (and optionally `CHAT_COMPLETIONS_PARSE`).
+4. Run the notebook LLM cell — expect `GUARDRAIL_CONNECTED` and printed `model=…`.
+5. Keep `SOEID`, certificates, and endpoints out of tracked files.
+6. If GuardRail is unavailable, the notebook falls back to `mock` — do **not** claim live Llama connectivity.
+
 
 ## Local helpers
 

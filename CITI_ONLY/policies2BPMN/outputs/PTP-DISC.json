@@ -1,0 +1,376 @@
+{
+  "workflow_id": "PTP-DISC",
+  "workflow_title": "Disclose Reportable Accounts",
+  "workflow_summary": "Employee discloses brokerage and investment accounts as required.",
+  "policy": {
+    "policy_id": "POL-PT-001",
+    "policy_title": "Global Personal Trading Policy",
+    "policy_version": "2021-09-28",
+    "source_file": "blackrockPTIP.html"
+  },
+  "source_references": [
+    {
+      "reference_id": "REF-001",
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "page": null,
+      "paragraph": 2,
+      "anchor": "policy-3-2",
+      "source_html": "policy_source.html",
+      "quoted_text": "You must disclose brokerage or other investment accounts, including private investments, trusts or investment clubs in which you make investment decisions or have direct influence or control (such as joint ownership, trading authorization, or the authority to exercise investment discretion) or a direct or indirect beneficial ownership interest by entering them into the Personal Trading Assistant (\u201cPTA\u201d). 2",
+      "start_offset": 1544,
+      "end_offset": 1953
+    },
+    {
+      "reference_id": "REF-002",
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "page": null,
+      "paragraph": 16,
+      "anchor": "policy-3-16",
+      "source_html": "policy_source.html",
+      "quoted_text": "Donation, reward, and debt based crowdfunding initiatives (however, note that equity and investment- based crowdfunding must be pre-cleared); and",
+      "start_offset": 3684,
+      "end_offset": 3829
+    },
+    {
+      "reference_id": "REF-003",
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "page": null,
+      "paragraph": 19,
+      "anchor": "policy-3-19",
+      "source_html": "policy_source.html",
+      "quoted_text": "Initial Holdings Certification : Within ten days of joining BlackRock, you must provide your securities holdings information, as well as account information for every account required to be disclosed in accordance with Section 3.2.",
+      "start_offset": 3940,
+      "end_offset": 4171
+    },
+    {
+      "reference_id": "REF-004",
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "page": null,
+      "paragraph": 19,
+      "anchor": "policy-3-19",
+      "source_html": "policy_source.html",
+      "quoted_text": "You are required to complete this certification even if you have no accounts or holdings to report in PTA.",
+      "start_offset": 4172,
+      "end_offset": 4278
+    },
+    {
+      "reference_id": "REF-005",
+      "section_id": "3",
+      "section_title": "Account Disclosure",
+      "page": null,
+      "paragraph": 20,
+      "anchor": "policy-3-20",
+      "source_html": "policy_source.html",
+      "quoted_text": "Current Information : The information you provide must be current (no older than 45 calendar days, prior to your commencing employment with BlackRock).",
+      "start_offset": 4279,
+      "end_offset": 4430
+    }
+  ],
+  "trigger": {
+    "type": "USER_INTENT",
+    "description": "Employee initiates activity under section 3."
+  },
+  "actors": [
+    {
+      "actor_id": "ACT-EMPLOYEE",
+      "name": "Employee",
+      "actor_type": "INDIVIDUAL",
+      "bpmn_lane": "Employee"
+    },
+    {
+      "actor_id": "ACT-COMPLIANCE",
+      "name": "Legal & Compliance",
+      "actor_type": "BUSINESS_FUNCTION",
+      "bpmn_lane": "Compliance"
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "STEP-001",
+      "sequence": 1,
+      "title": "Identify intended activity",
+      "description": "The employee identifies the personal-trading activity that may be subject to this section.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "INFERRED",
+      "inference_reason": "Connective step required to start a readable process from a user-intent trigger; not an additional policy obligation.",
+      "confidence": 0.75,
+      "next_step_ids": [
+        "STEP-002"
+      ],
+      "preconditions": [],
+      "outputs": [
+        "intended_activity"
+      ],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-3.2-001-A001"
+    },
+    {
+      "step_id": "STEP-002",
+      "sequence": 2,
+      "title": "Disclose brokerage or other investment accounts",
+      "description": "You must disclose brokerage or other investment accounts, including private investments, trusts or investment clubs in which you make investment decisions or have direct influence or control (such as joint ownership, trading authorization, or the authority to exercise investment discretion) or a direct or indirect beneficial ownership interest by entering them into the Personal Trading Assistant (\u201cPTA\u201d). 2",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "DISCLOSURE",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-007"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-3.2-002-A002"
+    },
+    {
+      "step_id": "STEP-007",
+      "sequence": 3,
+      "title": "Review pre-clearance request",
+      "description": "Legal & Compliance reviews the intended activity before the employee submits the request for a decision.",
+      "actor_id": "ACT-COMPLIANCE",
+      "action_type": "REVIEW",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-002"
+      ],
+      "explicit_or_inferred": "INFERRED",
+      "inference_reason": "Policy requires approval; the Compliance review is placed before submit so the request is examined prior to submission.",
+      "confidence": 0.8,
+      "next_step_ids": [
+        "STEP-003"
+      ],
+      "preconditions": [],
+      "outputs": [
+        "review_complete"
+      ],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-3.16-003-A003"
+    },
+    {
+      "step_id": "STEP-003",
+      "sequence": 4,
+      "title": "Submit required information",
+      "description": "Donation, reward, and debt based crowdfunding initiatives (however, note that equity and investment- based crowdfunding must be pre-cleared)",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "SUBMISSION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-002"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.84,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.7,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "GATEWAY-001"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": null,
+      "color": null,
+      "step_code": "P-3.16-004-A004"
+    },
+    {
+      "step_id": "STEP-004",
+      "sequence": 5,
+      "title": "Certification : Within ten days of joining BlackRock",
+      "description": "Initial Holdings Certification : Within ten days of joining BlackRock, you must provide your securities holdings information, as well as account information for every account required to be disclosed in accordance with Section 3.2.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "DISCLOSURE",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-003"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-005"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "APPROVED",
+      "color": "#2F7D4F",
+      "step_code": "P-3.19-005-A005"
+    },
+    {
+      "step_id": "STEP-005",
+      "sequence": 6,
+      "title": "Report in PTA",
+      "description": "You are required to complete this certification even if you have no accounts or holdings to report in PTA.",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "SUBMISSION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-004"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.93,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.93,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "STEP-006"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "APPROVED",
+      "color": "#2F7D4F",
+      "step_code": "P-3.19-006-A006"
+    },
+    {
+      "step_id": "STEP-006",
+      "sequence": 7,
+      "title": "Perform required action",
+      "description": "Current Information : The information you provide must be current (no older than 45 calendar days, prior to your commencing employment with BlackRock).",
+      "actor_id": "ACT-EMPLOYEE",
+      "action_type": "MANDATORY_ACTION",
+      "bpmn_type": "userTask",
+      "source_reference_ids": [
+        "REF-005"
+      ],
+      "explicit_or_inferred": "EXPLICIT",
+      "confidence": 0.87,
+      "confidence_detail": {
+        "action_detection": 0.92,
+        "actor_identification": 0.85,
+        "action_interpretation": 0.92,
+        "sequence_relationship": 0.7,
+        "source_grounding": 0.95
+      },
+      "next_step_ids": [
+        "END-001"
+      ],
+      "preconditions": [],
+      "outputs": [],
+      "deadline_id": null,
+      "exception_ids": [],
+      "path_outcome": "APPROVED",
+      "color": "#2F7D4F",
+      "step_code": "P-3.20-007-A007"
+    }
+  ],
+  "gateways": [
+    {
+      "gateway_id": "GATEWAY-001",
+      "gateway_type": "exclusiveGateway",
+      "question": "Was the request approved?",
+      "incoming_step_ids": [
+        "STEP-003"
+      ],
+      "branches": [
+        {
+          "label": "Approved",
+          "condition": "approval_status == 'approved'",
+          "target_step_id": "STEP-004",
+          "color": "#2F7D4F"
+        },
+        {
+          "label": "Rejected",
+          "condition": "approval_status == 'rejected'",
+          "target_event_id": "END-REJECTED",
+          "color": "#B3402E"
+        }
+      ],
+      "gateway_code": "P-3.16-005-G001"
+    }
+  ],
+  "events": [
+    {
+      "event_id": "START-001",
+      "event_type": "startEvent",
+      "title": "Employee initiates activity under section 3.",
+      "next_step_id": "STEP-001",
+      "source_reference_ids": [
+        "REF-001"
+      ],
+      "path_outcome": null,
+      "color": null,
+      "event_code": "P-3.2-001-E001"
+    },
+    {
+      "event_id": "END-REJECTED",
+      "event_type": "endEvent",
+      "title": "Activity must not proceed",
+      "path_outcome": "REJECTED",
+      "color": "#B3402E",
+      "event_code": "P-3-009-E002"
+    },
+    {
+      "event_id": "END-001",
+      "event_type": "endEvent",
+      "title": "Process completed",
+      "path_outcome": "APPROVED",
+      "color": "#2F7D4F",
+      "event_code": "P-3-010-E003"
+    }
+  ],
+  "conditions": [
+    {
+      "condition_id": "COND-001",
+      "expression": "approval_status == 'approved'",
+      "business_description": "Legal & Compliance grants approval.",
+      "source_reference_ids": [
+        "REF-002"
+      ]
+    }
+  ],
+  "exceptions": [],
+  "deadlines": [],
+  "records": [],
+  "controls": [],
+  "ambiguities": [],
+  "overall_confidence": 0.84,
+  "review_status": "PENDING",
+  "section_id": "3",
+  "section_title": "Account Disclosure"
+}

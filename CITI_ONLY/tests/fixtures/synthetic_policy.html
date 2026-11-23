@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Synthetic Escalation Policy</title>
+</head>
+<body>
+  <h1>Synthetic Escalation Policy</h1>
+  <p id="meta">Version 1.0 — Effective 2026-01-01</p>
+
+  <h2 id="s1">1. Purpose</h2>
+  <p id="s1-p1">This policy defines how analysts must escalate exceptions for synthetic transactions.</p>
+
+  <h2 id="s2">2. Roles</h2>
+  <p id="s2-p1">The Policy Owner is accountable for this document. The Process Performer (Analyst) executes the procedure. The Approver decides exception outcomes.</p>
+
+  <h2 id="s3">3. Requirements</h2>
+  <p id="s3-p1">Analysts must escalate exceptions within 1 business day.</p>
+  <p id="s3-p2">Approvers shall document the decision rationale.</p>
+  <p id="s3-p3">Teams should retain evidence for 7 years where applicable.</p>
+  <p id="s3-p4">It is unclear whether weekend hours count toward the escalation SLA.</p>
+
+  <h2 id="s4">4. Procedure</h2>
+  <ol id="s4-list">
+    <li id="s4-a1">Identify the exception and capture transaction identifiers.</li>
+    <li id="s4-a2">If the exception amount exceeds 10,000 USD, route to the Approver; otherwise close with standard control evidence.</li>
+    <li id="s4-a3">Approver records approve or reject.</li>
+    <li id="s4-a4">Retain control evidence in the case file.</li>
+  </ol>
+
+  <h2 id="s5">5. Risks, Controls, and Evidence</h2>
+  <p id="s5-p1">Operational Risk: delayed escalation may leave synthetic exposure unmanaged.</p>
+  <p id="s5-p2">Preventive Control: dual review of high-value exceptions; Control Owner is the Approver; frequency is each occurrence.</p>
+  <p id="s5-p3">Evidence: escalation ticket and approval record.</p>
+
+  <table id="s5-table">
+    <tr><th>Control</th><th>Owner</th><th>Evidence</th></tr>
+    <tr><td>Dual review</td><td>Approver</td><td>Approval record</td></tr>
+  </table>
+</body>
+</html>

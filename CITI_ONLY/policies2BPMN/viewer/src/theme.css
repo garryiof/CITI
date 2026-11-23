@@ -1,0 +1,199 @@
+/* ==========================================================================
+   THEME CONFIGURATION — policies2BPMN viewer
+   ==========================================================================
+   All colors and font sizes used by the application are defined here.
+   Change a value in this file and the whole interface updates.
+   styles.css contains layout only and references these variables.
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------
+     FONT FAMILIES
+     ------------------------------------------------------------------ */
+  /* Body text and controls */
+  --font-body: "Public Sans", sans-serif;
+  /* Headings and policy quotations */
+  --font-display: "Newsreader", serif;
+  /* Technical labels, IDs, badges */
+  --font-mono: "DM Mono", monospace;
+
+  /* ------------------------------------------------------------------
+     FONT SIZES
+     ------------------------------------------------------------------ */
+  /* Micro labels: kickers, badges, footer labels, legend text */
+  --fs-micro: 16px;
+  /* Tiny: workflow meta, ID rows, export buttons, links */
+  --fs-tiny: 13px;
+  /* Small: attribute values, footer stats, atomic phrase */
+  --fs-small: 15px;
+  /* Body: descriptions, summaries, branch labels */
+  --fs-body: 16px;
+  /* Text: workflow titles in list, search input, policy quotes */
+  --fs-text:17px;
+  /* Card titles inside the detail panel */
+  --fs-card-title: 12px;
+  /* Empty-state heading in the detail panel */
+  --fs-empty-title: 18px;
+  /* Application name in the top bar */
+  --fs-brand: 20px;
+  /* Selected element title in the detail panel */
+  --fs-detail-title: 21px;
+  /* Panel headings (Workflows / Element detail) */
+  --fs-panel-title: 22px;
+  /* Workflow title above the diagram */
+  --fs-diagram-title: 24px;
+  /* Labels rendered inside the BPMN diagram */
+  --fs-bpmn-label: 13px;
+
+  /* ------------------------------------------------------------------
+     CORE PALETTE
+     ------------------------------------------------------------------ */
+  /* Primary ink: main text, dark backgrounds (top bar, active items) */
+  --color-ink: #17211f;
+  /* Secondary text: descriptions, summaries */
+  --color-muted: #6e7470;
+  /* Page background behind the workspace */
+  --color-app-bg: #ecece5;
+  /* Workspace panel background */
+  --color-paper: #f7f5ed;
+  /* Diagram column background */
+  --color-canvas: #fcfbf6;
+  /* Standard border color */
+  --color-line: #d6d6ce;
+  /* Stronger border around the workspace */
+  --color-line-dark: #b9bbb4;
+  /* Side panels / bars background (rails, footer, stage bar) */
+  --color-panel-bg: #f1f0e9;
+  /* Buttons at rest */
+  --color-button-bg: #fffef9;
+  /* Buttons on hover */
+  --color-button-hover: #e9e9e1;
+  /* Drop shadow under the workspace */
+  --shadow-workspace: 0 18px 46px rgb(31 40 37 / 9%);
+
+  /* ------------------------------------------------------------------
+     ACCENT COLORS
+     ------------------------------------------------------------------ */
+  /* Brand accent: top bar underline, hovers, selection outline, edited badge */
+  --color-accent: #bd4f36;
+  /* Soft accent background: review pill, edited badge background */
+  --color-accent-soft: #f4e2db;
+  /* Positive accent: "explicit" markers, view-in-policy link */
+  --color-green: #446c5d;
+  /* Soft positive background */
+  --color-green-soft: #dce8e2;
+
+  /* ------------------------------------------------------------------
+     EXTRACTION / OUTCOME COLORS (diagram semantics)
+     ------------------------------------------------------------------ */
+  /* Inferred connector: PURPLE — steps added for readability, not policy text */
+  --color-inferred: #6b4fa1;
+  /* Inferred connector fill */
+  --color-inferred-fill: #ece5f6;
+  /* Approved path: nodes and relations after an "Approved" decision */
+  --color-approved: #2f7d4f;
+  /* Approved path fill */
+  --color-approved-fill: #e4f2e9;
+  /* Rejected path: nodes and relations after a "Rejected" decision */
+  --color-rejected: #b3402e;
+  /* Rejected path fill */
+  --color-rejected-fill: #f8e3dd;
+  /* Prohibited action: orange negative outcome (must not proceed) */
+  --color-prohibited: #c45e12;
+  /* Prohibited action fill */
+  --color-prohibited-fill: #fce8d5;
+  /* Recommended control: teal — suggested automation, not a policy obligation */
+  --color-recommended: #0e7a6e;
+  /* Recommended control fill */
+  --color-recommended-fill: #d6f0ec;
+
+  /* ------------------------------------------------------------------
+     TOP BAR
+     ------------------------------------------------------------------ */
+  /* Top bar text */
+  --color-topbar-text: #f7f5ed;
+  /* Top bar secondary text (eyebrow, status) */
+  --color-topbar-muted: #aab3af;
+  /* Status text next to the green dot */
+  --color-topbar-status: #bbc3bf;
+  /* "Local workspace" indicator dot */
+  --color-status-dot: #79a991;
+  /* Thin separator in the top bar status */
+  --color-topbar-separator: #4c5753;
+  /* Middle bar of the brand mark */
+  --color-brand-bar: #d37157;
+
+  /* ------------------------------------------------------------------
+     WORKFLOW LIST (left rail)
+     ------------------------------------------------------------------ */
+  /* Row divider */
+  --color-list-divider: #ddddd5;
+  /* Row hover background */
+  --color-list-hover: #e8e7df;
+  /* Workflow number */
+  --color-list-number: #979b96;
+  /* Workflow number when the row is active */
+  --color-list-number-active: #d1775e;
+  /* Meta text ("6 actions - 84%") */
+  --color-list-meta: #000;
+  /* Meta text when the row is active */
+  --color-list-meta-active: #aeb8b3;
+  /* Search box placeholder/icon */
+  --color-search-text: #888d88;
+  /* Search box background */
+  --color-search-bg: #faf9f3;
+  /* Search box border when focused */
+  --color-search-focus: #8e9691;
+
+  /* ------------------------------------------------------------------
+     DIAGRAM STAGE
+     ------------------------------------------------------------------ */
+  /* Stage background */
+  --color-stage-bg: #f9f8f2;
+  /* Dotted grid on the stage */
+  --color-stage-dots: #cacbc4;
+  /* Default BPMN element outline (when not on an outcome path) */
+  --color-bpmn-stroke: #33423d;
+  /* Default BPMN element fill */
+  --color-bpmn-fill: #fffef9;
+  /* Legend row text */
+  --color-legend-text: #6f746f;
+  /* "Drag elements to rearrange" hint */
+  --color-legend-hint: #9b9f99;
+  /* Footer stat labels */
+  --color-footer-label: #868b86;
+  /* Edited badge border */
+  --color-badge-border: #e0b8a9;
+  /* Edited badge / review pill text */
+  --color-badge-text: #8a503f;
+
+  /* ------------------------------------------------------------------
+     DETAIL PANEL
+     ------------------------------------------------------------------ */
+  /* Small uppercase labels (kickers, dt, section titles) */
+  --color-label: #8a8e89;
+  /* Complete policy wording text */
+  --color-wording: #35413d;
+  /* Quotation text in source cards */
+  --color-quote: #45504c;
+  /* Quotation left border */
+  --color-quote-border: #bdc1bc;
+  /* Source card background */
+  --color-card-bg: #fbfaf5;
+  /* Small chips in source meta */
+  --color-chip-bg: #e9e9e2;
+  /* Chip text */
+  --color-chip-text: #68716c;
+  /* Atomic phrase panel border */
+  --color-atomic-border: #aeb3ad;
+  /* Atomic phrase text */
+  --color-atomic-text: #4f5955;
+  /* "Policy verbatim" badge text */
+  --color-verbatim-text: #315f4d;
+  /* Branch condition code */
+  --color-condition: #7b574c;
+  /* Scrollbar thumbs */
+  --color-scrollbar: #b9bbb4;
+  /* Download button hover */
+  --color-download-hover: #35423e;
+}
