@@ -18,9 +18,9 @@ Exact filenames are enforced by `validate_offline_demo` / vendor readiness check
 
 ## Approval placeholder
 
-- [ ] bpmn-js Navigated Viewer bytes approved and copied
-- [ ] cytoscape.min.js approved and copied
-- [ ] license texts present
+- [x] bpmn-js Navigated Viewer bytes copied (bpmn-js 18.21.0, `dist/bpmn-navigated-viewer.production.min.js`)
+- [x] cytoscape.min.js copied (cytoscape 3.34.0, `dist/cytoscape.min.js`)
+- [x] license texts present (`LICENSES/`)
 - [ ] SHA256 recorded (optional but recommended)
 
 Copy these files into each run’s `demo/` directory at build time — never rely on CDN or absolute Hub paths.

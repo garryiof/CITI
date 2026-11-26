@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from policy_knowledge.config import TransferPolicy
-from policy_knowledge.exporters.viewer_exporter import build_offline_demo
+from policy_knowledge.exporters.viewer_exporter import build_offline_demo, check_vendor_readiness
 from policy_knowledge.ingestion import read_policy
 from policy_knowledge.intelligence.extraction_pipeline import extract_policy
 from policy_knowledge.intelligence.role_relevance import analyze_role_relevance
@@ -74,7 +74,7 @@ def test_demo_builds_redacted_when_excerpts_disabled(tmp_path: Path):
     manifest = json.loads((demo / "DEMO_MANIFEST.json").read_text(encoding="utf-8"))
     assert manifest["mode"] == "redacted"
     assert manifest.get("browser_test") == "BROWSER_TEST_NOT_RUN"
-    assert manifest["interactive_ready"] is False
+    assert manifest["interactive_ready"] is check_vendor_readiness().interactive_ready
     # Redacted mode: no sensitive source passages in embedded demo data
     assert "must escalate exceptions within 1 business day" not in data_js.lower()
     assert "[redacted]" in data_js
