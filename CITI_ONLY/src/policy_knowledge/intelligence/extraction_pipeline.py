@@ -149,6 +149,21 @@ def extract_policy(
 
     findings: list[ReviewFinding] = []
 
+    if not pass_b.actions and pass_b.modeling_status in ("supported", "partial"):
+        findings.append(
+            ReviewFinding(
+                id="FIND-PASSB-EMPTY-1",
+                severity="high",
+                category="empty_pass_b_actions",
+                description=(
+                    f"Pass B reported modeling_status={pass_b.modeling_status} but returned no actions; "
+                    "no workflow can be built. Re-run or review the procedure in the source."
+                ),
+                source_refs=[],
+                disposition="open",
+            )
+        )
+
     req_gate = filter_cited_entities(
         pass_a.requirements,
         available_source_ids=available,
@@ -398,7 +413,7 @@ def extract_policy(
         ),
         name=pass_b.process_name or title,
         activities=[a.id for a in actions],
-        flow_relations=list(pass_b.flow),
+        flow_relations=[f for f in pass_b.flow if f],
         source_refs=[blocks[0].id] if blocks else [],
         modeling_status=pass_b.modeling_status,
     )

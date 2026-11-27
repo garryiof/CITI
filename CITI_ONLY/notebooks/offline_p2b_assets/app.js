@@ -32,6 +32,22 @@
     return !!(rr && rr.perspectives && typeof rr.perspectives === "object");
   }
 
+  function policyId() {
+    if (DATA.role_relevance && DATA.role_relevance.policy_id) {
+      return String(DATA.role_relevance.policy_id);
+    }
+    if (state.workflow && state.workflow.policy && state.workflow.policy.policy_id) {
+      return String(state.workflow.policy.policy_id);
+    }
+    var wfs = DATA.workflows || {};
+    var keys = Object.keys(wfs);
+    for (var i = 0; i < keys.length; i++) {
+      var wf = wfs[keys[i]] && wfs[keys[i]].json;
+      if (wf && wf.policy && wf.policy.policy_id) return String(wf.policy.policy_id);
+    }
+    return "";
+  }
+
   function readLens() {
     /* Always open main view on All roles — do not restore last role from storage. */
     return "main_view";
@@ -1178,10 +1194,15 @@
     var inferredCount = wf ? (wf.steps || []).length - explicitCount : 0;
     var activeIndex = state.index.find(function (i) { return i.workflow_id === state.activeId; });
 
+    var pid = policyId();
+    document.title = pid ? pid + " · Policy Process Review" : "Policy Process Review (Offline)";
+
     root.innerHTML =
       '<main class="app-shell">' +
       '<header class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div><div>' +
-      '<p class="eyebrow">Policy intelligence / workflow review</p>' +
+      '<p class="eyebrow">Policy intelligence / workflow review' +
+      (pid ? " · " + escapeHtml(pid) : "") +
+      "</p>" +
       "<h1>Personal Trading Policy</h1></div></div>" +
       '<div class="header-status">' +
       (SHOW_REVIEW_ACCESS

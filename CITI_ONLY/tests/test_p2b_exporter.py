@@ -29,6 +29,7 @@ def _knowledge(llm=None):
         llm or SyntheticMockLLM(),
         policy_id="POLICY_001",
         title="Synthetic Escalation Policy",
+        input_path=str(FIXTURES / "synthetic_policy.html"),
     )
 
 
@@ -106,3 +107,107 @@ def test_offline_pack_uses_run_workflows(tmp_path: Path):
     assert all(role_map[r] for r in ("business_owner", "compliance_officer", "policy_owner"))
     known = set(payload["workflows"])
     assert all(e["workflow_id"] in known for entries in role_map.values() for e in entries)
+    assert "source_file" not in payload
+    assert "synthetic_policy.html" not in (out / "index.html").read_text(encoding="utf-8")
+    assert "function policyId()" in (out / "app.js").read_text(encoding="utf-8")
+    css = (out / "styles.css").read_text(encoding="utf-8")
+    assert "height: 74px;" in css
+
+
+def test_export_emits_decision_gateway_and_rejected_branch(tmp_path: Path):
+    from policy_knowledge.model.schemas import Decision
+
+    knowledge = _knowledge()
+    ref = knowledge.actions[0].source_refs[0]
+    next_label = knowledge.actions[1].label if len(knowledge.actions) > 1 else ""
+    knowledge.decisions = [
+        Decision(
+            id="DEC-APPROVAL-1",
+            question="Is the request approved and transaction permitted?",
+            branches=[
+                {"condition": "Approved", "outcome": "PROCEED", "next_action_label": next_label},
+                {
+                    "condition": "Rejected / Prohibited",
+                    "outcome": "PROHIBITED",
+                    "next_action_label": None,
+                    "end_label": "Must not proceed — prohibited or rejected",
+                },
+            ],
+            source_refs=[ref],
+        )
+    ]
+    out_dir = export_p2b_workflows(knowledge, tmp_path / "p2b")
+    index = json.loads((out_dir / "index.json").read_text(encoding="utf-8"))
+    wf_all = next(i for i in index if i["workflow_id"] == "WF-ALL")
+    assert wf_all["gateways"] == 1
+
+    wf_json = json.loads((out_dir / "WF-ALL.json").read_text(encoding="utf-8"))
+    assert len(wf_json["gateways"]) == 1
+    assert any(e["event_id"] == "END-REJ-001" for e in wf_json["end_events"])
+
+    xml = etree.fromstring((out_dir / "WF-ALL.bpmn").read_bytes())
+    gws = xml.findall(f".//{BPMN_NS}exclusiveGateway")
+    assert len(gws) == 1
+    assert gws[0].get("name") == "Is the request approved and transaction permitted?"
+    end_ids = {e.get("id") for e in xml.findall(f".//{BPMN_NS}endEvent")}
+    assert {"END-001", "END-REJ-001"} <= end_ids
+    flow_names = {f.get("name") for f in xml.findall(f".//{BPMN_NS}sequenceFlow") if f.get("name")}
+    assert {"Approved", "Rejected / Prohibited"} <= flow_names
+
+
+def test_derive_role_workflow_map_differentiates_roles():
+    from build_offline_p2b import derive_role_workflow_map
+
+    workflows = {
+        "WF-ALL": {"json": {"steps": [{"canonical_id": "ACT-1", "source_reference_ids": ["B1"]}, {"canonical_id": "ACT-2", "source_reference_ids": ["B2"]}]}},
+        "WF-01": {"json": {"steps": [{"canonical_id": "ACT-1", "source_reference_ids": ["B1"]}]}},
+        "WF-02": {"json": {"steps": [{"canonical_id": "ACT-2", "source_reference_ids": ["B2"]}]}},
+    }
+    rr = {
+        "perspectives": {
+            "business_owner": {
+                "assessments": [
+                    {
+                        "artifact_id": "ACT-1",
+                        "artifact_type": "action",
+                        "relevance": "PRIMARY",
+                        "why_relevant": "Follower must pre-clear.",
+                        "lens_tags": ["required_action", "deadline_or_approval"],
+                        "source_refs": ["B1"],
+                    }
+                ]
+            },
+            "compliance_officer": {
+                "assessments": [
+                    {
+                        "artifact_id": "CTL-1",
+                        "artifact_type": "control",
+                        "relevance": "PRIMARY",
+                        "why_relevant": "Compliance tests violation control.",
+                        "lens_tags": ["control_verification"],
+                        "associated_action_ids": ["ACT-2"],
+                        "associated_control_ids": ["CTL-1"],
+                        "source_refs": ["B2"],
+                    }
+                ]
+            },
+            "policy_owner": {
+                "assessments": [
+                    {
+                        "artifact_id": "FIND-1",
+                        "artifact_type": "finding",
+                        "relevance": "PRIMARY",
+                        "why_relevant": "Owner must close governance gap.",
+                        "lens_tags": ["ambiguity_or_gap"],
+                        "source_refs": ["B1"],
+                    }
+                ]
+            },
+        }
+    }
+    rmap = derive_role_workflow_map(rr, workflows)
+    assert [e["workflow_id"] for e in rmap["business_owner"]] == ["WF-01"]
+    assert [e["workflow_id"] for e in rmap["compliance_officer"]] == ["WF-02"]
+    assert "WF-ALL" in [e["workflow_id"] for e in rmap["policy_owner"]]
+
+

@@ -2756,40 +2756,77 @@ body.role-intel-page .role-intel-shell-workspace {
 
 body.role-intel-page .role-intel-header-bar {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
+  width: 100%;
+  min-height: 74px;
+  height: 74px;
   margin: 0;
-  padding: 18px 24px 14px;
+  padding: 0 26px;
   border-bottom: 3px solid var(--color-accent);
   background: var(--color-ink);
   color: var(--color-topbar-text);
 }
 
-body.role-intel-page .role-intel-header-bar .eyebrow,
-body.role-intel-page .role-intel-header-bar .role-intel-purpose {
+body.role-intel-page .role-intel-header-main {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+body.role-intel-page .role-intel-header-copy {
+  min-width: 0;
+}
+
+body.role-intel-page .role-intel-header-bar .eyebrow {
+  margin: 0 0 3px;
   color: var(--color-topbar-muted);
 }
 
+body.role-intel-page .role-intel-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
 body.role-intel-page .role-intel-header-bar h1 {
+  margin: 0;
+  font: 600 var(--fs-brand)/1.1 var(--font-display);
+  letter-spacing: 0.01em;
   color: var(--color-topbar-text);
-  margin-bottom: 8px;
+  white-space: nowrap;
 }
 
 body.role-intel-page .role-intel-header-bar .role-intel-role-badge {
+  margin: 0;
+  padding: 2px 8px;
+  font: 600 var(--fs-tiny) var(--font-mono);
   border-color: var(--color-brand-bar);
   background: color-mix(in srgb, var(--color-ink) 70%, var(--color-accent) 30%);
   color: var(--color-topbar-text);
+  white-space: nowrap;
+}
+
+body.role-intel-page .role-intel-header-bar .role-intel-purpose {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: 1.2;
+  color: var(--color-topbar-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 body.role-intel-page .role-intel-header-status {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font: 500 var(--fs-tiny) var(--font-mono);
+  gap: 9px;
+  font: 500 var(--fs-body) var(--font-mono);
   color: var(--color-topbar-status);
   white-space: nowrap;
-  padding-bottom: 8px;
+  padding-bottom: 0;
 }
 
 body.role-intel-page .role-phase-strip {

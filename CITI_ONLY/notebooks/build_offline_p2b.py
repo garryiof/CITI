@@ -208,6 +208,42 @@ def build_role_workflow_map(
 
 _RELEVANCE_RANK = {"PRIMARY": 0, "SECONDARY": 1}
 
+_ROLE_FOCUS_TAGS: dict[str, set[str]] = {
+    "business_owner": {
+        "applicable_requirement",
+        "required_action",
+        "prohibited_action",
+        "deadline_or_approval",
+        "evidence_to_retain",
+        "exception_handling",
+    },
+    "compliance_officer": {
+        "compliance_obligation",
+        "testable_requirement",
+        "control_verification",
+        "evidence_validation",
+        "exception_or_breach",
+        "test_scenario",
+        "operational_risk",
+    },
+    "policy_owner": {
+        "policy_objective",
+        "risk_coverage",
+        "governance_requirement",
+        "control_requirement",
+        "ownership_accountability",
+        "regulatory_dependency",
+        "ambiguity_or_gap",
+        "change_impact",
+    },
+}
+
+_ROLE_FOCUS_TYPES: dict[str, set[str]] = {
+    "business_owner": {"action", "requirement", "decision"},
+    "compliance_officer": {"risk", "control", "evidence", "finding"},
+    "policy_owner": {"finding", "role", "requirement", "risk"},
+}
+
 
 def derive_role_workflow_map(
     role_relevance: dict[str, Any] | None,
@@ -215,39 +251,103 @@ def derive_role_workflow_map(
 ) -> dict[str, list[dict[str, str]]]:
     """Role→workflow map for run-generated workflows, from Pass F assessments.
 
-    A workflow is relevant to a role when an assessment targets one of its actions
-    (directly or via associated_action_ids) or cites one of its source blocks.
+    Differentiates the three roles by matching each role's focus tags/types and
+    direct action links rather than falling back to broad source_ref overlap for
+    every role.
     """
     perspectives = (role_relevance or {}).get("perspectives") or {}
+    specific_wids = [w for w in workflows if w != "WF-ALL"]
     result: dict[str, list[dict[str, str]]] = {}
+
     for role in ("business_owner", "compliance_officer", "policy_owner"):
         assessments = (perspectives.get(role) or {}).get("assessments") or []
-        entries: list[dict[str, str]] = []
+        focus_tags = _ROLE_FOCUS_TAGS[role]
+        focus_types = _ROLE_FOCUS_TYPES[role]
+        scored: list[tuple[int, int, str, str, str]] = []
+
         for wid, pack in workflows.items():
-            steps = (pack.get("json") or {}).get("steps") or []
+            # Policy Follower & Compliance Officer focus on concrete workflows when present;
+            # Policy Owner keeps WF-ALL as an end-to-end coverage view.
+            if wid == "WF-ALL" and specific_wids and role != "policy_owner":
+                continue
+            wf_json = pack.get("json") or {}
+            steps = wf_json.get("steps") or []
             action_ids = {s.get("canonical_id") for s in steps if s.get("canonical_id")}
             refs = {r for s in steps for r in (s.get("source_reference_ids") or [])}
-            best: tuple[str, str] | None = None
+
+            best_rank: int | None = None
+            best_why = ""
+            score = 0
             for item in assessments:
                 if not isinstance(item, dict):
                     continue
                 relevance = str(item.get("relevance") or "")
                 if relevance not in _RELEVANCE_RANK:
                     continue
-                hit = (
+                tags = set(item.get("lens_tags") or [])
+                atype = str(item.get("artifact_type") or "")
+                in_role_focus = bool(tags & focus_tags) or (not tags and atype in focus_types)
+
+                direct_hit = bool(
                     item.get("artifact_id") in action_ids
-                    or action_ids & set(item.get("associated_action_ids") or [])
-                    or refs & set(item.get("source_refs") or [])
+                    or (action_ids & set(item.get("associated_action_ids") or []))
                 )
-                if hit and (best is None or _RELEVANCE_RANK[relevance] < _RELEVANCE_RANK[best[0]]):
-                    best = (relevance, str(item.get("why_relevant") or ""))
-            if best is not None:
-                entries.append({"workflow_id": wid, "relevance": best[0], "why": best[1]})
+                ref_hit = bool(refs & set(item.get("source_refs") or []))
+
+                # Require either a direct action hit or a role-focused source_ref hit.
+                if not direct_hit and not (ref_hit and in_role_focus):
+                    continue
+                if role == "compliance_officer" and not (
+                    in_role_focus
+                    or item.get("associated_risk_ids")
+                    or item.get("associated_control_ids")
+                    or item.get("associated_evidence_ids")
+                ):
+                    continue
+                if role == "policy_owner" and not in_role_focus and wid != "WF-ALL":
+                    continue
+
+                rank = _RELEVANCE_RANK[relevance]
+                weight = (3 if direct_hit else 1) + (2 if in_role_focus else 0) + (2 if rank == 0 else 1)
+                score += weight
+                if best_rank is None or rank < best_rank:
+                    best_rank = rank
+                    best_why = str(item.get("why_relevant") or "")
+
+            if best_rank is not None:
+                rel_label = "PRIMARY" if best_rank == 0 else "SECONDARY"
+                scored.append((best_rank, -score, wid, rel_label, best_why))
+
+        # Fallback if strict filtering left a role empty: relax to any direct/ref hit
+        if not scored:
+            for wid, pack in workflows.items():
+                if wid == "WF-ALL" and specific_wids and role != "policy_owner":
+                    continue
+                steps = (pack.get("json") or {}).get("steps") or []
+                action_ids = {s.get("canonical_id") for s in steps if s.get("canonical_id")}
+                refs = {r for s in steps for r in (s.get("source_reference_ids") or [])}
+                for item in assessments:
+                    if not isinstance(item, dict):
+                        continue
+                    relevance = str(item.get("relevance") or "")
+                    if relevance not in _RELEVANCE_RANK:
+                        continue
+                    if (
+                        item.get("artifact_id") in action_ids
+                        or (action_ids & set(item.get("associated_action_ids") or []))
+                        or (refs & set(item.get("source_refs") or []))
+                    ):
+                        scored.append(
+                            (_RELEVANCE_RANK[relevance], -1, wid, relevance, str(item.get("why_relevant") or ""))
+                        )
+                        break
+
+        scored.sort()
+        entries = [{"workflow_id": wid, "relevance": rel, "why": why} for _, _, wid, rel, why in scored]
         if not entries and "WF-ALL" in workflows:
             entries.append(
                 {"workflow_id": "WF-ALL", "relevance": "SECONDARY", "why": "Whole-policy view."}
             )
-        entries.sort(key=lambda e: _RELEVANCE_RANK.get(e["relevance"], 2))
         result[role] = entries
     return result
 

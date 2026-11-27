@@ -120,6 +120,12 @@
     if (DATA.role_relevance && DATA.role_relevance.policy_id) {
       return String(DATA.role_relevance.policy_id);
     }
+    var wfs = DATA.workflows || {};
+    var keys = Object.keys(wfs);
+    for (var i = 0; i < keys.length; i++) {
+      var wf = wfs[keys[i]] && wfs[keys[i]].json;
+      if (wf && wf.policy && wf.policy.policy_id) return String(wf.policy.policy_id);
+    }
     return "";
   }
 
@@ -243,19 +249,23 @@
   function renderHeader(roleLabel, purpose) {
     return (
       '<header class="role-intel-header role-intel-header-bar">' +
-      '<div class="role-intel-header-main">' +
+      '<div class="brand role-intel-header-main">' +
+      '<div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>' +
+      '<div class="role-intel-header-copy">' +
       '<p class="eyebrow">Role view from main workspace' +
       (policyId() ? " · " + escapeHtml(policyId()) : "") +
       "</p>" +
+      '<div class="role-intel-title-row">' +
       "<h1>" +
       escapeHtml(policyTitle()) +
       "</h1>" +
-      '<p class="role-intel-role-badge" aria-label="Selected role">' +
+      '<span class="role-intel-role-badge" aria-label="Selected role">' +
       escapeHtml(roleLabel) +
-      "</p>" +
-      '<p class="role-intel-purpose">' +
-      escapeHtml(purpose || "") +
-      "</p></div>" +
+      "</span>" +
+      (purpose
+        ? '<span class="role-intel-purpose">' + escapeHtml(purpose) + "</span>"
+        : "") +
+      "</div></div></div>" +
       '<div class="role-intel-header-status"><span class="status-dot"></span><span>Offline role view</span></div>' +
       "</header>"
     );
@@ -312,8 +322,101 @@
     return html;
   }
 
+  function catalogLabel(id) {
+    var cat = (DATA.canonical_catalog || {})[id];
+    if (cat && cat.label) return String(cat.label);
+    return String(id || "");
+  }
+
+  function uniqueStrings(list) {
+    var out = [];
+    var seen = {};
+    (list || []).forEach(function (v) {
+      var s = String(v || "").trim();
+      if (!s || seen[s]) return;
+      seen[s] = true;
+      out.push(s);
+    });
+    return out;
+  }
+
+  function roleInsightsForWorkflow(lens, wf) {
+    var perspectives = (DATA.role_relevance && DATA.role_relevance.perspectives) || {};
+    var assessments = (perspectives[lens] && perspectives[lens].assessments) || [];
+    var steps = (wf && wf.steps) || [];
+    var actionIds = {};
+    var refs = {};
+    steps.forEach(function (s) {
+      if (s.canonical_id) actionIds[s.canonical_id] = true;
+      (s.source_reference_ids || []).forEach(function (r) { refs[r] = true; });
+    });
+
+    var matched = [];
+    assessments.forEach(function (a) {
+      if (!a || (a.relevance !== "PRIMARY" && a.relevance !== "SECONDARY")) return;
+      var hit =
+        !!actionIds[a.artifact_id] ||
+        (a.associated_action_ids || []).some(function (id) { return !!actionIds[id]; }) ||
+        (a.source_refs || []).some(function (r) { return !!refs[r]; });
+      if (hit) matched.push(a);
+    });
+    if (!matched.length) {
+      matched = assessments.filter(function (a) {
+        return a && (a.relevance === "PRIMARY" || a.relevance === "SECONDARY");
+      }).slice(0, 6);
+    }
+
+    var risks = [];
+    var controls = [];
+    var evidence = [];
+    var findings = [];
+    var reasons = [];
+    matched.forEach(function (a) {
+      if (a.why_relevant) reasons.push(a.why_relevant);
+      if (a.artifact_type === "risk") risks.push(catalogLabel(a.artifact_id));
+      if (a.artifact_type === "control") controls.push(catalogLabel(a.artifact_id));
+      if (a.artifact_type === "evidence") evidence.push(catalogLabel(a.artifact_id));
+      if (a.artifact_type === "finding") findings.push(catalogLabel(a.artifact_id));
+      (a.associated_risk_ids || []).forEach(function (id) { risks.push(catalogLabel(id)); });
+      (a.associated_control_ids || []).forEach(function (id) { controls.push(catalogLabel(id)); });
+      (a.associated_evidence_ids || []).forEach(function (id) { evidence.push(catalogLabel(id)); });
+    });
+
+    return {
+      matched: matched,
+      reasons: uniqueStrings(reasons).slice(0, 4),
+      risks: uniqueStrings(risks).slice(0, 5),
+      controls: uniqueStrings(controls).slice(0, 5),
+      evidence: uniqueStrings(evidence).slice(0, 5),
+      findings: uniqueStrings(findings).slice(0, 5),
+    };
+  }
+
+  function renderBulletList(title, items) {
+    if (!items || !items.length) return "";
+    return (
+      '<div class="role-detail-steps"><p class="role-diagram-col-title">' +
+      escapeHtml(title) +
+      "</p><ul>" +
+      items.map(function (it) { return "<li>" + escapeHtml(it) + "</li>"; }).join("") +
+      "</ul></div>"
+    );
+  }
+
+  function renderGatewaySummary(wf) {
+    var gws = (wf && wf.gateways) || [];
+    if (!gws.length) return "";
+    var lines = gws.map(function (g) {
+      var branchText = (g.branches || [])
+        .map(function (b) { return (b.label || b.condition || "") + (b.outcome === "PROHIBITED" ? " (stop)" : ""); })
+        .filter(Boolean)
+        .join(" / ");
+      return (g.question || "Decision") + (branchText ? " — " + branchText : "");
+    });
+    return renderBulletList("Decision gates & stop rules", lines);
+  }
+
   function renderDetail(lens, entry) {
-    var labels = DETAIL_HINTS[lens] || DETAIL_HINTS.business_owner;
     if (!entry) {
       return (
         '<aside class="role-detail"><div class="role-detail-heading"><p class="section-kicker">Detail</p><h2>Select a process</h2></div>' +
@@ -324,40 +427,75 @@
     var title = displayTitle(entry.workflow_id, (wf && wf.workflow_title) || entry.index.title);
     var summary = (wf && (wf.workflow_summary || wf.purpose)) || entry.why || "";
     var steps = stepLines(wf);
+    var insights = roleInsightsForWorkflow(lens, wf);
+    var prohibitedSteps = ((wf && wf.steps) || [])
+      .filter(function (s) { return s.action_type === "PROHIBITED_ACTION" || s.path_outcome === "PROHIBITED"; })
+      .map(function (s) { return s.title; });
+    var unassignedCount = ((wf && wf.steps) || [])
+      .filter(function (s) { return s.actor_id === "ACT-UNASSIGNED"; }).length;
+
+    var roleBody = "";
+    if (lens === "compliance_officer") {
+      roleBody =
+        '<dl class="role-detail-dl">' +
+        "<dt>What you test</dt><dd>" +
+        escapeHtml(entry.why || insights.reasons[0] || summary) +
+        "</dd><dt>Operational owners</dt><dd>" +
+        escapeHtml(actorNames(wf) || "See lanes on the diagram.") +
+        "</dd></dl>" +
+        renderBulletList("Risks & breaches to monitor", insights.risks) +
+        renderBulletList("Controls to verify", insights.controls) +
+        renderBulletList("Evidence to test", insights.evidence) +
+        renderGatewaySummary(wf);
+    } else if (lens === "policy_owner") {
+      var gaps = insights.findings.slice();
+      if (unassignedCount > 0) {
+        gaps.push(unassignedCount + " step(s) have no named role owner (Unassigned).");
+      }
+      if (!((wf && wf.gateways) || []).length) {
+        gaps.push("No explicit approval/rejection decision gate linked to this workflow.");
+      }
+      roleBody =
+        '<dl class="role-detail-dl">' +
+        "<dt>Owner focus</dt><dd>" +
+        escapeHtml(entry.why || insights.reasons[0] || summary) +
+        "</dd><dt>Accountable actors</dt><dd>" +
+        escapeHtml(actorNames(wf) || "No named role owner in source.") +
+        "</dd></dl>" +
+        renderBulletList("Coverage & open gaps", gaps) +
+        renderBulletList("Governance rationale", insights.reasons) +
+        renderBulletList("Linked risks & controls", uniqueStrings(insights.risks.concat(insights.controls)));
+    } else {
+      roleBody =
+        '<dl class="role-detail-dl">' +
+        "<dt>What you must do</dt><dd>" +
+        escapeHtml(entry.why || insights.reasons[0] || summary || "Follow this process as shown in the diagram.") +
+        "</dd><dt>Who else is involved</dt><dd>" +
+        escapeHtml(actorNames(wf) || "See lanes on the diagram.") +
+        "</dd></dl>" +
+        renderBulletList("Prohibited / must not proceed", prohibitedSteps) +
+        renderGatewaySummary(wf) +
+        renderBulletList(
+          "Proof & records to keep",
+          insights.evidence.length ? insights.evidence : ["Keep approvals, attestations, and disclosures required by these steps."]
+        ) +
+        (steps
+          ? '<div class="role-detail-steps"><p class="role-diagram-col-title">Your steps in order</p><ol>' +
+            steps +
+            "</ol></div>"
+          : "");
+    }
+
     return (
-      '<aside class="role-detail"><div class="role-detail-heading"><p class="section-kicker">Detail</p><h2>' +
+      '<aside class="role-detail"><div class="role-detail-heading"><p class="section-kicker">' +
+      escapeHtml(LENS_LABELS[lens] || "Detail") +
+      " perspective</p><h2>" +
       escapeHtml(title) +
       "</h2></div>" +
       '<p class="role-detail-blurb">' +
       escapeHtml(entry.why || summary) +
       "</p>" +
-      '<dl class="role-detail-dl">' +
-      "<dt>" +
-      escapeHtml(labels.what) +
-      "</dt><dd>" +
-      escapeHtml(entry.why || summary || "Follow this process as shown in the diagram.") +
-      "</dd>" +
-      "<dt>" +
-      escapeHtml(labels.who) +
-      "</dt><dd>" +
-      escapeHtml(actorNames(wf) || "See lanes on the diagram.") +
-      "</dd>" +
-      "<dt>" +
-      escapeHtml(labels.proof) +
-      "</dt><dd>" +
-      escapeHtml(
-        lens === "policy_owner"
-          ? "If this process is weak or missing owners, coverage is incomplete."
-          : lens === "compliance_officer"
-            ? "Use records and controls linked to this process when testing."
-            : "Keep the outputs this process requires (approvals, attestations, disclosures)."
-      ) +
-      "</dd></dl>" +
-      (steps
-        ? '<div class="role-detail-steps"><p class="role-diagram-col-title">Steps from main view</p><ol>' +
-          steps +
-          "</ol></div>"
-        : "") +
+      roleBody +
       '<p class="role-detail-meta"><span class="intel-badge soft">' +
       escapeHtml(entry.relevance || "") +
       '</span> <code>' +
@@ -430,7 +568,7 @@
     if (!lens) {
       document.title = "Role view · " + policyTitle();
       root.innerHTML =
-        '<main class="role-intel-shell">' +
+        '<main class="role-intel-shell role-intel-shell-workspace">' +
         renderHeader(
           "No role selected",
           "Open a role from the main viewer dropdown (Policy Follower, Compliance Officer, or Policy Owner)."
