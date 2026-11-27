@@ -1014,6 +1014,21 @@
       ":</span> " +
       ids
         .map(function (id) {
+          var entry = catalogEntry(id) || {};
+          if (entry.type === "risk") {
+            var riskClass = "intel-chip intel-chip-risk";
+            if (entry.unmapped) riskClass += " is-unmapped";
+            else if (entry.classification_origin === "suggested") riskClass += " is-suggested";
+            return (
+              '<span class="' +
+              riskClass +
+              '" title="' +
+              escapeAttr(entry.policy_wording || id) +
+              '">' +
+              escapeHtml(entry.label || id) +
+              "</span>"
+            );
+          }
           return (
             '<span class="intel-chip" title="' +
             escapeAttr(id) +
@@ -1117,6 +1132,23 @@
     return html;
   }
 
+  function renderRiskTaxonomyNote() {
+    var tax = DATA.risk_taxonomy;
+    if (!tax || !tax.total) return "";
+    return (
+      '<div class="overview-taxonomy"><span class="overview-taxonomy-kicker">CITI risk taxonomy</span><p>' +
+      "Mapped " +
+      escapeHtml(String(tax.mapped)) +
+      " · Suggested " +
+      escapeHtml(String(tax.suggested)) +
+      ' · <strong class="overview-taxonomy-unmapped">Unmapped risks: ' +
+      escapeHtml(String(tax.unmapped)) +
+      "</strong> of " +
+      escapeHtml(String(tax.total)) +
+      "</p></div>"
+    );
+  }
+
   function renderOverviewBar() {
     if (
       !state.workflow ||
@@ -1200,10 +1232,10 @@
     root.innerHTML =
       '<main class="app-shell">' +
       '<header class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div><div>' +
-      '<p class="eyebrow">Policy intelligence / workflow review' +
-      (pid ? " · " + escapeHtml(pid) : "") +
-      "</p>" +
-      "<h1>Personal Trading Policy</h1></div></div>" +
+      '<p class="eyebrow">Policy intelligence / workflow review</p>' +
+      "<h1>Personal Trading Policy" +
+      (pid ? ' <span class="brand-policy-id">' + escapeHtml(pid) + "</span>" : "") +
+      "</h1></div></div>" +
       '<div class="header-status">' +
       (SHOW_REVIEW_ACCESS
         ? '<label class="role-switch"><span>Review access</span>' +
@@ -1251,6 +1283,7 @@
       '<input data-action="filter" value="' +
       escapeAttr(state.query) +
       '" placeholder="Filter workflows" aria-label="Filter workflows" /></label>' +
+      renderRiskTaxonomyNote() +
       '<nav class="workflow-list" aria-label="Policy workflows">' +
       visibleIndex()
         .map(function (item, index) {

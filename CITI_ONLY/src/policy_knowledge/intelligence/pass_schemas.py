@@ -58,6 +58,7 @@ class PassCRisk(BaseModel):
     name: str
     description: Optional[str] = None
     source_refs: list[str] = Field(default_factory=list)
+    taxonomy_candidate_id: Optional[str] = None
 
 
 class PassCControl(BaseModel):

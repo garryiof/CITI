@@ -3,7 +3,14 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any, Optional
+
+from policy_knowledge.governance.taxonomy_mapper import (
+    default_taxonomy_dir,
+    load_entries,
+    resolve_match,
+)
 
 from policy_knowledge.intelligence.guardrail_client import LLMAdapter, build_messages
 from policy_knowledge.intelligence.pass_schemas import (
@@ -40,13 +47,39 @@ def _blocks_payload(blocks: list[SourceBlock]) -> str:
     return "SOURCE_BLOCKS_JSON:\n" + json.dumps(payload, ensure_ascii=False)
 
 
-def _pass_messages(pass_key: str, source_blocks_payload: str) -> list[dict[str, str]]:
+def _pass_messages(
+    pass_key: str,
+    source_blocks_payload: str,
+    system_suffix: str = "",
+) -> list[dict[str, str]]:
     system = load_prompt(f"{pass_key}.system").text
+    if system_suffix:
+        system = f"{system.rstrip()}\n\n{system_suffix}"
     user = load_prompt(
         f"{pass_key}.user",
         variables={"source_blocks_payload": source_blocks_payload},
     ).text.rstrip("\n")
     return build_messages(system, user)
+
+
+_RISK_TAXONOMY_RULES = (
+    "Risk taxonomy: each risk must carry taxonomy_candidate_id set to the id of the best-fitting entry "
+    "in RISK_TAXONOMY_JSON below, or null when no entry fits. Never invent an id. Keep each risk name "
+    "as the policy wording; do not rewrite it to a taxonomy label."
+)
+
+
+def _taxonomy_system_block(marker: str, entries: list[dict[str, Any]]) -> str:
+    compact = [
+        {
+            "id": e.get("id"),
+            "label": e.get("label"),
+            "definition": e.get("definition"),
+            "aliases": e.get("aliases") or [],
+        }
+        for e in entries
+    ]
+    return f"{_RISK_TAXONOMY_RULES}\n\n{marker}:\n{json.dumps(compact, ensure_ascii=False)}"
 
 
 def _group_workflows(
@@ -136,6 +169,7 @@ def extract_policy(
     input_path: str = "",
     source_hash: Optional[str] = None,
     require_source_refs: bool = True,
+    risk_taxonomy_path: Optional[Path] = None,
 ) -> PolicyKnowledge:
     available = {b.id for b in blocks}
     doc_hash = source_hash or (blocks[0].document_hash if blocks else "")
@@ -143,7 +177,16 @@ def extract_policy(
 
     pass_a = llm.parse_structured(_pass_messages("pass_a", user_payload), PassAResult)
     pass_b = llm.parse_structured(_pass_messages("pass_b", user_payload), PassBResult)
-    pass_c = llm.parse_structured(_pass_messages("pass_c", user_payload), PassCResult)
+    risk_taxonomy_path = Path(risk_taxonomy_path) if risk_taxonomy_path else default_taxonomy_dir() / "risk_taxonomy.yaml"
+    risk_entries = load_entries(risk_taxonomy_path, "risks")
+    pass_c = llm.parse_structured(
+        _pass_messages(
+            "pass_c",
+            user_payload,
+            system_suffix=_taxonomy_system_block("RISK_TAXONOMY_JSON", risk_entries),
+        ),
+        PassCResult,
+    )
     pass_d = llm.parse_structured(_pass_messages("pass_d", user_payload), PassDResult)
     pass_e = llm.parse_structured(_pass_messages("pass_e", user_payload), PassEResult)
 
@@ -268,13 +311,31 @@ def extract_policy(
     findings.extend(risk_gate.findings)
     for raw in risk_gate.accepted:
         primary = raw.source_refs[0]
+        match = resolve_match(raw.name, raw.taxonomy_candidate_id, risk_taxonomy_path, "risks")
+        origin = {"exact": "normalized", "alias": "normalized", "llm_suggested": "suggested"}.get(
+            match.status, "source_stated"
+        )
         risk = Risk(
             id=stable_entity_id("risk", raw.name, primary),
             name=raw.name,
             description=raw.description,
             source_refs=list(raw.source_refs),
-            classification_origin="source_stated",
+            risk_code=match.code if match.status != "unmapped" else None,
+            risk_label=match.label if match.status != "unmapped" else None,
+            classification_origin=origin,
         )
+        if match.status == "unmapped":
+            findings.append(
+                ReviewFinding(
+                    id=f"FIND-RISK-TAX-{len(findings)+1}",
+                    severity="low",
+                    category="unmapped_risk",
+                    description=f"Risk '{raw.name}' has no CITI risk taxonomy match; review manually.",
+                    entity_ids=[risk.id],
+                    source_refs=list(raw.source_refs),
+                    disposition="open",
+                )
+            )
         risks.append(risk)
         risk_by_name[raw.name.lower()] = risk
 

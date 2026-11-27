@@ -98,6 +98,7 @@ class Risk(BaseModel):
     source_refs: list[str]
     description: Optional[str] = None
     risk_code: Optional[str] = None
+    risk_label: Optional[str] = None
     classification_origin: ClassificationOrigin = "source_stated"
 
 

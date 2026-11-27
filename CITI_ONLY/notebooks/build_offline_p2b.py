@@ -38,6 +38,38 @@ _CATALOG_COLLECTIONS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
 )
 
 
+def _risk_catalog_entry(item: dict[str, Any], artifact_id: str) -> dict[str, Any]:
+    """Risk chip data: CITI code · taxonomy label when matched, else flagged as unmapped."""
+    policy_wording = str(item.get("name") or artifact_id)
+    code = str(item.get("risk_code") or "").strip()
+    taxonomy_label = str(item.get("risk_label") or "").strip()
+    origin = str(item.get("classification_origin") or "source_stated")
+    if code:
+        label = f"{code} · {taxonomy_label}" if taxonomy_label else code
+    else:
+        label = f"Unmapped: {policy_wording}"
+    return {
+        "type": "risk",
+        "label": label,
+        "policy_wording": policy_wording,
+        "risk_code": code,
+        "classification_origin": origin,
+        "unmapped": not code,
+        "source_refs": list(item.get("source_refs") or []),
+    }
+
+
+def risk_taxonomy_summary(canonical_catalog: dict[str, dict[str, Any]] | None) -> dict[str, int]:
+    """Counts of risks by taxonomy match status, for the Overview and index."""
+    risks = [e for e in (canonical_catalog or {}).values() if e.get("type") == "risk"]
+    return {
+        "total": len(risks),
+        "mapped": sum(1 for e in risks if not e.get("unmapped") and e.get("classification_origin") != "suggested"),
+        "suggested": sum(1 for e in risks if not e.get("unmapped") and e.get("classification_origin") == "suggested"),
+        "unmapped": sum(1 for e in risks if e.get("unmapped")),
+    }
+
+
 def build_canonical_catalog(policy_knowledge: dict[str, Any]) -> dict[str, dict[str, Any]]:
     """Compact id → {type, label, source_refs} map for offline lens labels."""
     catalog: dict[str, dict[str, Any]] = {}
@@ -47,6 +79,9 @@ def build_canonical_catalog(policy_knowledge: dict[str, Any]) -> dict[str, dict[
                 continue
             artifact_id = item.get("id")
             if not artifact_id:
+                continue
+            if artifact_type == "risk":
+                catalog[str(artifact_id)] = _risk_catalog_entry(item, str(artifact_id))
                 continue
             label = ""
             for key in label_keys:
@@ -529,6 +564,7 @@ def build_offline_p2b(
     if role_relevance is not None:
         payload["role_relevance"] = role_relevance
         payload["canonical_catalog"] = catalog or {}
+        payload["risk_taxonomy"] = risk_taxonomy_summary(catalog)
 
     llm_map = None
     if isinstance(role_relevance, dict):

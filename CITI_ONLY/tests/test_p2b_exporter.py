@@ -211,3 +211,61 @@ def test_derive_role_workflow_map_differentiates_roles():
     assert "WF-ALL" in [e["workflow_id"] for e in rmap["policy_owner"]]
 
 
+
+def test_risk_catalog_labels_and_taxonomy_summary():
+    from build_offline_p2b import build_canonical_catalog, risk_taxonomy_summary
+
+    knowledge = {
+        "risks": [
+            {"id": "R1", "name": "Delayed escalation", "risk_code": "RISK_OPS",
+             "risk_label": "Operational Risk", "classification_origin": "normalized", "source_refs": ["B1"]},
+            {"id": "R2", "name": "Missed attestation", "risk_code": "RISK_CONDUCT",
+             "risk_label": "Conduct Risk", "classification_origin": "suggested", "source_refs": ["B1"]},
+            {"id": "R3", "name": "Unclear exposure", "risk_code": None,
+             "risk_label": None, "classification_origin": "source_stated", "source_refs": ["B2"]},
+        ]
+    }
+    catalog = build_canonical_catalog(knowledge)
+    assert catalog["R1"]["label"] == "RISK_OPS · Operational Risk"
+    assert catalog["R1"]["policy_wording"] == "Delayed escalation"
+    assert catalog["R2"]["classification_origin"] == "suggested"
+    assert catalog["R3"]["label"] == "Unmapped: Unclear exposure"
+    assert catalog["R3"]["unmapped"] is True
+
+    summary = risk_taxonomy_summary(catalog)
+    assert summary == {"total": 3, "mapped": 1, "suggested": 1, "unmapped": 1}
+
+
+def test_risk_control_csv_has_risk_code_column():
+    from policy_knowledge.governance.risk_control_matrix import build_risk_control_rows
+
+    knowledge = _knowledge()
+    knowledge.risks[0].risk_code = "RISK_OPS"
+    rows = build_risk_control_rows(knowledge)
+    assert rows[0]["risk_code"] == "RISK_OPS"
+    assert all("risk_code" in row for row in rows)
+    assert any(row["risk_code"] == "unmapped" for row in rows[1:]) or len(rows) == 1
+
+
+def test_offline_pack_ships_risk_chip_and_overview_code(tmp_path: Path):
+    from build_offline_p2b import build_offline_p2b
+
+    knowledge = _knowledge()
+    run_dir = tmp_path / "run"
+    export_p2b_workflows(knowledge, run_dir / "outputs" / "p2b")
+    canonical = run_dir / "outputs" / "canonical"
+    canonical.mkdir(parents=True)
+    role_doc = analyze_role_relevance(knowledge, SyntheticMockLLM(), provider="mock")
+    export_role_relevance(role_doc, canonical / "role_relevance.json")
+    (canonical / "policy_knowledge.json").write_text(knowledge.model_dump_json(), encoding="utf-8")
+
+    out = build_offline_p2b(REPO_ROOT, tmp_path / "pack", canonical_run_dir=run_dir)
+    data = (out / "data.js").read_text(encoding="utf-8")
+    payload = json.loads(data[len("window.P2B_DATA = ") : -2])
+    assert payload["risk_taxonomy"]["total"] == len(knowledge.risks)
+    assert payload["risk_taxonomy"]["unmapped"] == len(knowledge.risks)
+
+    app_js = (out / "app.js").read_text(encoding="utf-8")
+    assert "is-unmapped" in app_js and "renderRiskTaxonomyNote" in app_js
+    css = (out / "styles.css").read_text(encoding="utf-8")
+    assert ".intel-chip-risk.is-unmapped" in css and ".intel-chip-risk.is-suggested" in css

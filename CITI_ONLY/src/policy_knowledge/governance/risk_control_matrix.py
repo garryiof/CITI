@@ -22,6 +22,7 @@ def build_risk_control_rows(knowledge: PolicyKnowledge) -> list[dict[str, str]]:
             {
                 "risk_id": risk.id,
                 "risk_name": risk.name,
+                "risk_code": risk.risk_code or "unmapped",
                 "controls": ";".join(mitigations) or "not_specified",
                 "requirements": ";".join(reqs) or "not_specified",
                 "origin": risk.classification_origin,

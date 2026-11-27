@@ -340,9 +340,23 @@ button {
 
 /* Product name */
 .brand h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0;
   font: 600 var(--fs-brand)/1.1 var(--font-display);
   letter-spacing: 0.01em;
+}
+
+.brand-policy-id {
+  display: inline-block;
+  padding: 2px 8px;
+  font: 600 var(--fs-tiny)/1.2 var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--color-topbar-text);
+  border: 1px solid var(--color-brand-bar);
+  background: color-mix(in srgb, var(--color-ink) 70%, var(--color-accent) 30%);
+  white-space: nowrap;
 }
 
 /* Right side of the top bar: local workspace status */
@@ -2429,6 +2443,40 @@ button.element-id.code-chip-btn.open {
 .intel-chip code {
   color: var(--color-muted);
   font-family: var(--font-mono);
+}
+
+/* CITI risk chips: suggested = LLM candidate (dotted), unmapped = no taxonomy match (amber) */
+.intel-chip-risk.is-suggested {
+  border-style: dotted;
+}
+
+.intel-chip-risk.is-unmapped {
+  border-color: #c98a1b;
+  background: #fff4df;
+  color: #7a4d00;
+}
+
+.overview-taxonomy {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-line);
+}
+
+.overview-taxonomy-kicker {
+  display: block;
+  font: 500 var(--fs-tiny) var(--font-mono);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.overview-taxonomy p {
+  margin: 4px 0 0;
+  font-size: var(--fs-small);
+}
+
+.overview-taxonomy-unmapped {
+  color: #7a4d00;
 }
 
 .lens-switch {

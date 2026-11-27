@@ -76,6 +76,7 @@ def build_canonical_payload(knowledge: PolicyKnowledge) -> dict[str, Any]:
             {
                 "id": r.id,
                 "name": r.name,
+                "risk_code": r.risk_code,
                 "description": _truncate(r.description),
                 "source_refs": list(r.source_refs),
             }
