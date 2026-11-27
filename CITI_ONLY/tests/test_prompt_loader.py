@@ -74,7 +74,7 @@ def test_pass_user_messages_match_prior_inline_format():
         )
     ]
     payload = _blocks_payload(blocks)
-    for letter, key in zip("ABCDE", ["pass_a", "pass_b", "pass_c", "pass_d", "pass_e"], strict=True):
+    for letter, key in zip("ABCDE", ["pass_a", "pass_b", "pass_c", "pass_d", "pass_e"]):
         messages = _pass_messages(key, payload)
         assert messages[0]["role"] == "system"
         assert messages[0]["content"] == LEGACY_SYSTEM[key]

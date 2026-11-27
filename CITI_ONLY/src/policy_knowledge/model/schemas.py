@@ -80,6 +80,8 @@ class Process(BaseModel):
     flow_relations: list[dict] = Field(default_factory=list)
     source_refs: list[str]
     modeling_status: ModelingStatus = "needs_review"
+    summary: Optional[str] = None
+    trigger: Optional[str] = None
 
 
 class Decision(BaseModel):

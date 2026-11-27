@@ -68,6 +68,18 @@
       "required_vars": ["source_blocks_payload"],
       "description": "Pass E user — source blocks payload"
     },
+    "pass_w.system": {
+      "file": "extraction/pass_w.system.md",
+      "version": "1.0.0",
+      "required_vars": [],
+      "description": "Pass W system — group actions into workflows"
+    },
+    "pass_w.user": {
+      "file": "extraction/pass_w.user.md",
+      "version": "1.0.0",
+      "required_vars": ["policy_title", "actions_payload"],
+      "description": "Pass W user — extracted actions payload"
+    },
     "schema_json_object": {
       "file": "_shared/schema_json_object.md",
       "version": "1.0.0",

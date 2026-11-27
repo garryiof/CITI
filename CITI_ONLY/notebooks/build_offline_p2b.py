@@ -1,7 +1,7 @@
 """Build a file://-openable policies2BPMN-style offline viewer pack.
 
-Reads ``policies2BPMN/outputs`` and bpmn-js UMD assets as reference only.
-Does not modify the ``policies2BPMN`` folder.
+Workflows come from the pipeline run (``<run>/outputs/p2b``) when available,
+otherwise from the static ``policies2BPMN/outputs`` snapshot (read-only).
 
 Optionally embeds precomputed Pass F ``role_relevance`` + a compact entity
 catalog into ``window.P2B_DATA`` for offline intelligence lenses. When those
@@ -206,6 +206,63 @@ def build_role_workflow_map(
     }
 
 
+_RELEVANCE_RANK = {"PRIMARY": 0, "SECONDARY": 1}
+
+
+def derive_role_workflow_map(
+    role_relevance: dict[str, Any] | None,
+    workflows: dict[str, dict[str, Any]],
+) -> dict[str, list[dict[str, str]]]:
+    """Role→workflow map for run-generated workflows, from Pass F assessments.
+
+    A workflow is relevant to a role when an assessment targets one of its actions
+    (directly or via associated_action_ids) or cites one of its source blocks.
+    """
+    perspectives = (role_relevance or {}).get("perspectives") or {}
+    result: dict[str, list[dict[str, str]]] = {}
+    for role in ("business_owner", "compliance_officer", "policy_owner"):
+        assessments = (perspectives.get(role) or {}).get("assessments") or []
+        entries: list[dict[str, str]] = []
+        for wid, pack in workflows.items():
+            steps = (pack.get("json") or {}).get("steps") or []
+            action_ids = {s.get("canonical_id") for s in steps if s.get("canonical_id")}
+            refs = {r for s in steps for r in (s.get("source_reference_ids") or [])}
+            best: tuple[str, str] | None = None
+            for item in assessments:
+                if not isinstance(item, dict):
+                    continue
+                relevance = str(item.get("relevance") or "")
+                if relevance not in _RELEVANCE_RANK:
+                    continue
+                hit = (
+                    item.get("artifact_id") in action_ids
+                    or action_ids & set(item.get("associated_action_ids") or [])
+                    or refs & set(item.get("source_refs") or [])
+                )
+                if hit and (best is None or _RELEVANCE_RANK[relevance] < _RELEVANCE_RANK[best[0]]):
+                    best = (relevance, str(item.get("why_relevant") or ""))
+            if best is not None:
+                entries.append({"workflow_id": wid, "relevance": best[0], "why": best[1]})
+        if not entries and "WF-ALL" in workflows:
+            entries.append(
+                {"workflow_id": "WF-ALL", "relevance": "SECONDARY", "why": "Whole-policy view."}
+            )
+        entries.sort(key=lambda e: _RELEVANCE_RANK.get(e["relevance"], 2))
+        result[role] = entries
+    return result
+
+
+def _run_workflows_dir(canonical_run_dir: Path | None) -> Path | None:
+    """``<run>/outputs/p2b`` when the pipeline exported workflows for that run."""
+    if canonical_run_dir is None:
+        return None
+    run_dir = Path(canonical_run_dir)
+    if run_dir.name == "canonical":
+        run_dir = run_dir.parent.parent
+    candidate = run_dir / "outputs" / "p2b"
+    return candidate if (candidate / "index.json").is_file() else None
+
+
 def _vendored_bpmn_dir(repo_root: Path) -> Path | None:
     """Flat vendor dir (modeler + css + bpmn-font) shipped under assets or pack."""
     for rel in (
@@ -298,17 +355,30 @@ def build_offline_p2b(
     role_relevance_path: Path | None = None,
     policy_knowledge_path: Path | None = None,
     canonical_run_dir: Path | None = None,
+    workflows_dir: Path | None = None,
 ) -> Path:
     """Package an offline HTML viewer into ``out_dir`` and return that path.
 
+    Workflow source: ``workflows_dir`` if given, else ``<canonical_run_dir>/outputs/p2b``
+    when present, else the static ``policies2BPMN/outputs`` snapshot.
     Optional role-intelligence kwargs embed Pass F output into ``P2B_DATA``.
-    Missing or invalid inputs are skipped (legacy pack unchanged).
     """
     repo_root = Path(repo_root).resolve()
     out_dir = Path(out_dir).resolve()
 
-    outputs = repo_root / "policies2BPMN" / "outputs"
-    index_path = _require_file(outputs / "index.json", "policies2BPMN outputs index")
+    run_workflows = Path(workflows_dir) if workflows_dir else _run_workflows_dir(canonical_run_dir)
+    if run_workflows is not None:
+        outputs = run_workflows.resolve()
+        workflow_source = "pipeline_run"
+        index_path = _require_file(outputs / "index.json", "run workflows index")
+    else:
+        outputs = repo_root / "policies2BPMN" / "outputs"
+        workflow_source = "static_snapshot"
+        index_path = _require_file(
+            outputs / "index.json",
+            "No run workflows (<run>/outputs/p2b) and no static policies2BPMN snapshot; "
+            "re-run the pipeline (Cell 8) and pass canonical_run_dir",
+        )
     assets_src = repo_root / "notebooks" / ASSETS_DIRNAME
     for name in REQUIRED_ASSET_FILES:
         _require_file(assets_src / name, "offline pack template")
@@ -363,7 +433,10 @@ def build_offline_p2b(
     llm_map = None
     if isinstance(role_relevance, dict):
         llm_map = role_relevance.get("role_workflow_map")
-    payload["role_workflow_map"] = build_role_workflow_map(index, llm_map=llm_map)
+    if workflow_source == "pipeline_run" and not llm_map:
+        payload["role_workflow_map"] = derive_role_workflow_map(role_relevance, workflows)
+    else:
+        payload["role_workflow_map"] = build_role_workflow_map(index, llm_map=llm_map)
 
     if out_dir.exists():
         try:
@@ -413,6 +486,7 @@ def build_offline_p2b(
         "kind": "offline_p2b",
         "generated_at": payload["generated_at"],
         "workflow_count": len(index),
+        "workflow_source": workflow_source,
         "source_outputs": str(outputs),
         "role_relevance_embedded": role_relevance is not None,
         "role_workflow_map_embedded": True,

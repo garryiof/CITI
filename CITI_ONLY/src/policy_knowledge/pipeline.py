@@ -16,6 +16,7 @@ from policy_knowledge.exporters.bpmn_exporter import export_bpmn
 from policy_knowledge.exporters.json_exporter import export_canonical_json
 from policy_knowledge.exporters.matrix_exporter import export_matrices
 from policy_knowledge.exporters.okf_exporter import export_okf
+from policy_knowledge.exporters.p2b_exporter import export_p2b_workflows
 from policy_knowledge.exporters.viewer_exporter import build_offline_demo
 from policy_knowledge.ingestion import read_policy
 from policy_knowledge.intelligence.extraction_pipeline import extract_policy
@@ -108,6 +109,7 @@ def run_policy_demo(
     export_canonical_json(knowledge, run_dir / "outputs" / "canonical")
     export_okf(knowledge, run_dir / "outputs" / "okf")
     export_bpmn(knowledge, run_dir / "outputs" / "bpmn")
+    export_p2b_workflows(knowledge, run_dir / "outputs" / "p2b")
     export_matrices(knowledge, run_dir / "outputs" / "matrices")
 
     runtime_preview = llm_runtime_status(llm)
@@ -168,6 +170,7 @@ def run_policy_demo(
         "role_relevance": str(role_path),
         "okf": str(run_dir / "outputs" / "okf"),
         "bpmn": str(run_dir / "outputs" / "bpmn"),
+        "p2b_workflows": str(run_dir / "outputs" / "p2b"),
         "matrices": str(run_dir / "outputs" / "matrices"),
         "demo": str(demo_dir),
         "qa": str(run_dir / "outputs" / "qa_report.json"),

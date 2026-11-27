@@ -12,6 +12,7 @@ from policy_knowledge.intelligence.pass_schemas import (
     PassCResult,
     PassDResult,
     PassEResult,
+    PassWResult,
 )
 from policy_knowledge.intelligence.prompt_loader import load_prompt
 from policy_knowledge.intelligence.reconciliation import reconcile_knowledge
@@ -46,6 +47,84 @@ def _pass_messages(pass_key: str, source_blocks_payload: str) -> list[dict[str, 
         variables={"source_blocks_payload": source_blocks_payload},
     ).text.rstrip("\n")
     return build_messages(system, user)
+
+
+def _group_workflows(
+    llm: LLMAdapter,
+    *,
+    policy_title: str,
+    actions: list[Action],
+    role_names: dict[str, str],
+    findings: list[ReviewFinding],
+) -> list[Process]:
+    """Pass W: group resolved actions into named workflows (empty list on failure)."""
+    if len(actions) < 2:
+        return []
+    payload = [
+        {
+            "label": a.label,
+            "description": a.description,
+            "actors": [role_names.get(r, r) for r in a.actor_role_ids],
+            "source_refs": a.source_refs,
+        }
+        for a in actions
+    ]
+    system = load_prompt("pass_w.system").text
+    user = load_prompt(
+        "pass_w.user",
+        variables={
+            "policy_title": policy_title,
+            "actions_payload": json.dumps(payload, ensure_ascii=False),
+        },
+    ).text.rstrip("\n")
+    try:
+        result = llm.parse_structured(build_messages(system, user), PassWResult)
+    except Exception as exc:  # noqa: BLE001 — grouping is optional; whole-policy workflow remains
+        findings.append(
+            ReviewFinding(
+                id=f"FIND-WORKFLOW-{len(findings)+1}",
+                severity="low",
+                category="workflow_grouping_failed",
+                description=f"Pass W failed; offline pack shows the whole-policy workflow only: {exc}",
+                disposition="open",
+            )
+        )
+        return []
+
+    by_label = {a.label.strip().lower(): a for a in actions}
+    processes: list[Process] = []
+    seen: set[str] = set()
+    for wf in result.workflows:
+        members: list[Action] = []
+        for label in wf.action_labels:
+            action = by_label.get(label.strip().lower())
+            if action is not None and action not in members:
+                members.append(action)
+        if not members:
+            continue
+        process_id = stable_entity_id("process", wf.title, members[0].id)
+        if process_id in seen:
+            continue
+        seen.add(process_id)
+        refs: list[str] = []
+        for action in members:
+            refs.extend(r for r in action.source_refs if r not in refs)
+        processes.append(
+            Process(
+                id=process_id,
+                name=wf.title,
+                activities=[a.id for a in members],
+                flow_relations=[
+                    {"from": members[i].label, "to": members[i + 1].label}
+                    for i in range(len(members) - 1)
+                ],
+                source_refs=refs,
+                modeling_status="supported",
+                summary=wf.summary,
+                trigger=wf.trigger,
+            )
+        )
+    return processes
 
 
 def extract_policy(
@@ -323,6 +402,16 @@ def extract_policy(
         source_refs=[blocks[0].id] if blocks else [],
         modeling_status=pass_b.modeling_status,
     )
+    workflow_processes: list[Process] = []
+    if process.modeling_status != "unsupported":
+        workflow_processes = _group_workflows(
+            llm,
+            policy_title=pass_a.title or title,
+            actions=actions,
+            role_names={r.id: r.name for r in roles},
+            findings=findings,
+        )
+        workflow_processes = [p for p in workflow_processes if p.id != process.id]
 
     for raw in pass_e.findings:
         findings.append(
@@ -350,7 +439,7 @@ def extract_policy(
         requirements=requirements,
         roles=roles,
         actions=actions,
-        processes=[process],
+        processes=[process, *workflow_processes],
         decisions=decisions,
         risks=risks,
         controls=controls,

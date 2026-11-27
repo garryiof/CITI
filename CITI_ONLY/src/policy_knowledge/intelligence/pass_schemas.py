@@ -103,3 +103,14 @@ class PassEFinding(BaseModel):
 
 class PassEResult(BaseModel):
     findings: list[PassEFinding] = Field(default_factory=list)
+
+
+class PassWWorkflow(BaseModel):
+    title: str
+    summary: Optional[str] = None
+    trigger: Optional[str] = None
+    action_labels: list[str] = Field(default_factory=list)
+
+
+class PassWResult(BaseModel):
+    workflows: list[PassWWorkflow] = Field(default_factory=list)

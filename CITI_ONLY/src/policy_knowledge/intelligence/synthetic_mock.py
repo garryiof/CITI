@@ -14,6 +14,7 @@ from policy_knowledge.intelligence.pass_schemas import (
     PassCResult,
     PassDResult,
     PassEResult,
+    PassWResult,
 )
 from policy_knowledge.intelligence.role_relevance_schemas import (
     PerspectiveResult,
@@ -33,6 +34,15 @@ def _user_content(messages: list[dict]) -> str:
 def _blocks_from_messages(messages: list[dict]) -> list[dict[str, str]]:
     user = _user_content(messages)
     marker = "SOURCE_BLOCKS_JSON:"
+    if marker not in user:
+        return []
+    payload = user.split(marker, 1)[1].strip()
+    return json.loads(payload)
+
+
+def _actions_from_messages(messages: list[dict]) -> list[dict]:
+    user = _user_content(messages)
+    marker = "ACTIONS_JSON:"
     if marker not in user:
         return []
     payload = user.split(marker, 1)[1].strip()
@@ -345,6 +355,8 @@ class SyntheticMockLLM:
             if payload:
                 return _role_relevance_from_canonical(payload)
             return RoleRelevanceResult()
+        if schema is PassWResult:
+            return self._pass_w(_actions_from_messages(messages))
         blocks = _blocks_from_messages(messages)
         if schema is PassAResult:
             return self._pass_a(blocks)
@@ -461,6 +473,29 @@ class SyntheticMockLLM:
                     {"from": "Route high-value exception", "to": "Record decision"},
                     {"from": "Record decision", "to": "Retain evidence"},
                 ],
+            }
+        )
+
+    def _pass_w(self, actions: list[dict]) -> PassWResult:
+        labels = [a["label"] for a in actions if a.get("label")]
+        if len(labels) < 2:
+            return PassWResult()
+        return PassWResult.model_validate(
+            {
+                "workflows": [
+                    {
+                        "title": "Escalate an exception",
+                        "summary": "Identify, route and decide on a policy exception.",
+                        "trigger": "An exception is identified.",
+                        "action_labels": labels[:-1],
+                    },
+                    {
+                        "title": "Retain control evidence",
+                        "summary": "Keep evidence of the control outcome.",
+                        "trigger": "A decision is recorded.",
+                        "action_labels": labels[-1:],
+                    },
+                ]
             }
         )
 
