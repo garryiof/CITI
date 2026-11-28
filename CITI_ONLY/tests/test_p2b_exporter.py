@@ -269,3 +269,127 @@ def test_offline_pack_ships_risk_chip_and_overview_code(tmp_path: Path):
     assert "is-unmapped" in app_js and "renderRiskTaxonomyNote" in app_js
     css = (out / "styles.css").read_text(encoding="utf-8")
     assert ".intel-chip-risk.is-unmapped" in css and ".intel-chip-risk.is-suggested" in css
+
+
+def test_match_decisions_prevents_cross_topic_gateway_collision(tmp_path: Path):
+    from policy_knowledge.model.schemas import Action, Decision, Policy, PolicyKnowledge, Process, Role, SourceBlock
+
+    b1 = SourceBlock(
+        id="SRC-0007",
+        policy_id="PTIP",
+        section_path="PDF page 7",
+        text="Covered Persons must obtain ICRM approval for Reportable Accounts and obtain pre-clearance to trade a security.",
+        block_type="page",
+        source_locator="pdf:page[7]",
+        sequence=1,
+        document_hash="h",
+    )
+    r1 = Role(id="ROLE-1", name="Covered Person", source_refs=["SRC-0007"])
+    a1 = Action(
+        id="ACT-1",
+        label="Obtain ICRM approval for new Reportable Accounts",
+        description="Obtain ICRM approval prior to opening a new Reportable Account.",
+        actor_role_ids=["ROLE-1"],
+        source_refs=["SRC-0007"],
+    )
+    a2 = Action(
+        id="ACT-2",
+        label="Disclose Reportable Accounts",
+        description="Disclose Reportable Accounts in the compliance system.",
+        actor_role_ids=["ROLE-1"],
+        source_refs=["SRC-0007"],
+    )
+    a3 = Action(
+        id="ACT-3",
+        label="Submit pre-clearance request",
+        description="Submit pre-clearance request before trading a particular security.",
+        actor_role_ids=["ROLE-1"],
+        source_refs=["SRC-0007"],
+    )
+    a4 = Action(
+        id="ACT-4",
+        label="Execute security trade",
+        description="Execute the approved security transaction.",
+        actor_role_ids=["ROLE-1"],
+        source_refs=["SRC-0007"],
+    )
+    dec = Decision(
+        id="DEC-1",
+        question="Is the Covered Person eligible to trade in a particular security?",
+        branches=[
+            {"condition": "Approved", "outcome": "PROCEED", "next_action_label": None},
+            {"condition": "Rejected / Prohibited", "outcome": "PROHIBITED", "next_action_label": None},
+        ],
+        source_refs=["SRC-0007"],
+    )
+    knowledge = PolicyKnowledge(
+        policy=Policy(id="PTIP", title="Personal Trading", input_path="p.pdf", source_hash="h", review_status="extracted"),
+        source_blocks=[b1],
+        roles=[r1],
+        actions=[a1, a2, a3, a4],
+        decisions=[dec],
+        processes=[
+            Process(id="P-ALL", name="All", activities=["ACT-1", "ACT-2", "ACT-3", "ACT-4"], source_refs=["SRC-0007"], modeling_status="supported"),
+            Process(id="P-ACC", name="Reportable Accounts", activities=["ACT-1", "ACT-2"], source_refs=["SRC-0007"], modeling_status="supported"),
+            Process(id="P-TRD", name="Security Trading", activities=["ACT-3", "ACT-4"], source_refs=["SRC-0007"], modeling_status="supported"),
+        ],
+    )
+    out = export_p2b_workflows(knowledge, tmp_path / "p2b")
+    acc = json.loads((out / "WF-01.json").read_text(encoding="utf-8"))
+    trd = json.loads((out / "WF-02.json").read_text(encoding="utf-8"))
+    # Reportable Accounts must NOT receive the security-trading eligibility gateway.
+    assert acc["gateways"][0]["question"] != dec.question
+    assert acc["gateways"][0]["explicit_or_inferred"] == "INFERRED"
+    # Security Trading DOES receive the security-trading eligibility gateway.
+    assert trd["gateways"][0]["question"] == dec.question
+    assert trd["gateways"][0]["explicit_or_inferred"] == "EXPLICIT"
+
+
+def test_role_steps_json_and_offline_embed(tmp_path: Path):
+    from build_offline_p2b import build_offline_p2b, build_role_workflow_map
+    from policy_knowledge.exporters.role_steps_exporter import export_role_steps
+
+    # Static snapshot map includes PTP-BLK under business_owner for full follower coverage.
+    static_map = build_role_workflow_map([
+        {"workflow_id": "PTP-PRECLEAR"},
+        {"workflow_id": "PTP-BLK"},
+        {"workflow_id": "PTP-VIOL"},
+        {"workflow_id": "PTP-POLICY"},
+    ])
+    assert any(e["workflow_id"] == "PTP-BLK" for e in static_map["business_owner"])
+
+    knowledge = _knowledge()
+    run_dir = tmp_path / "run"
+    p2b_dir = export_p2b_workflows(knowledge, run_dir / "outputs" / "p2b")
+    canonical = run_dir / "outputs" / "canonical"
+    canonical.mkdir(parents=True)
+    role_doc = analyze_role_relevance(knowledge, SyntheticMockLLM(), provider="mock")
+    export_role_relevance(role_doc, canonical / "role_relevance.json")
+    (canonical / "policy_knowledge.json").write_text(knowledge.model_dump_json(), encoding="utf-8")
+
+    rs_path = export_role_steps(
+        p2b_dir,
+        role_doc.model_dump(),
+        canonical / "role_steps.json",
+        policy_id=knowledge.policy.id,
+        policy_title=knowledge.policy.title,
+    )
+    rs_doc = json.loads(rs_path.read_text(encoding="utf-8"))
+    assert rs_doc["schema_version"] == "role_steps-1.0"
+    assert set(rs_doc["roles"]) == {"business_owner", "compliance_officer", "policy_owner"}
+    assert rs_doc["roles"]["business_owner"]["total_steps"] > 0
+    first_step = rs_doc["roles"]["business_owner"]["steps"][0]
+    assert {"order", "workflow_id", "workflow_title", "step_id", "title", "description", "actor", "role_guidance"} <= set(first_step)
+
+    out = build_offline_p2b(REPO_ROOT, tmp_path / "pack", canonical_run_dir=run_dir)
+    assert (out / "role_steps.json").is_file()
+    manifest = json.loads((out / "OFFLINE_MANIFEST.json").read_text(encoding="utf-8"))
+    assert manifest["role_steps_embedded"] is True
+    data = (out / "data.js").read_text(encoding="utf-8")
+    payload = json.loads(data[len("window.P2B_DATA = ") : -2])
+    assert set(payload["role_steps"]["roles"]) == {"business_owner", "compliance_officer", "policy_owner"}
+    role_js = (out / "role_intelligence.js").read_text(encoding="utf-8")
+    assert "downloadRoleStepsJson" in role_js
+    assert "Workflow steps in order" in role_js
+    assert "Policy process steps in order" in role_js
+

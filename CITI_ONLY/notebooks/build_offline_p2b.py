@@ -14,7 +14,7 @@ import json
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 
 ASSETS_DIRNAME = "offline_p2b_assets"
@@ -169,6 +169,7 @@ _ROLE_WORKFLOW_HEURISTIC: dict[str, list[tuple[str, str, str]]] = {
         ("PTP-SHORT", "SECONDARY", "Avoid short-term trading profits."),
         ("PTP-PRIVATE", "SECONDARY", "Get pre-approval for private investments."),
         ("PTP-TXTYPE", "SECONDARY", "Apply the right pre-clearance rules by transaction type."),
+        ("PTP-BLK", "SECONDARY", "Follow special rules when trading firm securities."),
     ],
     "compliance_officer": [
         ("PTP-VIOL", "PRIMARY", "Review and address personal trading violations."),
@@ -387,6 +388,183 @@ def derive_role_workflow_map(
     return result
 
 
+_ROLE_META: dict[str, tuple[str, str, str]] = {
+    "business_owner": (
+        "Policy Follower",
+        "Operational obligations and sequential steps you must follow.",
+        "What you must do",
+    ),
+    "compliance_officer": (
+        "Compliance Officer",
+        "Controls, monitoring, and compliance verification steps across the policy.",
+        "What you monitor and test",
+    ),
+    "policy_owner": (
+        "Policy Owner",
+        "Policy ownership, governance checkpoints, and coverage across the policy.",
+        "Governance and coverage focus",
+    ),
+}
+
+
+def _match_step_guidance(
+    step: dict[str, Any],
+    assessments: list[dict[str, Any]],
+    fallback_why: str,
+) -> str:
+    cid = step.get("canonical_id")
+    step_refs = set(step.get("source_reference_ids") or [])
+    for item in assessments:
+        if not isinstance(item, dict):
+            continue
+        if item.get("relevance") not in _RELEVANCE_RANK:
+            continue
+        if cid and (
+            item.get("artifact_id") == cid
+            or cid in (item.get("associated_action_ids") or [])
+        ):
+            if item.get("why_relevant"):
+                return str(item["why_relevant"])
+    for item in assessments:
+        if not isinstance(item, dict):
+            continue
+        if item.get("relevance") not in _RELEVANCE_RANK:
+            continue
+        if step_refs and (step_refs & set(item.get("source_refs") or [])):
+            if item.get("why_relevant"):
+                return str(item["why_relevant"])
+    return fallback_why or str(step.get("description") or "")
+
+
+def build_role_steps(
+    workflows: dict[str, dict[str, Any]],
+    role_workflow_map: dict[str, list[dict[str, str]]],
+    *,
+    role_relevance: Optional[dict[str, Any]] = None,
+    policy_id: str = "",
+    policy_title: str = "",
+) -> dict[str, Any]:
+    """Return structured JSON containing all three roles and every ordered step per role."""
+    perspectives = (role_relevance or {}).get("perspectives") or {}
+    inferred_policy_id = policy_id or str((role_relevance or {}).get("policy_id") or "")
+    inferred_title = policy_title
+    if not inferred_title or not inferred_policy_id:
+        for pack in workflows.values():
+            pol = ((pack.get("json") or {}).get("policy")) or {}
+            if not inferred_policy_id and pol.get("policy_id"):
+                inferred_policy_id = str(pol["policy_id"])
+            if not inferred_title and pol.get("policy_title"):
+                inferred_title = str(pol["policy_title"])
+            if inferred_policy_id and inferred_title:
+                break
+
+    roles_out: dict[str, dict[str, Any]] = {}
+    for role_key in ("business_owner", "compliance_officer", "policy_owner"):
+        role_label, purpose, step_focus = _ROLE_META[role_key]
+        assessments = (perspectives.get(role_key) or {}).get("assessments") or []
+        entries = role_workflow_map.get(role_key) or []
+
+        wf_summaries: list[dict[str, Any]] = []
+        role_steps: list[dict[str, Any]] = []
+        order_num = 0
+
+        for entry in entries:
+            wid = str(entry.get("workflow_id") or "")
+            wf_json = (workflows.get(wid) or {}).get("json") or {}
+            if not wf_json:
+                continue
+            wf_title = str(wf_json.get("workflow_title") or wid)
+            relevance = str(entry.get("relevance") or "SECONDARY")
+            why = str(entry.get("why") or wf_json.get("workflow_summary") or "")
+            actor_map = {
+                str(a.get("actor_id")): str(a.get("name") or a.get("actor_id"))
+                for a in (wf_json.get("actors") or [])
+                if isinstance(a, dict) and a.get("actor_id")
+            }
+            gw_by_after = {
+                str(g.get("after_step_id")): g
+                for g in (wf_json.get("gateways") or [])
+                if isinstance(g, dict) and g.get("after_step_id")
+            }
+
+            steps = wf_json.get("steps") or []
+            wf_summaries.append(
+                {
+                    "workflow_id": wid,
+                    "workflow_title": wf_title,
+                    "relevance": relevance,
+                    "why": why,
+                    "step_count": len(steps),
+                }
+            )
+            for idx, step in enumerate(steps, start=1):
+                if not isinstance(step, dict):
+                    continue
+                order_num += 1
+                step_id = str(step.get("step_id") or f"STEP-{idx:03d}")
+                title = str(step.get("title") or step.get("label") or step.get("name") or step_id)
+                actor_id = str(step.get("actor_id") or "")
+                actor = actor_map.get(
+                    actor_id,
+                    str(step.get("actor_role") or actor_id or "Unassigned"),
+                )
+                gw = gw_by_after.get(step_id)
+                gateway_after = None
+                if gw:
+                    gateway_after = {
+                        "gateway_id": gw.get("gateway_id"),
+                        "question": gw.get("question"),
+                        "explicit_or_inferred": gw.get("explicit_or_inferred"),
+                        "branches": [
+                            {
+                                "label": br.get("label") or br.get("condition"),
+                                "outcome": br.get("outcome"),
+                            }
+                            for br in (gw.get("branches") or [])
+                            if isinstance(br, dict)
+                        ],
+                    }
+                role_steps.append(
+                    {
+                        "order": order_num,
+                        "workflow_id": wid,
+                        "workflow_title": wf_title,
+                        "relevance": relevance,
+                        "step_id": step_id,
+                        "step_code": f"{wid}:{step_id}",
+                        "sequence": int(step.get("sequence") or idx),
+                        "title": title,
+                        "description": str(step.get("description") or ""),
+                        "actor": actor,
+                        "action_type": str(step.get("action_type") or "MANDATORY_ACTION"),
+                        "explicit_or_inferred": str(step.get("explicit_or_inferred") or "EXPLICIT"),
+                        "path_outcome": step.get("path_outcome"),
+                        "role_focus": step_focus,
+                        "role_guidance": _match_step_guidance(step, assessments, why),
+                        "gateway_after": gateway_after,
+                        "source_reference_ids": list(step.get("source_reference_ids") or []),
+                    }
+                )
+
+        roles_out[role_key] = {
+            "role_key": role_key,
+            "role_label": role_label,
+            "purpose": purpose,
+            "workflow_count": len(wf_summaries),
+            "total_steps": len(role_steps),
+            "workflows": wf_summaries,
+            "steps": role_steps,
+        }
+
+    return {
+        "schema_version": "role_steps-1.0",
+        "policy_id": inferred_policy_id,
+        "policy_title": inferred_title,
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "roles": roles_out,
+    }
+
+
 def _run_workflows_dir(canonical_run_dir: Path | None) -> Path | None:
     """``<run>/outputs/p2b`` when the pipeline exported workflows for that run."""
     if canonical_run_dir is None:
@@ -573,6 +751,11 @@ def build_offline_p2b(
         payload["role_workflow_map"] = derive_role_workflow_map(role_relevance, workflows)
     else:
         payload["role_workflow_map"] = build_role_workflow_map(index, llm_map=llm_map)
+    payload["role_steps"] = build_role_steps(
+        workflows,
+        payload["role_workflow_map"],
+        role_relevance=role_relevance,
+    )
 
     if out_dir.exists():
         try:
@@ -596,6 +779,10 @@ def build_offline_p2b(
 
     data_js = "window.P2B_DATA = " + json.dumps(payload, ensure_ascii=False) + ";\n"
     (out_dir / "data.js").write_text(data_js, encoding="utf-8")
+    (out_dir / "role_steps.json").write_text(
+        json.dumps(payload["role_steps"], indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
     (out_dir / "policy_source.html").write_text(policy_source_html, encoding="utf-8")
 
     readme = "\n".join(
@@ -626,6 +813,7 @@ def build_offline_p2b(
         "source_outputs": str(outputs),
         "role_relevance_embedded": role_relevance is not None,
         "role_workflow_map_embedded": True,
+        "role_steps_embedded": True,
         "role_views": [
             "role_intelligence.html?lens=business_owner",
             "role_intelligence.html?lens=compliance_officer",
@@ -644,6 +832,7 @@ _OFFLINE_ZIP_NAMES = (
     "app.js",
     "styles.css",
     "data.js",
+    "role_steps.json",
     "role_intelligence.html",
     "role_intelligence.js",
     "policy_source.html",

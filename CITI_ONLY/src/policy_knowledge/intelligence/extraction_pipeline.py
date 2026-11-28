@@ -11,7 +11,7 @@ from policy_knowledge.governance.taxonomy_mapper import (
     load_entries,
     resolve_match,
 )
-
+from policy_knowledge.ingestion.chunker import chunk_blocks
 from policy_knowledge.intelligence.guardrail_client import LLMAdapter, build_messages
 from policy_knowledge.intelligence.pass_schemas import (
     PassAResult,
@@ -80,6 +80,220 @@ def _taxonomy_system_block(marker: str, entries: list[dict[str, Any]]) -> str:
         for e in entries
     ]
     return f"{_RISK_TAXONOMY_RULES}\n\n{marker}:\n{json.dumps(compact, ensure_ascii=False)}"
+
+
+def _extend_unique(target: list[str], extra: list[str]) -> None:
+    for item in extra:
+        if item and item not in target:
+            target.append(item)
+
+
+def _chunk_block_groups(blocks: list[SourceBlock], max_chunk_chars: int) -> list[list[SourceBlock]]:
+    if not blocks:
+        return [[]]
+    chunks = chunk_blocks(blocks, max_chars=max(1, int(max_chunk_chars)), overlap=200)
+    if len(chunks) <= 1:
+        return [blocks]
+    by_id = {b.id: b for b in blocks}
+    groups: list[list[SourceBlock]] = []
+    for chunk in chunks:
+        ids = chunk.metadata.get("source_block_ids") or []
+        group = [by_id[bid] for bid in ids if bid in by_id]
+        if group:
+            groups.append(group)
+    return groups or [blocks]
+
+
+def _merge_pass_a(results: list[PassAResult]) -> PassAResult:
+    if len(results) == 1:
+        return results[0]
+    title: Optional[str] = None
+    version: Optional[str] = None
+    reqs: list[Any] = []
+    req_by_key: dict[str, Any] = {}
+    roles: list[Any] = []
+    role_by_key: dict[str, Any] = {}
+    notes: list[str] = []
+    for res in results:
+        if not title and res.title:
+            title = res.title
+        if not version and res.version:
+            version = res.version
+        for r in res.requirements:
+            key = r.text.strip().lower()
+            if key in req_by_key:
+                _extend_unique(req_by_key[key].source_refs, r.source_refs)
+            else:
+                copy = r.model_copy(deep=True)
+                req_by_key[key] = copy
+                reqs.append(copy)
+        for role in res.roles:
+            key = role.name.strip().lower()
+            if key in role_by_key:
+                _extend_unique(role_by_key[key].source_refs, role.source_refs)
+                if not role_by_key[key].description and role.description:
+                    role_by_key[key].description = role.description
+            else:
+                copy = role.model_copy(deep=True)
+                role_by_key[key] = copy
+                roles.append(copy)
+        _extend_unique(notes, res.notes)
+    return PassAResult(title=title, version=version, requirements=reqs, roles=roles, notes=notes)
+
+
+_STATUS_PRIORITY = {"supported": 0, "partial": 1, "needs_review": 2, "unsupported": 3}
+
+
+def _merge_pass_b(results: list[PassBResult]) -> PassBResult:
+    if len(results) == 1:
+        return results[0]
+    process_name: Optional[str] = None
+    status = "unsupported"
+    actions: list[Any] = []
+    action_by_key: dict[str, Any] = {}
+    decisions: list[Any] = []
+    decision_by_key: dict[str, Any] = {}
+    flow: list[dict] = []
+    seen_flow: set[tuple[str, str]] = set()
+    for res in results:
+        if not process_name and res.process_name:
+            process_name = res.process_name
+        if _STATUS_PRIORITY.get(res.modeling_status, 9) < _STATUS_PRIORITY.get(status, 9):
+            status = res.modeling_status
+        for act in res.actions:
+            key = act.label.strip().lower()
+            if key in action_by_key:
+                existing = action_by_key[key]
+                _extend_unique(existing.source_refs, act.source_refs)
+                _extend_unique(existing.actor_role_names, act.actor_role_names)
+                if len(act.description or "") > len(existing.description or ""):
+                    existing.description = act.description
+            else:
+                copy = act.model_copy(deep=True)
+                action_by_key[key] = copy
+                actions.append(copy)
+        for dec in res.decisions:
+            key = dec.question.strip().lower()
+            if key in decision_by_key:
+                existing = decision_by_key[key]
+                _extend_unique(existing.source_refs, dec.source_refs)
+                if not existing.branches and dec.branches:
+                    existing.branches = list(dec.branches)
+                if not existing.after_action_label and dec.after_action_label:
+                    existing.after_action_label = dec.after_action_label
+            else:
+                copy = dec.model_copy(deep=True)
+                decision_by_key[key] = copy
+                decisions.append(copy)
+        for item in res.flow:
+            if not item:
+                continue
+            src = str(item.get("from") or "").strip()
+            tgt = str(item.get("to") or "").strip()
+            if not src or not tgt:
+                continue
+            pair = (src.lower(), tgt.lower())
+            if pair not in seen_flow:
+                seen_flow.add(pair)
+                flow.append({"from": src, "to": tgt})
+    if actions and status == "unsupported":
+        status = "supported"
+    return PassBResult(
+        process_name=process_name,
+        modeling_status=status,  # type: ignore[arg-type]
+        actions=actions,
+        decisions=decisions,
+        flow=flow,
+    )
+
+
+def _merge_pass_c(results: list[PassCResult]) -> PassCResult:
+    if len(results) == 1:
+        return results[0]
+    risks: list[Any] = []
+    risk_by_key: dict[str, Any] = {}
+    controls: list[Any] = []
+    ctl_by_key: dict[str, Any] = {}
+    evidence: list[Any] = []
+    ev_by_key: dict[str, Any] = {}
+    for res in results:
+        for r in res.risks:
+            key = r.name.strip().lower()
+            if key in risk_by_key:
+                existing = risk_by_key[key]
+                _extend_unique(existing.source_refs, r.source_refs)
+                if not existing.taxonomy_candidate_id and r.taxonomy_candidate_id:
+                    existing.taxonomy_candidate_id = r.taxonomy_candidate_id
+                if not existing.description and r.description:
+                    existing.description = r.description
+            else:
+                copy = r.model_copy(deep=True)
+                risk_by_key[key] = copy
+                risks.append(copy)
+        for c in res.controls:
+            key = c.name.strip().lower()
+            if key in ctl_by_key:
+                existing = ctl_by_key[key]
+                _extend_unique(existing.source_refs, c.source_refs)
+                _extend_unique(existing.owner_role_names, c.owner_role_names)
+                if not existing.frequency and c.frequency:
+                    existing.frequency = c.frequency
+            else:
+                copy = c.model_copy(deep=True)
+                ctl_by_key[key] = copy
+                controls.append(copy)
+        for e in res.evidence:
+            key = e.name.strip().lower()
+            if key in ev_by_key:
+                existing = ev_by_key[key]
+                _extend_unique(existing.source_refs, e.source_refs)
+                _extend_unique(existing.related_control_names, e.related_control_names)
+                if not existing.description and e.description:
+                    existing.description = e.description
+            else:
+                copy = e.model_copy(deep=True)
+                ev_by_key[key] = copy
+                evidence.append(copy)
+    return PassCResult(risks=risks, controls=controls, evidence=evidence)
+
+
+def _merge_pass_d(results: list[PassDResult]) -> PassDResult:
+    if len(results) == 1:
+        return results[0]
+    edges: list[Any] = []
+    edge_by_key: dict[tuple[str, str, str], Any] = {}
+    for res in results:
+        for edge in res.edges:
+            key = (
+                edge.source_name.strip().lower(),
+                edge.relation_type.strip().upper(),
+                edge.target_name.strip().lower(),
+            )
+            if key in edge_by_key:
+                _extend_unique(edge_by_key[key].source_refs, edge.source_refs)
+            else:
+                copy = edge.model_copy(deep=True)
+                edge_by_key[key] = copy
+                edges.append(copy)
+    return PassDResult(edges=edges)
+
+
+def _merge_pass_e(results: list[PassEResult]) -> PassEResult:
+    if len(results) == 1:
+        return results[0]
+    findings: list[Any] = []
+    finding_by_key: dict[tuple[str, str], Any] = {}
+    for res in results:
+        for f in res.findings:
+            key = (f.category.strip().lower(), f.description.strip().lower())
+            if key in finding_by_key:
+                _extend_unique(finding_by_key[key].source_refs, f.source_refs)
+                _extend_unique(finding_by_key[key].entity_hints, f.entity_hints)
+            else:
+                copy = f.model_copy(deep=True)
+                finding_by_key[key] = copy
+                findings.append(copy)
+    return PassEResult(findings=findings)
 
 
 def _group_workflows(
@@ -157,6 +371,32 @@ def _group_workflows(
                 trigger=wf.trigger,
             )
         )
+
+    if processes:
+        covered_ids = {aid for proc in processes for aid in proc.activities}
+        uncovered = [a for a in actions if a.id not in covered_ids]
+        if uncovered:
+            refs = []
+            for action in uncovered:
+                refs.extend(r for r in action.source_refs if r not in refs)
+            extra_title = "Additional policy obligations and procedures"
+            extra_id = stable_entity_id("process", extra_title, uncovered[0].id)
+            if extra_id not in seen:
+                processes.append(
+                    Process(
+                        id=extra_id,
+                        name=extra_title,
+                        activities=[a.id for a in uncovered],
+                        flow_relations=[
+                            {"from": uncovered[i].label, "to": uncovered[i + 1].label}
+                            for i in range(len(uncovered) - 1)
+                        ],
+                        source_refs=refs,
+                        modeling_status="supported",
+                        summary="Remaining obligations and compliance steps extracted from the policy.",
+                        trigger="When additional policy obligations apply.",
+                    )
+                )
     return processes
 
 
@@ -170,25 +410,37 @@ def extract_policy(
     source_hash: Optional[str] = None,
     require_source_refs: bool = True,
     risk_taxonomy_path: Optional[Path] = None,
+    max_chunk_chars: int = 12000,
 ) -> PolicyKnowledge:
     available = {b.id for b in blocks}
     doc_hash = source_hash or (blocks[0].document_hash if blocks else "")
-    user_payload = _blocks_payload(blocks)
+    block_groups = _chunk_block_groups(blocks, max_chunk_chars=max_chunk_chars)
+    chunk_payloads = [_blocks_payload(group) for group in block_groups]
 
-    pass_a = llm.parse_structured(_pass_messages("pass_a", user_payload), PassAResult)
-    pass_b = llm.parse_structured(_pass_messages("pass_b", user_payload), PassBResult)
+    pass_a = _merge_pass_a(
+        [llm.parse_structured(_pass_messages("pass_a", payload), PassAResult) for payload in chunk_payloads]
+    )
+    pass_b = _merge_pass_b(
+        [llm.parse_structured(_pass_messages("pass_b", payload), PassBResult) for payload in chunk_payloads]
+    )
     risk_taxonomy_path = Path(risk_taxonomy_path) if risk_taxonomy_path else default_taxonomy_dir() / "risk_taxonomy.yaml"
     risk_entries = load_entries(risk_taxonomy_path, "risks")
-    pass_c = llm.parse_structured(
-        _pass_messages(
-            "pass_c",
-            user_payload,
-            system_suffix=_taxonomy_system_block("RISK_TAXONOMY_JSON", risk_entries),
-        ),
-        PassCResult,
+    taxonomy_suffix = _taxonomy_system_block("RISK_TAXONOMY_JSON", risk_entries)
+    pass_c = _merge_pass_c(
+        [
+            llm.parse_structured(
+                _pass_messages("pass_c", payload, system_suffix=taxonomy_suffix),
+                PassCResult,
+            )
+            for payload in chunk_payloads
+        ]
     )
-    pass_d = llm.parse_structured(_pass_messages("pass_d", user_payload), PassDResult)
-    pass_e = llm.parse_structured(_pass_messages("pass_e", user_payload), PassEResult)
+    pass_d = _merge_pass_d(
+        [llm.parse_structured(_pass_messages("pass_d", payload), PassDResult) for payload in chunk_payloads]
+    )
+    pass_e = _merge_pass_e(
+        [llm.parse_structured(_pass_messages("pass_e", payload), PassEResult) for payload in chunk_payloads]
+    )
 
     findings: list[ReviewFinding] = []
 
@@ -297,6 +549,7 @@ def extract_policy(
                 branches=list(raw.branches),
                 source_refs=list(raw.source_refs),
                 ambiguity_flag=raw.ambiguity_flag,
+                after_action_label=raw.after_action_label,
             )
         )
 

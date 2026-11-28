@@ -17,6 +17,7 @@ from policy_knowledge.exporters.json_exporter import export_canonical_json
 from policy_knowledge.exporters.matrix_exporter import export_matrices
 from policy_knowledge.exporters.okf_exporter import export_okf
 from policy_knowledge.exporters.p2b_exporter import export_p2b_workflows
+from policy_knowledge.exporters.role_steps_exporter import export_role_steps
 from policy_knowledge.exporters.viewer_exporter import build_offline_demo
 from policy_knowledge.ingestion import read_policy
 from policy_knowledge.intelligence.extraction_pipeline import extract_policy
@@ -99,6 +100,7 @@ def run_policy_demo(
         title=policy_path.stem,
         input_path=str(policy_path),
         require_source_refs=config.processing.require_source_refs,
+        max_chunk_chars=int(config.llm.max_chunk_chars or 12000),
     )
 
     (run_dir / "intermediate" / "source_blocks.json").write_text(
@@ -123,6 +125,13 @@ def run_policy_demo(
     role_path = export_role_relevance(
         role_doc,
         run_dir / "outputs" / "canonical" / "role_relevance.json",
+    )
+    role_steps_path = export_role_steps(
+        run_dir / "outputs" / "p2b",
+        role_doc.model_dump(),
+        run_dir / "outputs" / "canonical" / "role_steps.json",
+        policy_id=knowledge.policy.id,
+        policy_title=knowledge.policy.title,
     )
 
     demo_dir = build_offline_demo(
@@ -168,6 +177,7 @@ def run_policy_demo(
     artifact_paths = {
         "canonical": str(run_dir / "outputs" / "canonical" / "policy_knowledge.json"),
         "role_relevance": str(role_path),
+        "role_steps": str(role_steps_path),
         "okf": str(run_dir / "outputs" / "okf"),
         "bpmn": str(run_dir / "outputs" / "bpmn"),
         "p2b_workflows": str(run_dir / "outputs" / "p2b"),

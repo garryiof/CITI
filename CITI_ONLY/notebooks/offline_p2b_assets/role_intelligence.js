@@ -61,6 +61,7 @@
       { workflow_id: "PTP-SHORT", relevance: "SECONDARY", why: "Avoid short-term trading profits." },
       { workflow_id: "PTP-PRIVATE", relevance: "SECONDARY", why: "Get pre-approval for private investments." },
       { workflow_id: "PTP-TXTYPE", relevance: "SECONDARY", why: "Apply the right pre-clearance rules by transaction type." },
+      { workflow_id: "PTP-BLK", relevance: "SECONDARY", why: "Follow special rules when trading firm securities." },
     ],
     compliance_officer: [
       { workflow_id: "PTP-VIOL", relevance: "PRIMARY", why: "Review and address personal trading violations." },
@@ -227,23 +228,127 @@
       .join(", ");
   }
 
+  function actorLookup(wf) {
+    var map = {};
+    ((wf && wf.actors) || []).forEach(function (a) {
+      if (a && a.actor_id) map[a.actor_id] = a.name || a.actor_id;
+    });
+    return map;
+  }
+
   function stepLines(wf) {
+    var actors = actorLookup(wf);
+    var gwByAfter = {};
+    ((wf && wf.gateways) || []).forEach(function (g) {
+      if (g && g.after_step_id) gwByAfter[g.after_step_id] = g;
+    });
     return ((wf && wf.steps) || [])
       .map(function (s, i) {
-        var label = s.label || s.name || s.step_id || "Step " + (i + 1);
+        var label = s.title || s.label || s.name || s.step_id || "Step " + (i + 1);
+        var actorName = actors[s.actor_id] || s.actor_role || s.actor_id || "";
+        var desc = s.description ? '<div class="role-step-desc">' + escapeHtml(s.description) + "</div>" : "";
+        var gw = s.step_id ? gwByAfter[s.step_id] : null;
+        var gwHtml = gw
+          ? '<div class="role-step-gw">Decision: ' + escapeHtml(gw.question || "") + "</div>"
+          : "";
         return (
           "<li><strong>" +
           escapeHtml(label) +
           "</strong>" +
-          (s.actor_role || s.actor_id
+          (actorName
             ? ' <span class="muted">(' +
-              escapeHtml(s.actor_role || s.actor_id) +
+              escapeHtml(actorName) +
               ")</span>"
             : "") +
+          desc +
+          gwHtml +
           "</li>"
         );
       })
       .join("");
+  }
+
+  function totalRoleSteps(lens, entries) {
+    var rs = DATA.role_steps && DATA.role_steps.roles && DATA.role_steps.roles[lens];
+    if (rs && typeof rs.total_steps === "number") return rs.total_steps;
+    var sum = 0;
+    (entries || []).forEach(function (entry) {
+      var wf = workflowJson(entry.workflow_id);
+      sum += ((wf && wf.steps) || []).length;
+    });
+    return sum;
+  }
+
+  function renderAllRoleStepsSection(lens, entries) {
+    var rs = DATA.role_steps && DATA.role_steps.roles && DATA.role_steps.roles[lens];
+    var steps = (rs && rs.steps) || [];
+    if (!steps.length) {
+      (entries || []).forEach(function (entry) {
+        var wf = workflowJson(entry.workflow_id);
+        var actors = actorLookup(wf);
+        ((wf && wf.steps) || []).forEach(function (s, idx) {
+          steps.push({
+            workflow_id: entry.workflow_id,
+            workflow_title: displayTitle(entry.workflow_id, (wf && wf.workflow_title) || entry.workflow_id),
+            sequence: idx + 1,
+            title: s.title || s.label || s.name || s.step_id,
+            description: s.description || "",
+            actor: actors[s.actor_id] || s.actor_role || s.actor_id || "",
+          });
+        });
+      });
+    }
+    if (!steps.length) return "";
+    var items = steps
+      .map(function (st) {
+        return (
+          "<li><span class=\"role-step-wf-tag\">" +
+          escapeHtml(displayTitle(st.workflow_id, st.workflow_title || st.workflow_id)) +
+          "</span> <strong>" +
+          escapeHtml(st.title || "") +
+          "</strong>" +
+          (st.actor ? ' <span class="muted">(' + escapeHtml(st.actor) + ")</span>" : "") +
+          (st.description ? '<div class="role-step-desc">' + escapeHtml(st.description) + "</div>" : "") +
+          "</li>"
+        );
+      })
+      .join("");
+    return (
+      '<div class="role-detail-all-steps">' +
+      '<div class="role-all-steps-bar">' +
+      '<p class="role-diagram-col-title">All steps for ' +
+      escapeHtml(LENS_LABELS[lens] || lens) +
+      " (" +
+      steps.length +
+      ")</p>" +
+      '<button type="button" class="role-json-download-btn" data-download-role-steps="1">Download role_steps.json</button>' +
+      "</div>" +
+      '<details class="role-all-steps-details">' +
+      "<summary>View all " + steps.length + " ordered steps across workflows</summary>" +
+      "<ol>" + items + "</ol>" +
+      "</details></div>"
+    );
+  }
+
+  function downloadRoleStepsJson() {
+    var payload = DATA.role_steps || {
+      schema_version: "role_steps-1.0",
+      policy_id: policyId(),
+      policy_title: policyTitle(),
+      roles: {},
+    };
+    var text = JSON.stringify(payload, null, 2);
+    try {
+      var blob = new Blob([text], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "role_steps.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    } catch (e) { /* ignore */ }
   }
 
   function renderHeader(roleLabel, purpose) {
@@ -293,12 +398,15 @@
   }
 
   function renderRail(lens, entries) {
+    var stepCount = totalRoleSteps(lens, entries);
     var html =
       '<aside class="role-rail"><div class="role-rail-heading"><p class="section-kicker">From main view</p><h2>' +
       escapeHtml(RAIL_TITLES[lens] || "Processes") +
       '</h2><p class="role-rail-count">' +
       entries.length +
-      ' workflows</p></div><nav class="role-rail-list" aria-label="Role workflows">';
+      " workflows · " +
+      stepCount +
+      ' steps</p></div><nav class="role-rail-list" aria-label="Role workflows">';
 
     entries.forEach(function (entry, index) {
       var title = displayTitle(entry.workflow_id, entry.index.title || entry.workflow_id);
@@ -416,7 +524,7 @@
     return renderBulletList("Decision gates & stop rules", lines);
   }
 
-  function renderDetail(lens, entry) {
+  function renderDetail(lens, entry, entries) {
     if (!entry) {
       return (
         '<aside class="role-detail"><div class="role-detail-heading"><p class="section-kicker">Detail</p><h2>Select a process</h2></div>' +
@@ -446,7 +554,12 @@
         renderBulletList("Risks & breaches to monitor", insights.risks) +
         renderBulletList("Controls to verify", insights.controls) +
         renderBulletList("Evidence to test", insights.evidence) +
-        renderGatewaySummary(wf);
+        renderGatewaySummary(wf) +
+        (steps
+          ? '<div class="role-detail-steps"><p class="role-diagram-col-title">Workflow steps in order</p><ol>' +
+            steps +
+            "</ol></div>"
+          : "");
     } else if (lens === "policy_owner") {
       var gaps = insights.findings.slice();
       if (unassignedCount > 0) {
@@ -464,7 +577,12 @@
         "</dd></dl>" +
         renderBulletList("Coverage & open gaps", gaps) +
         renderBulletList("Governance rationale", insights.reasons) +
-        renderBulletList("Linked risks & controls", uniqueStrings(insights.risks.concat(insights.controls)));
+        renderBulletList("Linked risks & controls", uniqueStrings(insights.risks.concat(insights.controls))) +
+        (steps
+          ? '<div class="role-detail-steps"><p class="role-diagram-col-title">Policy process steps in order</p><ol>' +
+            steps +
+            "</ol></div>"
+          : "");
     } else {
       roleBody =
         '<dl class="role-detail-dl">' +
@@ -496,6 +614,7 @@
       escapeHtml(entry.why || summary) +
       "</p>" +
       roleBody +
+      renderAllRoleStepsSection(lens, entries) +
       '<p class="role-detail-meta"><span class="intel-badge soft">' +
       escapeHtml(entry.relevance || "") +
       '</span> <code>' +
@@ -541,7 +660,7 @@
       '<div class="role-workspace">' +
       renderRail(lens, entries) +
       renderStage(selected) +
-      renderDetail(lens, selected) +
+      renderDetail(lens, selected, entries) +
       "</div></main>";
 
     mountBpmn(state.selectedId);
@@ -552,6 +671,11 @@
     if (!root || state.bound) return;
     state.bound = true;
     root.addEventListener("click", function (event) {
+      var dlBtn = event.target.closest("[data-download-role-steps]");
+      if (dlBtn) {
+        downloadRoleStepsJson();
+        return;
+      }
       var btn = event.target.closest("[data-select-workflow]");
       if (!btn) return;
       var id = btn.getAttribute("data-select-workflow");

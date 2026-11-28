@@ -31,6 +31,7 @@ def test_e2e_mock_builds_isolated_run(tmp_path: Path):
     assert (run_dir / "outputs" / "bpmn").exists()
     assert (run_dir / "demo" / "index.html").exists()
     assert (run_dir / "outputs" / "canonical" / "role_relevance.json").exists()
+    assert (run_dir / "outputs" / "canonical" / "role_steps.json").exists()
     import json
 
     manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
@@ -38,7 +39,20 @@ def test_e2e_mock_builds_isolated_run(tmp_path: Path):
     assert manifest["llm_status"] == "MOCK"
     assert manifest["guardrail_status"] == "GUARDRAIL_NOT_CONNECTED"
     assert "role_relevance" in manifest["artifact_paths"]
+    assert "role_steps" in manifest["artifact_paths"]
     assert result.validation.get("role_relevance", {}).get("ok") is True
+
+    role_steps_doc = json.loads(
+        (run_dir / "outputs" / "canonical" / "role_steps.json").read_text(encoding="utf-8")
+    )
+    assert set(role_steps_doc["roles"].keys()) == {
+        "business_owner",
+        "compliance_officer",
+        "policy_owner",
+    }
+    assert role_steps_doc["roles"]["business_owner"]["total_steps"] >= 1
+    assert role_steps_doc["roles"]["compliance_officer"]["total_steps"] >= 1
+    assert role_steps_doc["roles"]["policy_owner"]["total_steps"] >= 1
 
     role_doc = json.loads(
         (run_dir / "outputs" / "canonical" / "role_relevance.json").read_text(encoding="utf-8")

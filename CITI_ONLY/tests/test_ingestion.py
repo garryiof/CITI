@@ -148,3 +148,28 @@ def test_chunker_preserves_sequence():
     assert chunks
     assert [c.sequence for c in chunks] == sorted(c.sequence for c in chunks)
     assert all(c.metadata.get("source_block_ids") for c in chunks)
+
+
+def test_pdf_splits_numbered_sections_into_distinct_blocks():
+    from policy_knowledge.ingestion.pdf_reader import _split_page_blocks
+
+    page_text = (
+        "1. Reportable Accounts\n"
+        "Covered Persons must disclose all Reportable Accounts within 10 business days.\n"
+        "2. Pre-Clearance Requirements\n"
+        "Covered Persons must submit a pre-clearance request before trading securities.\n"
+        "3. Annual Certification\n"
+        "Covered Persons must complete annual policy certification."
+    )
+    sections = _split_page_blocks(7, page_text)
+    assert len(sections) == 3
+    assert "Reportable Accounts" in sections[0].section_path
+    assert "Pre-Clearance" in sections[1].section_path
+    assert "Annual Certification" in sections[2].section_path
+    assert all(b.source_locator.startswith("pdf:page[7]#s") for b in sections)
+
+    # Short unheaded page preserves single-block backwards compatibility.
+    short = _split_page_blocks(1, "Employees must escalate exceptions.")
+    assert len(short) == 1
+    assert short[0].source_locator == "pdf:page[1]"
+

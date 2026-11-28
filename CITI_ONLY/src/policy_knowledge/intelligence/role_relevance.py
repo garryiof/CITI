@@ -72,6 +72,16 @@ def build_canonical_payload(knowledge: PolicyKnowledge) -> dict[str, Any]:
             }
             for d in knowledge.decisions
         ],
+        "processes": [
+            {
+                "id": p.id,
+                "name": p.name,
+                "activities": list(p.activities),
+                "trigger": _truncate(p.trigger),
+                "source_refs": list(p.source_refs),
+            }
+            for p in knowledge.processes
+        ],
         "risks": [
             {
                 "id": r.id,

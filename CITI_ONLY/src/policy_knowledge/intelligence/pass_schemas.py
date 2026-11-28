@@ -44,6 +44,7 @@ class PassBDecision(BaseModel):
     branches: list[dict] = Field(default_factory=list)
     source_refs: list[str] = Field(default_factory=list)
     ambiguity_flag: bool = False
+    after_action_label: Optional[str] = None
 
 
 class PassBResult(BaseModel):

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://citi-poc.local/schemas/taxonomy.schema.json",
+  "title": "CITI taxonomy file (risks, controls, roles)",
+  "description": "Shape of risk_taxonomy.yaml / control_taxonomy.yaml / role_taxonomy.yaml. Load with CITI_TAXONOMY_DIR. Ids must be unique within each list (checked by tests, not by this schema).",
+  "type": "object",
+  "required": ["risks"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Free-text taxonomy version. Informational only."
+    },
+    "risks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "controls": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "roles": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["id", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable code written to risk_code. The LLM may only return ids from this list."
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "CITI display name, shown in the viewer as CODE · Label."
+        },
+        "definition": {
+          "type": "string",
+          "description": "Optional. Sent to the LLM in the Pass C prompt to help it choose the right id."
+        },
+        "aliases": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "description": "Optional alternative names, matched case-insensitively."
+        }
+      }
+    }
+  }
+}

@@ -102,6 +102,93 @@ def _branch_is_negative(branch: dict) -> bool:
     return False
 
 
+_GENERIC_POLICY_WORDS = frozenset(
+    {
+        "covered",
+        "person",
+        "persons",
+        "employee",
+        "employees",
+        "policy",
+        "policies",
+        "must",
+        "shall",
+        "should",
+        "will",
+        "with",
+        "from",
+        "that",
+        "this",
+        "their",
+        "they",
+        "have",
+        "been",
+        "into",
+        "such",
+        "when",
+        "whether",
+        "particular",
+        "request",
+        "approved",
+        "approve",
+        "approval",
+        "permitted",
+        "permit",
+        "prohibited",
+        "prohibit",
+        "rejected",
+        "reject",
+        "proceed",
+        "required",
+        "require",
+        "obtain",
+        "submit",
+        "review",
+        "confirm",
+        "ensure",
+        "applicable",
+        "certain",
+        "under",
+        "about",
+        "before",
+        "after",
+        "within",
+        "does",
+        "make",
+        "complete",
+        "completed",
+        "process",
+        "step",
+        "steps",
+    }
+)
+
+
+def _stem_token(tok: str) -> str:
+    if len(tok) > 5 and tok.endswith("ies"):
+        return tok[:-3] + "y"
+    if len(tok) > 5 and tok.endswith("ing"):
+        return tok[:-3]
+    if len(tok) > 4 and tok.endswith("ed"):
+        return tok[:-2]
+    if len(tok) > 4 and tok.endswith("s") and not tok.endswith("ss"):
+        return tok[:-1]
+    return tok
+
+
+def _domain_keywords(text: str) -> set[str]:
+    tokens = re.findall(r"[a-z0-9]{4,}", (text or "").lower())
+    out: set[str] = set()
+    for tok in tokens:
+        if tok in _GENERIC_POLICY_WORDS:
+            continue
+        stem = _stem_token(tok)
+        if stem in _GENERIC_POLICY_WORDS:
+            continue
+        out.add(stem)
+    return out
+
+
 def _match_decisions(
     workflow_id: str,
     members: list[Action],
@@ -113,12 +200,15 @@ def _match_decisions(
         return []
     label_to_idx = {a.label.strip().lower(): i for i, a in enumerate(members)}
     workflow_refs = {r for a in members for r in a.source_refs if r in blocks_by_id}
+    step_keywords = [_domain_keywords(f"{a.label} {a.description}") for a in members]
 
     matched: list[tuple[int, dict]] = []
     used_positions: set[int] = set()
 
     for dec in decisions:
         dec_refs = [r for r in dec.source_refs if r in blocks_by_id]
+        explicit_after_label = (getattr(dec, "after_action_label", None) or "").strip().lower()
+        explicit_after_idx = label_to_idx.get(explicit_after_label) if explicit_after_label else None
         target_idx: Optional[int] = None
         pos_label = "Approved"
         neg_label = "Rejected / Prohibited"
@@ -142,24 +232,45 @@ def _match_decisions(
                 if tgt and tgt in label_to_idx:
                     target_idx = label_to_idx[tgt]
 
+        dec_kw = _domain_keywords(dec.question)
+        ref_hits = [i for i, a in enumerate(members) if set(a.source_refs) & set(dec_refs)]
+        kw_ref_hits = [i for i in ref_hits if step_keywords[i] & dec_kw] if dec_kw else []
+        kw_any_hits = [i for i, kw in enumerate(step_keywords) if kw & dec_kw] if dec_kw else []
+
         # Decide whether this decision belongs to this workflow.
         belongs = False
-        if target_idx is not None:
+        if explicit_after_idx is not None:
+            belongs = True
+        elif target_idx is not None:
             belongs = True
         elif workflow_id == ALL_WORKFLOW_ID:
             belongs = True
         elif dec_refs and (set(dec_refs) & workflow_refs):
-            belongs = True
+            # Guard against splicing an unrelated decision from the same PDF page
+            # when domain keywords explicitly point to a different topic.
+            if not dec_kw or kw_ref_hits or kw_any_hits:
+                belongs = True
         if not belongs:
             continue
 
         # Determine which step index the gateway sits immediately after.
-        if target_idx is not None and target_idx > 0:
+        if explicit_after_idx is not None:
+            after_idx = explicit_after_idx
+        elif target_idx is not None and target_idx > 0:
             after_idx = target_idx - 1
         else:
-            ref_hits = [i for i, a in enumerate(members) if set(a.source_refs) & set(dec_refs)]
+            kw_approval_hits = [i for i in kw_ref_hits if _is_approval_action(members[i])]
+            ref_approval_hits = [i for i in ref_hits if _is_approval_action(members[i])]
             approval_hits = [i for i, a in enumerate(members) if _is_approval_action(a)]
-            if ref_hits:
+            if kw_approval_hits:
+                after_idx = kw_approval_hits[0]
+            elif kw_ref_hits:
+                after_idx = kw_ref_hits[0]
+            elif kw_any_hits:
+                after_idx = kw_any_hits[0]
+            elif ref_approval_hits:
+                after_idx = ref_approval_hits[0]
+            elif ref_hits:
                 after_idx = ref_hits[0]
             elif approval_hits:
                 after_idx = approval_hits[0]
